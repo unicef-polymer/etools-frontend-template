@@ -10,6 +10,7 @@ import {pageContentHeaderSlottedStyles} from
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 
 import {GenericObject} from '../../../types/globals';
+import '../../common/layout/etools-table/etools-table';
 
 /**
  * @polymer
@@ -33,8 +34,9 @@ class EngagementsList extends PolymerElement {
       </page-content-header>
       
       <section class="paper-material page-content" elevation="1">
-        Engagements list will go here.... TODO<br>
-        <a href$="[[rootPath]]engagements/23/details">Go to engagement details pages :)</a>
+        <a style="margin-bottom: 24px;" href$="[[rootPath]]engagements/23/details">Go to engagement details pages :)</a>
+        
+        <etools-table caption="Engagements list - optional table title" items="[[listData]]"></etools-table>
       </section>
     `;
   }
