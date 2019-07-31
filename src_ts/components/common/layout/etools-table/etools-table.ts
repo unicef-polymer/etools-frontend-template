@@ -1,14 +1,29 @@
 import {PolymerElement, html} from '@polymer/polymer/polymer-element';
+import '@polymer/iron-icons/iron-icons';
 import '@polymer/polymer/lib/elements/dom-if';
 import '@polymer/polymer/lib/elements/dom-repeat';
 import {property} from '@polymer/decorators/lib/decorators';
 
 import {etoolsTableStyles} from './etools-table-styles';
-import {GenericObject} from "../../../../types/globals";
+import {GenericObject} from '../../../../types/globals';
 
-export type TEtoolsTableItems = {
-  columns: any[];
-  data: any[];
+export enum EtoolsTableColumnType {
+  Text,
+  Date,
+  Link,
+  Number
+}
+
+export enum EtoolsTableColumnSort {
+  Asc,
+  Desc
+}
+
+export interface EtoolsTableColumn {
+  label: string; // column header label
+  name: string; // property name from item object
+  type: EtoolsTableColumnType;
+  sort?: EtoolsTableColumnSort;
 }
 
 /**
@@ -23,7 +38,6 @@ class EtoolsTable extends PolymerElement {
     return html`
       ${etoolsTableStyles}
 
-      Etools table element
       <template is="dom-if" if="[[tableTitle]]">
         <div></div>
       </template>
@@ -32,19 +46,22 @@ class EtoolsTable extends PolymerElement {
         <caption hidden$="[[showCaption(caption)]]">[[caption]]</caption>
         <thead>
           <tr>
-            <th>#NO</th>
-            <th>Name</th>
-            <th>Position</th>
-            <th>Address</th>
+            <template is="dom-repeat" items="[[columns]]" as="column">
+              <th class$="[[getColumnClassList(column)]]">
+                [[column.label]]
+                <template is="dom-if" if="[[columnHasSort(column.sort)]]">
+                  <iron-icon icon="[[getSortIcon(column.sort)]]"></iron-icon>
+                </template>
+              </th>
+            </template>
           </tr>
         </thead>
         <tbody>
           <template is="dom-repeat" items="[[tableData]]">
             <tr>
-              <td>[[item.id]]</td>
-              <td>[[item.name]]</td>
-              <td>[[item.position]]</td>
-              <td>[[item.address]]</td>
+              <template is="dom-repeat" items="[[items]]">
+                <td>getItemValue(item, index)</td>
+              </template>
             </tr>
           </template>
         </tbody>
@@ -56,10 +73,42 @@ class EtoolsTable extends PolymerElement {
   caption: string = '';
 
   @property({type: Array})
+  columns: EtoolsTableColumn[] = [];
+
+  @property({type: Array})
   items: GenericObject[] = [];
 
   showCaption(caption: string): boolean {
     return !caption;
+  }
+
+
+  // Columns
+  getColumnClassList(column: EtoolsTableColumn): string {
+    const classList: string[] = [];
+
+    if (column.type === EtoolsTableColumnType.Number) {
+      classList.push('right-align');
+    }
+
+    if (this.columnHasSort(column.sort)) {
+      classList.push('sort');
+    }
+
+    return classList.join(' ');
+  }
+
+  columnHasSort(sort: EtoolsTableColumnSort | undefined): boolean {
+    return sort === EtoolsTableColumnSort.Asc || sort === EtoolsTableColumnSort.Desc;
+  }
+
+  getSortIcon(sort: EtoolsTableColumnSort): string {
+    return sort === EtoolsTableColumnSort.Asc ? 'arrow-upward' : 'arrow-downward';
+  }
+
+  // Rows
+  getItemValue(item: any, itemIndex: number) {
+
   }
 
 }

@@ -7,6 +7,7 @@ export const etoolsTableStyles = html`
       display: block;
       width: 100%;
     }
+
     table {
       width: 100%;
       margin-bottom: 1rem;
@@ -21,11 +22,36 @@ export const etoolsTableStyles = html`
     table td, table th {
       padding: .75rem;
       vertical-align: top;
-      border-top: 1px solid var(--etools-table-rows-border-color, #dee2e6);
       display: table-cell;
       text-align: left;
     }
-    
+
+    table td.right-align, table th.right-align {
+      text-align: right;
+    }
+
+    table td {
+      border-top: 1px solid var(--etools-table-rows-border-color, #dee2e6);
+    }
+
+    table th {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      color: var(--etools-table-secondary-text-color, rgba(0, 0, 0, .54));
+    }
+
+    table th.sort:hover {
+      color: var(--etools-table-primary-text-color, rgba(0, 0, 0, .84));
+      cursor: pointer;
+    }
+
+    table th.sort iron-icon {
+      width: 16px;
+      height: 16px;
+    }
+
     caption {
       width: 100%;
       height: 64px;
