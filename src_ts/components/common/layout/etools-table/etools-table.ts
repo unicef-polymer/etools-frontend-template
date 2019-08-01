@@ -108,7 +108,8 @@ class EtoolsTable extends PolymerElement {
 
   // Rows
   getItemValue(item: any, itemIndex: number) {
-
+    const column: EtoolsTableColumn = this.columns[itemIndex];
+    return item[column.name];
   }
 
 }
