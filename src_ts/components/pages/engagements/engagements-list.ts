@@ -94,17 +94,17 @@ class EngagementsList extends PolymerElement {
     this.filters = [
       {
         filterName: 'Search partner',
+        filterKey: 'q',
         type: EtoolsFilterTypes.Search,
         selectedValue: this.selectedFilters.q,
-        path: 'q',
         selected: true
       },
       {
         filterName: 'Partner Type',
+        filterKey: 'partner_type',
         type: EtoolsFilterTypes.DropdownMulti,
         selectionOptions: this.partnerTypes,
         selectedValue: this.selectedFilters.partner_type,
-        path: 'partner_type',
         selected: true,
         minWidth: '350px',
         hideSearch: true,
@@ -112,10 +112,10 @@ class EngagementsList extends PolymerElement {
       },
       {
         filterName: 'Synced',
+        filterKey: 'synced',
         type: EtoolsFilterTypes.Dropdown,
         selectionOptions: this.partnerSyncedOpts,
         selectedValue: this.selectedFilters.synced,
-        path: 'synced',
         selected: true,
         minWidth: '350px',
         hideSearch: true,
@@ -123,15 +123,15 @@ class EngagementsList extends PolymerElement {
       },
       {
         filterName: 'Show hidden',
+        filterKey: 'show_hidden',
         type: EtoolsFilterTypes.Toggle,
         selectedValue: this.selectedFilters.show_hidden,
-        path: 'show_hidden',
         selected: true
       },
       {
         filterName: 'Created After',
+        filterKey: 'created_after',
         type: EtoolsFilterTypes.Date,
-        path: 'created_after',
         selectedValue: this.selectedFilters.created_after,
         selected: true
       }

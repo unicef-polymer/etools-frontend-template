@@ -14,6 +14,8 @@ import '@polymer/paper-item/paper-item-body';
 
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
+import '@unicef-polymer/etools-date-time/datepicker-lite';
+
 import {GenericObject} from '../../../../types/globals';
 
 export enum EtoolsFilterTypes {
@@ -26,11 +28,11 @@ export enum EtoolsFilterTypes {
 
 export interface EtoolsFilter {
   filterName: string;
+  filterKey: string;
   type: EtoolsFilterTypes;
   selected: boolean; // flag filter as selected from filters menu
   selectedValue: any;
   disabled?: boolean;
-  path: string; // data path to update, selectedFilters obj property name
   selectionOptions?: any[]; // used only by dropdowns
   minWidth?: string; // used only by dropdowns
   hideSearch?: boolean; // used only by dropdowns
@@ -59,7 +61,7 @@ export class EtoolsFilters extends LitElement {
                autocomplete="off"
                .value="${f.selectedValue}"
                placeholder="${f.filterName}" 
-               data-filter-path="${f.path}">
+               data-filter-key="${f.filterKey}">
         <iron-icon icon="search" slot="prefix"></iron-icon>
       </paper-input>
     `;
@@ -79,7 +81,7 @@ export class EtoolsFilters extends LitElement {
           .selected="${f.selectedValue}"
           trigger-value-change-event
           @etools-selected-item-changed="filterValueChanged"
-          data-filter-path="${f.path}"
+          data-filter-key="${f.filterKey}"
           ?hide-search="${f.hideSearch}"
           .minWidth="${f.minWidth}"
           .horizontalAlign="left"
@@ -103,7 +105,7 @@ export class EtoolsFilters extends LitElement {
           .selectedValues="${f.selectedValue}"
           trigger-value-change-event
           @etools-selected-item-changed="esmmValueChanged"
-          data-filter-path="${f.path}"
+          data-filter-key="${f.filterKey}"
           ?hide-search="${f.hideSearch}"
           .minWidth="${f.minWidth}"
           .horizontalAlign="left"
@@ -122,7 +124,7 @@ export class EtoolsFilters extends LitElement {
                        .value="${f.selectedValue}"
                        fire-date-has-changed
                        @date-has-changed="_filterDateHasChanged"
-                       data-filter-path="${f.path}"
+                       data-filter-key="${f.filterKey}"
                        .selectedDateDisplayFormat="D MMM YYYY">
       </datepicker-lite>
     `;
@@ -135,7 +137,7 @@ export class EtoolsFilters extends LitElement {
         ${f.filterName}
         <paper-toggle-button id="toggleFilter" 
                              ?checked="${f.selectedValue}"
-                             data-filter-path="${f.path}"
+                             data-filter-key="${f.filterKey}"
                              @iron-change="toggleValueChanged"></paper-toggle-button>
       </div>
     `;
@@ -174,8 +176,12 @@ export class EtoolsFilters extends LitElement {
   get filterMenuOptions() {
     const menuOptions: any[] = [];
     this.filters.forEach((f: EtoolsFilter) => {
+      // language=HTML
       menuOptions.push(html`
-        <paper-icon-item @tap="selectFilter" ?disabled="${f.disabled}" ?selected="${f.selected}">
+        <paper-icon-item @tap="${this.selectFilter}"
+            ?disabled="${f.disabled}"
+            ?selected="${f.selected}"
+            data-filter-key="${f.filterKey}">
           <iron-icon icon="check" slot="item-icon" ?hidden="${!f.selected}"></iron-icon>
           <paper-item-body>${f.filterName}</paper-item-body>
         </paper-icon-item>
@@ -198,7 +204,7 @@ export class EtoolsFilters extends LitElement {
               Filters
             </paper-button>
             <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button @tap="clearAllFilterValues"
+              <paper-button @tap="${this.clearAllFilterValues}"
                             class="secondary-btn">
                 CLEAR ALL
               </paper-button>
@@ -209,6 +215,21 @@ export class EtoolsFilters extends LitElement {
           </paper-menu-button>
         </div>
     `;
+  }
+
+  clearAllFilterValues() {
+    console.log('clear all...');
+  }
+
+  selectFilter(e: CustomEvent) {
+    console.log(e.currentTarget);
+    const menuOption = e.currentTarget as HTMLElement;
+    const filterKey = menuOption.getAttribute('data-filter-key');
+    if (!filterKey) {
+      throw new Error('[EtoolsFilters.selectFilter] No data-filter-key attr found on clicked option');
+    }
+    const isSelected: boolean = menuOption.hasAttribute('selected');
+
   }
 
 }

@@ -1,14 +1,30 @@
 {
   "entrypoint": "index.html",
   "shell": "src/components/app-shell/app-shell.js",
+  "fragments": [
+    "src/components/pages/page-not-found.js",
+    "src/components/pages/engagements/engagements-list.js",
+    "src/components/pages/engagements/engagement-tabs.js",
+    "src/components/pages/engagements/engagement-tab-pages/engagement-details.js",
+    "src/components/pages/engagements/engagement-tab-pages/engagement-questionnaires.js",
+    "src/components/pages/page-two.js"
+  ],
   "sources": [
-    "images/**/*"
+    "src/**/*",
+    "images/**/*",
+    "package.json"
   ],
   "extraDependencies": [
     "manifest.json",
+    "push-manifest.json",
     "node_modules/@webcomponents/webcomponentsjs/**",
-    "push-manifest.json"
+    "node_modules/web-animations-js/web-animations-next-lite.min.js",
+    "node_modules/moment/min/moment.min.js"
   ],
+  "lint": {
+    "rules": ["polymer-3"],
+    "ignoreWarnings": ["could-not-resolve-reference", "non-literal-import"]
+  },
   "builds": [
     {
       "name": "esm-bundled",
@@ -30,37 +46,12 @@
     },
     {
       "name": "es6-bundled",
-      "browserCapabilities": [
-        "es2015"
-      ],
-      "js": {
-        "compile": "es2015",
-        "minify": true,
-        "transformModulesToAmd": true
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
+      "preset": "es6-bundled",
       "addServiceWorker": true
     },
     {
       "name": "es5-bundled",
-      "js": {
-        "compile": "es5",
-        "minify": true,
-        "transformModulesToAmd": true
-      },
-      "css": {
-        "minify": true
-      },
-      "html": {
-        "minify": true
-      },
-      "bundle": true,
+      "preset": "es5-bundled",
       "addServiceWorker": true
     }
   ],
