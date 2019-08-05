@@ -25,7 +25,11 @@ class EngagementsList extends PolymerElement {
     // language=HTML
     return html`
       ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
-      <style include="paper-material-styles"></style>
+      <style include="paper-material-styles">
+      .page-content.filters {
+        padding: 8px 24px;        
+      }
+      </style>
 
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
@@ -35,7 +39,7 @@ class EngagementsList extends PolymerElement {
         </div>
       </page-content-header>
       
-      <section class="paper-material page-content" elevation="1">
+      <section class="paper-material page-content filters" elevation="1">
         <etools-filters selected-filters="[[selectedFilters]]" filters="[[filters]]"></etools-filters>
       </section>
       
@@ -96,7 +100,7 @@ class EngagementsList extends PolymerElement {
         filterName: 'Search partner',
         filterKey: 'q',
         type: EtoolsFilterTypes.Search,
-        selectedValue: this.selectedFilters.q,
+        selectedValue: '',
         selected: true
       },
       {
@@ -104,7 +108,7 @@ class EngagementsList extends PolymerElement {
         filterKey: 'partner_type',
         type: EtoolsFilterTypes.DropdownMulti,
         selectionOptions: this.partnerTypes,
-        selectedValue: this.selectedFilters.partner_type,
+        selectedValue: [],
         selected: true,
         minWidth: '350px',
         hideSearch: true,
@@ -115,8 +119,8 @@ class EngagementsList extends PolymerElement {
         filterKey: 'synced',
         type: EtoolsFilterTypes.Dropdown,
         selectionOptions: this.partnerSyncedOpts,
-        selectedValue: this.selectedFilters.synced,
-        selected: true,
+        selectedValue: null,
+        selected: false,
         minWidth: '350px',
         hideSearch: true,
         disabled: this.partnerSyncedOpts.length === 0
@@ -125,15 +129,15 @@ class EngagementsList extends PolymerElement {
         filterName: 'Show hidden',
         filterKey: 'show_hidden',
         type: EtoolsFilterTypes.Toggle,
-        selectedValue: this.selectedFilters.show_hidden,
+        selectedValue: true,
         selected: true
       },
       {
         filterName: 'Created After',
         filterKey: 'created_after',
         type: EtoolsFilterTypes.Date,
-        selectedValue: this.selectedFilters.created_after,
-        selected: true
+        selectedValue: null,
+        selected: false
       }
     ];
   }
