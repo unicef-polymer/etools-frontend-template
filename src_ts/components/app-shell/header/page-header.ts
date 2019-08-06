@@ -6,13 +6,19 @@ import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '../../common/layout/support-btn';
+import './countries-dropdown';
 
 import {connect} from 'pwa-helpers/connect-mixin.js';
-import {store} from '../../../redux/store';
+import {RootState, store} from '../../../redux/store';
 
 import {isProductionServer, isStagingServer} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
 import {property} from '@polymer/decorators/lib/decorators';
+import {EtoolsUserModel} from '../../user/user-model';
+import {fireEvent} from '../../utils/fire-custom-event';
+import {isEmptyObject} from '../../utils/utils';
+import {GenericObject} from '../../../types/globals';
+import {updateCurrentUserData} from '../../user/user-actions';
 
 /**
  * page header element
@@ -92,18 +98,18 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
           </dom-if>
         </div>
         <div class="content-align">
-          <!--<countries-dropdown id="countries" countries="[[countries]]"-->
-                              <!--current-country="[[profile.country]]"></countries-dropdown>-->
+          <countries-dropdown id="countries" countries="[[countries]]"
+                              current-country="[[profile.country]]"></countries-dropdown>
 
           <support-btn></support-btn> 
 
-          <!--<etools-profile-dropdown-->
-              <!--sections="[[allSections]]"-->
-              <!--offices="[[allOffices]]"-->
-              <!--users="[[allUsers]]"-->
-              <!--profile="{{profile}}"-->
-              <!--on-save-profile="_saveProfile"-->
-              <!--on-sign-out="_signOut"></etools-profile-dropdown>-->
+          <etools-profile-dropdown
+              sections="[[allSections]]"
+              offices="[[allOffices]]"
+              users="[[allUsers]]"
+              profile="{{profile}}"
+              on-save-profile="_saveProfile"
+              on-sign-out="_signOut"></etools-profile-dropdown>
 
           <!--<paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>-->
         </div>
@@ -114,6 +120,24 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
   @property({type: Boolean})
   _isStaging: boolean = false;
 
+  @property({type: Object})
+  profile: any | null = null;
+
+  @property({type: Object})
+  profileDropdownData: any | null = null;
+
+  @property({type: Array})
+  offices: any[] = [];
+
+  @property({type: Array})
+  sections: any[] = [];
+
+  @property({type: Array})
+  users: EtoolsUserModel[] = [];
+
+  @property({type: Array})
+  editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
+
   public connectedCallback() {
     super.connectedCallback();
     this._setBgColor();
@@ -121,9 +145,42 @@ class PageHeader extends connect(store)(GestureEventListeners(PolymerElement)) {
   }
 
   // @ts-ignore
-  // public stateChanged(state: RootState) {
-  //   // TODO
-  // }
+  public stateChanged(state: RootState) {
+    // TODO
+    console.log(state);
+    if (state) {
+      this.profile = state.user!.data;
+    }
+  }
+
+  public _saveProfile(e: any) {
+    const modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
+    this.saveProfile(modifiedFields);
+  }
+
+  public saveProfile(profile: any) {
+    if (isEmptyObject(profile)) {
+      // empty profile means no changes found
+      fireEvent(this, 'toast', {
+        text: 'All changes are saved.',
+        showCloseBtn: false
+      });
+      return;
+    }
+
+    updateCurrentUserData(profile);
+  }
+
+  protected _getModifiedFields(originalData: any, newData: any) {
+    const modifiedFields: GenericObject = {};
+    this.editableFields.forEach(function(field: any) {
+      if (originalData[field] !== newData[field]) {
+        modifiedFields[field] = newData[field];
+      }
+    });
+
+    return modifiedFields;
+  }
 
   public menuBtnClicked() {
     store.dispatch(updateDrawerState(true));
