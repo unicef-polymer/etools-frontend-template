@@ -100,7 +100,7 @@ export class EtoolsFilters extends LitElement {
           .options="${f.selectionOptions}"
           .optionValue="${f.optionValue ? f.optionValue : 'value'}"
           .optionLabel="${f.optionLabel ? f.optionLabel : 'label'}"
-          .selectedValues="${f.selectedValue}"
+          .selectedValues="${[...f.selectedValue]}"
           trigger-value-change-event
           @etools-selected-items-changed="${this.filterMultiSelectionChange}"
           data-filter-key="${f.filterKey}"
@@ -242,8 +242,8 @@ export class EtoolsFilters extends LitElement {
     if (isSelected) {
       filterOption.selectedValue = this.getFilterEmptyValue(filterOption.type);
     }
-    // repaint
-    this.requestUpdate();
+    // repaint&fire change event
+    this.requestUpdate().then(() => this.fireFiltersChangeEvent());
   }
 
   // get filter empty value by type
@@ -286,7 +286,6 @@ export class EtoolsFilters extends LitElement {
     if (filterOption.selectedValue === e.detail.value) {
       return;
     }
-    console.log(filterOption.selectedValue, e.detail.value);
     filterOption.selectedValue = e.detail.value;
     this.requestUpdate().then(() => this.fireFiltersChangeEvent());
   }
@@ -301,10 +300,13 @@ export class EtoolsFilters extends LitElement {
   filterMultiSelectionChange(e: CustomEvent) {
     const filterEl = e.currentTarget as HTMLElement;
     const filterOption: EtoolsFilter = this.getFilterOption(filterEl);
-
-    filterOption.selectedValue = e.detail.selectedItems.length > 0
+    const currentSelectedVal = e.detail.selectedItems.length > 0
       ? e.detail.selectedItems.map((optionObj: any) => optionObj[(filterEl as any).optionValue])
       : [];
+    if (JSON.stringify(currentSelectedVal) === JSON.stringify(filterOption.selectedValue)) {
+      return;
+    }
+    filterOption.selectedValue = currentSelectedVal;
     this.requestUpdate().then(() => this.fireFiltersChangeEvent());
   }
 
