@@ -40,7 +40,8 @@ class EngagementsList extends PolymerElement {
       </page-content-header>
       
       <section class="paper-material page-content filters" elevation="1">
-        <etools-filters selected-filters="[[selectedFilters]]" filters="[[filters]]"></etools-filters>
+        <etools-filters filters="[[filters]]"
+                        on-filter-change="filtersChange"></etools-filters>
       </section>
       
       <section class="paper-material page-content" elevation="1">
@@ -140,6 +141,12 @@ class EngagementsList extends PolymerElement {
         selected: false
       }
     ];
+  }
+
+  filtersChange(e: CustomEvent) {
+    console.log('filters change event handling...', e.detail);
+    this.selectedFilters = {...this.selectedFilters, ...e.detail};
+    // DO filter stuff here
   }
 }
 

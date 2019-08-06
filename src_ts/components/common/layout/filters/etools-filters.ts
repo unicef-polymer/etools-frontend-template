@@ -44,6 +44,8 @@ export class EtoolsFilters extends LitElement {
   @property({type: Object})
   filters: EtoolsFilter[] = [];
 
+  private lastSelectedValues: any = null;
+
   static get styles() {
     return [etoolsFiltersStyles];
   }
@@ -276,8 +278,15 @@ export class EtoolsFilters extends LitElement {
   }
 
   textInputChange(e: CustomEvent) {
+    if (!e.detail) {
+      return;
+    }
     const filterEl = e.currentTarget as HTMLElement;
     const filterOption: EtoolsFilter = this.getFilterOption(filterEl);
+    if (filterOption.selectedValue === e.detail.value) {
+      return;
+    }
+    console.log(filterOption.selectedValue, e.detail.value);
     filterOption.selectedValue = e.detail.value;
     this.requestUpdate().then(() => this.fireFiltersChangeEvent());
   }
@@ -307,8 +316,14 @@ export class EtoolsFilters extends LitElement {
   }
 
   filterToggleChange(e: CustomEvent) {
+    if (!e.detail) {
+      return;
+    }
     const filterEl = e.currentTarget as HTMLElement;
     const filterOption: EtoolsFilter = this.getFilterOption(filterEl);
+    if (filterOption.selectedValue === (filterEl as any).checked) {
+      return;
+    }
     filterOption.selectedValue = (filterEl as any).checked; // get toggle btn value
     this.requestUpdate().then(() => this.fireFiltersChangeEvent());
   }
@@ -331,22 +346,32 @@ export class EtoolsFilters extends LitElement {
       }
     });
     this.requestUpdate();
+    this.lastSelectedValues = {...this.getSelectedFilterValues(), ...filterValues};
   }
 
   // fire change custom event to notify parent that filters were updated
   fireFiltersChangeEvent() {
-    this.dispatchEvent(new CustomEvent('change', {
-      detail: this.getSelectedFilterValues(),
+    const selectedValues = this.getSelectedFilterValues();
+    if (JSON.stringify(this.lastSelectedValues) === JSON.stringify(selectedValues)) {
+      return;
+    }
+    this.lastSelectedValues = {...selectedValues};
+
+    this.dispatchEvent(new CustomEvent('filter-change', {
+      detail: selectedValues,
       bubbles: true,
       composed: true
     }));
   }
 
+  // build and return and object based on filterKey and selectedValue
   getSelectedFilterValues() {
-    const selectedFilters: EtoolsFilter[] = this.filters.filter((f: EtoolsFilter) => f.selected);
-    // const selectedValues = {};
-
-
+    const selectedFilters: any = {};
+    this.filters
+      .forEach((f: EtoolsFilter) => {
+        selectedFilters[f.filterKey] = f.selectedValue;
+      });
+    return selectedFilters;
   }
 
 }
