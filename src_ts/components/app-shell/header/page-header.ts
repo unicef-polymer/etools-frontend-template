@@ -2,20 +2,23 @@ import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
+import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+import {customElement, LitElement, html, property} from 'lit-element';
+
 import '../../common/layout/support-btn';
 import './countries-dropdown';
 
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {RootState, store} from '../../../redux/store';
-
 import {isProductionServer, isStagingServer, ROOT_PATH} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
 import {EtoolsUserModel} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
 import {isEmptyObject} from '../../utils/utils';
-import {GenericObject} from '../../../types/globals';
 import {updateCurrentUserData} from '../../user/user-actions';
-import {customElement, LitElement, html, property} from 'lit-element';
+import {GenericObject} from '../../../types/globals';
+import {pageHeaderStyles} from './page-header-styles';
+
 /**
  * page header element
  * @LitElement
@@ -27,58 +30,11 @@ export class PageHeader extends connect(store)(LitElement) {
   public render() {
     // main template
     // language=HTML
-    return html`        
+    return html`  
+      ${pageHeaderStyles}      
       <style>
         app-toolbar {
-          padding: 0 16px 0 0;
-          height: 60px;
           background-color: ${this.headerColor};
-        }
-
-        .titlebar {
-          color: var(--header-color);
-        }
-
-        #menuButton {
-          display: block;
-          color: var(--header-color);
-        }
-
-        support-btn{
-          color: var(--header-color);
-        }
-
-        .titlebar {
-          @apply --layout-flex;
-          font-size: 28px;
-          font-weight: 300;
-        }
-
-        .titlebar img {
-          width: 34px;
-          margin: 0 8px 0 24px;
-        }
-
-        .content-align {
-          @apply --layout-horizontal;
-          @apply --layout-center;
-        }
-
-        #app-logo {
-          height: 32px;
-          width: auto;
-        }
-
-        .envWarning {
-          color: var(--nonprod-text-warn-color);
-          font-weight: 700;
-          font-size: 18px;
-        }
-
-        @media (min-width: 850px) {
-          #menuButton {
-            display: none;
-          }
         }
       </style>
       
@@ -90,20 +46,19 @@ export class PageHeader extends connect(store)(LitElement) {
           ${this.isStaging ? html`<div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>` : ''}
         </div>
         <div class="content-align">
-          <countries-dropdown id="countries" countries="[[countries]]"
-                              current-country="[[profile.country]]"></countries-dropdown>
+          <countries-dropdown></countries-dropdown>
 
           <support-btn></support-btn> 
 
           <etools-profile-dropdown
-              sections="[[allSections]]"
-              offices="[[allOffices]]"
-              users="[[allUsers]]"
-              profile="{{profile}}"
-              on-save-profile="_saveProfile"
-              on-sign-out="_signOut"></etools-profile-dropdown>
+              .sections="${this.profileDrSections}"
+              .offices="${this.profileDrOffices}"
+              .users="${this.profileDrUsers}"
+              .profile="${ this.profile ? {...this.profile} : {} }"
+              @save-profile="${this.handleSaveProfile}"
+              @sign-out="${this._signOut}">
+          </etools-profile-dropdown>
 
-          <!--<paper-icon-button id="refresh" icon="refresh" on-tap="_openDataRefreshDialog"></paper-icon-button>-->
         </div>
       </app-toolbar>
     `;
@@ -119,7 +74,7 @@ export class PageHeader extends connect(store)(LitElement) {
   public headerColor: string = 'var(--header-bg-color)';
 
   @property({type: Object})
-  profile: any | null = null;
+  profile!: EtoolsUserModel;
 
   @property({type: Object})
   profileDropdownData: any | null = null;
@@ -131,7 +86,16 @@ export class PageHeader extends connect(store)(LitElement) {
   sections: any[] = [];
 
   @property({type: Array})
-  users: EtoolsUserModel[] = [];
+  users: any[] = [];
+
+  @property({type: Array})
+  profileDrOffices: any[] = [];
+
+  @property({type: Array})
+  profileDrSections: any[] = [];
+
+  @property({type: Array})
+  profileDrUsers: any[] = [];
 
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
@@ -142,31 +106,41 @@ export class PageHeader extends connect(store)(LitElement) {
     this.isStaging = isStagingServer();
   }
 
-  // @ts-ignore
   public stateChanged(state: RootState) {
-    // TODO
-    console.log(state);
     if (state) {
-      this.profile = state.user!.data;
+      this.profile = state.user!.data as EtoolsUserModel;
     }
   }
 
-  public _saveProfile(e: any) {
+  public handleSaveProfile(e: any) {
     const modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
-    this.saveProfile(modifiedFields);
-  }
-
-  public saveProfile(profile: any) {
-    if (isEmptyObject(profile)) {
+    if (isEmptyObject(modifiedFields)) {
       // empty profile means no changes found
-      fireEvent(this, 'toast', {
-        text: 'All changes are saved.',
-        showCloseBtn: false
-      });
+      this.showSaveNotification();
       return;
     }
+    this.profileSaveLoadingMsgDisplay();
+    updateCurrentUserData(modifiedFields).then(() => {
+      this.showSaveNotification();
+    }).catch(() => {
+      this.showSaveNotification('Profile data not saved. Save profile error!');
+    }).then(() => {
+      this.profileSaveLoadingMsgDisplay(false);
+    });
+  }
 
-    updateCurrentUserData(profile);
+  protected profileSaveLoadingMsgDisplay(show: boolean = true) {
+    fireEvent(this, 'global-loading', {
+      active: show,
+      loadingSource: 'profile-save'
+    });
+  }
+
+  protected showSaveNotification(msg?: string) {
+    fireEvent(this, 'toast', {
+      text: msg ? msg : 'All changes are saved.',
+      showCloseBtn: false
+    });
   }
 
   protected _getModifiedFields(originalData: any, newData: any) {
@@ -190,5 +164,20 @@ export class PageHeader extends connect(store)(LitElement) {
     if (!isProductionServer()) {
       this.headerColor = 'var(--nonprod-header-color)';
     }
+  }
+
+  protected _signOut() {
+    // this._clearDexieDbs();
+    this.clearLocalStorage();
+    window.location.href = window.location.origin + '/logout';
+  }
+
+  // TODO
+  // protected _clearDexieDbs() {
+  //   window.EtoolsPmpApp.DexieDb.delete();
+  // }
+
+  protected clearLocalStorage() {
+    localStorage.clear();
   }
 }

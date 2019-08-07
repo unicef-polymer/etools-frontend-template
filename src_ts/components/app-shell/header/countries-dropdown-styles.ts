@@ -1,45 +1,45 @@
-import {html} from '@polymer/polymer/polymer-element.js';
+import {html} from 'lit-element';
 
-export const CountriesDropdownStyles = html`
+// language=HTML
+export const countriesDropdownStyles = html`
+  <style>
 
-<style>
-    
     *[hidden] {
       display: none !important;
     }
-    
+
     :host {
       display: block;
     }
-    
+
     :host(:hover) {
       cursor: pointer;
     }
-    
+
     etools-dropdown {
       width: 160px;
-    
+
       --paper-listbox: {
         max-height: 600px;
       };
-    
+
       --esmm-icons: {
         color: var(--header-color);
         cursor: pointer;
       };
-    
+
       --paper-input-container-underline: {
         display: none;
       };
-    
+
       --paper-input-container-underline-focus: {
         display: none;
       };
-    
+
       --paper-input-container-underline-disabled: {
         display: none;
       };
-    
+
       --paper-input-container-input: {
         color: var(--header-color);
         cursor: pointer;
@@ -47,11 +47,11 @@ export const CountriesDropdownStyles = html`
         text-align: right;
         line-height: 21px; /* for IE */
       };
-    
+
       --paper-menu-button-dropdown: {
         max-height: 380px;
       };
     }
-</style>
+  </style>
 
 `;
