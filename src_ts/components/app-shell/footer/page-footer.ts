@@ -1,14 +1,16 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
+import {LitElement, html, customElement, property} from 'lit-element';
+import {ROOT_PATH} from '../../../config/config';
 
 /**
  * page footer element
- * @polymer
+ * @LitElement
  * @customElement
  */
-class PageFooter extends PolymerElement {
+@customElement('page-footer')
+export class PageFooter extends LitElement {
 
-  public static get template() {
+  public render() {
     // main template
     // language=HTML
     return html`
@@ -58,7 +60,7 @@ class PageFooter extends PolymerElement {
       <footer>
         <div id="footer-content">
         <span id="unicef-logo">
-          <img src$="[[rootPath]]images/UNICEF_logo.png" alt="UNICEF logo">
+          <img src="${this.rootPath}images/UNICEF_logo.png" alt="UNICEF logo">
         </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>
@@ -69,6 +71,7 @@ class PageFooter extends PolymerElement {
     `;
   }
 
-}
+  @property({type: String})
+  rootPath: string = ROOT_PATH;
 
-window.customElements.define('page-footer', PageFooter);
+}
