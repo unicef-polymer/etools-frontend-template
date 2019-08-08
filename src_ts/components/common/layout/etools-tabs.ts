@@ -9,12 +9,11 @@ import {PaperTabsElement} from '@polymer/paper-tabs';
 
 import {property} from '@polymer/decorators';
 
-
 /**
  * @polymer
  * @customElement
  */
-class EtoolsTabs extends PolymerElement {
+export class EtoolsTabs extends PolymerElement {
 
   public static get template() {
     // main template

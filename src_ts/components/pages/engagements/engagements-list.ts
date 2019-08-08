@@ -1,36 +1,35 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element';
-import '@polymer/paper-styles/element-styles/paper-material-styles';
 import '@polymer/paper-button/paper-button';
+import {LitElement, html, property, customElement} from 'lit-element';
 
 import {SharedStyles} from '../../styles/shared-styles';
 import '../../common/layout/page-content-header/page-content-header';
-import {property} from '@polymer/decorators';
 import {pageContentHeaderSlottedStyles} from
   '../../common/layout/page-content-header/page-content-header-slotted-styles';
+
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 
 import {GenericObject} from '../../../types/globals';
-
 import '../../common/layout/filters/etools-filters';
 import {EtoolsFilter, EtoolsFilterTypes} from '../../common/layout/filters/etools-filters';
+import {ROOT_PATH} from '../../../config/config';
+import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-class EngagementsList extends PolymerElement {
+@customElement('engagements-list')
+export class EngagementsList extends LitElement {
 
-  public static get template() {
+  static get styles() {
+    return [elevationStyles];
+  }
+
+  public render() {
     // main template
     // language=HTML
     return html`
       ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
-      <style include="paper-material-styles">
-      .page-content.filters {
-        padding: 8px 24px;        
-      }
-      </style>
-
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
 
@@ -39,17 +38,20 @@ class EngagementsList extends PolymerElement {
         </div>
       </page-content-header>
       
-      <section class="paper-material page-content filters" elevation="1">
-        <etools-filters filters="[[filters]]"
-                        on-filter-change="filtersChange"></etools-filters>
+      <section class="elevation page-content filters" elevation="1">
+        <etools-filters .filters="${this.filters}"
+                        @filter-change="${this.filtersChange}"></etools-filters>
       </section>
       
-      <section class="paper-material page-content" elevation="1">
+      <section class="elevation page-content" elevation="1">
         Engagements list will go here.... TODO<br>
-        <a href$="[[rootPath]]engagements/23/details">Go to engagement details pages :)</a>
+        <a href="${this.rootPath}engagements/23/details">Go to engagement details pages :)</a>
       </section>
     `;
   }
+
+  @property({type: String})
+  rootPath: string = ROOT_PATH;
 
   @property({type: Array})
   listData: GenericObject[] = [];
@@ -149,5 +151,3 @@ class EngagementsList extends PolymerElement {
     // DO filter stuff here
   }
 }
-
-window.customElements.define('engagements-list', EngagementsList);
