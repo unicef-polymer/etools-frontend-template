@@ -1,20 +1,24 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/paper-styles/element-styles/paper-material-styles.js';
-
 import {SharedStyles} from '../styles/shared-styles.js';
+import {customElement, LitElement, html} from 'lit-element';
+import {elevationStyles} from '../styles/lit-styles/elevation-styles';
+import {pageLayoutStyles} from '../styles/page-layout-styles';
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-class PageTwo extends PolymerElement {
+@customElement('page-two')
+export class PageTwo extends LitElement {
 
-  public static get template() {
+  static get styles() {
+    return [elevationStyles];
+  }
+
+  public render() {
     // main template
     // language=HTML
     return html`
-      <style include="paper-material-styles"></style>
-      ${SharedStyles}
-      <section class="paper-material" elevation="1">
+      ${SharedStyles} ${pageLayoutStyles}
+      <section class="elevation page-content" elevation="1">
         <h1>Page2</h1>
         <p>
         Contrary to popular belief, Lorem Ipsum is not simply random text. It has roots in a piece of classical 
@@ -36,5 +40,3 @@ class PageTwo extends PolymerElement {
   }
 
 }
-
-window.customElements.define('page-two', PageTwo);
