@@ -14,7 +14,7 @@ import {isProductionServer, isStagingServer, ROOT_PATH} from '../../../config/co
 import {updateDrawerState} from '../../../redux/actions/app';
 import {EtoolsUserModel} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {isEmptyObject} from '../../utils/utils';
+import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUserData} from '../../user/user-actions';
 import {GenericObject} from '../../../types/globals';
 import {pageHeaderStyles} from './page-header-styles';
@@ -114,7 +114,7 @@ export class PageHeader extends connect(store)(LitElement) {
 
   public handleSaveProfile(e: any) {
     const modifiedFields = this._getModifiedFields(this.profile, e.detail.profile);
-    if (isEmptyObject(modifiedFields)) {
+    if (isEmpty(modifiedFields)) {
       // empty profile means no changes found
       this.showSaveNotification();
       return;
