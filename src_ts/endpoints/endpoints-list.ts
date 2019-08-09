@@ -11,7 +11,10 @@ export interface EtoolsEndpoints {
 
 export const etoolsEndpoints: EtoolsEndpoints = {
   userProfile: {
-    url: 'http://localhost:8082/api/v3/users/profile/'
+    url: '/api/v3/users/profile/'
+  },
+  changeCountry: {
+    url: '/api/v3/users/changecountry/'
   }
   // agreements: {
   //   template: '/api/v2/agreements/',
@@ -19,4 +22,3 @@ export const etoolsEndpoints: EtoolsEndpoints = {
   //   cacheTableName: 'agreements'
   // },
 };
-
