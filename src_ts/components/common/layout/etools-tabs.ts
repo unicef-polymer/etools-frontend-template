@@ -9,12 +9,11 @@ import {PaperTabsElement} from '@polymer/paper-tabs';
 
 import {property} from '@polymer/decorators';
 
-
 /**
  * @polymer
  * @customElement
  */
-class EtoolsTabs extends PolymerElement {
+export class EtoolsTabs extends PolymerElement {
 
   public static get template() {
     // main template
@@ -31,7 +30,7 @@ class EtoolsTabs extends PolymerElement {
         }
 
         :host([border-bottom]) {
-          border-bottom: 1px solid var(--darker-divider-color);
+          border-bottom: 1px solid var(--dark-divider-color);
         }
 
         paper-tabs {

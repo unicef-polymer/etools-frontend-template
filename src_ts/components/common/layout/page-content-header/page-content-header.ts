@@ -1,17 +1,14 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
 import '@polymer/iron-flex-layout/iron-flex-layout.js';
-import {property} from '@polymer/decorators';
+import {LitElement, html, property, customElement} from 'lit-element';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-class PageContentHeader extends PolymerElement {
-  static get is() {
-    return 'page-content-header';
-  }
+@customElement('page-content-header')
+export class PageContentHeader extends LitElement {
 
-  static get template() {
+  render() {
     // language=HTML
     return html`
       <style>
@@ -27,8 +24,8 @@ class PageContentHeader extends PolymerElement {
           background-color: var(--primary-background-color);
           padding: 0 24px;
           min-height: 85px;
-          border-bottom: 1px solid var(--darker-divider-color);
-          
+          border-bottom: 1px solid var(--dark-divider-color);
+
           --page-title: {
             margin: 0;
             font-weight: normal;
@@ -91,9 +88,7 @@ class PageContentHeader extends PolymerElement {
     `;
   }
 
-  @property({type: Boolean, reflectToAttribute: true})
+  @property({type: Boolean, reflect: true})
   withTabsVisible: boolean = false;
 
 }
-
-window.customElements.define(PageContentHeader.is, PageContentHeader);

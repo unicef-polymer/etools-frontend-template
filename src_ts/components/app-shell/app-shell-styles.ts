@@ -1,6 +1,5 @@
-import {html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
-
+import {html} from 'lit-element';
+import '@polymer/iron-flex-layout/iron-flex-layout';
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
 
 export const AppShellStyles = html`
