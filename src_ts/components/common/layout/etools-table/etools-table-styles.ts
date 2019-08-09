@@ -1,4 +1,5 @@
-import {html} from "@polymer/polymer/polymer-element";
+import '@polymer/iron-flex-layout/iron-flex-layout';
+import {html} from 'lit-element';
 
 // language=HTML
 export const etoolsTableStyles = html`
@@ -25,6 +26,10 @@ export const etoolsTableStyles = html`
       display: table-cell;
       text-align: left;
     }
+    
+    table th {
+      font-size: var(--etools-table-col-header-font-size, 12px);
+    }
 
     table td.right-align, table th.right-align {
       text-align: right;
@@ -32,6 +37,14 @@ export const etoolsTableStyles = html`
 
     table td {
       border-top: 1px solid var(--etools-table-rows-border-color, #dee2e6);
+      font-size: var(--etools-table-col-font-size, 13px);
+    }
+    
+    table td a {
+      color: var(--primary-color);
+      text-decoration: none;
+      font-weight: 500;
+      outline: none;
     }
 
     table th {
@@ -59,6 +72,44 @@ export const etoolsTableStyles = html`
       font-size: 20px;
       text-align: left;
       color: var(--etools-table-text-color, #2b2b2b);
+      padding: 0 var(--etools-table-side-padding, 24px);
+    }
+    
+    table tr th:first-child,
+    table tr td:first-child {
+      padding-left: var(--etools-table-side-padding, 24px);
+    }
+
+    table tr th:last-of-type,
+    table tr td:last-of-type {
+      padding-right: var(--etools-table-side-padding, 24px);
+    }
+    
+    table tr td.pagination {
+      padding-right: 16px;
+    }
+    
+    /* action styles */
+    .row-actions {
+      position: relative;
+      min-width: 100px;
+    }
+    
+    .row-actions .actions {
+      position: absolute;
+      right: var(--etools-table-side-padding, 16px);
+      top: 0;
+      bottom: 0;
+      @apply --layout-horizontal;
+      @apply --layout-center;
+      @apply --layout-end-justified;
+      background: transparent;
+    }
+    
+    .row-actions paper-icon-button {
+      color: var(--dark-icon-color, #6f6f70);
+      --iron-icon-width: 16px;
+      --iron-icon-height: 16px;
     }
   </style>
 `;

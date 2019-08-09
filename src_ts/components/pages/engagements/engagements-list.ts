@@ -19,6 +19,7 @@ import {
   EtoolsTableColumnSort,
   EtoolsTableColumnType
 } from '../../common/layout/etools-table/etools-table';
+import {EtoolsPaginator, getPaginator} from "../../common/layout/etools-table/paginator";
 
 /**
  * @LitElement
@@ -36,6 +37,11 @@ export class EngagementsList extends LitElement {
     // language=HTML
     return html`
       ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
+      <style>
+        etools-table {
+          /*--etools-table-side-padding: 0;*/
+        }
+      </style>
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
 
@@ -54,10 +60,16 @@ export class EngagementsList extends LitElement {
         <a href="${this.rootPath}engagements/23/details">Go to engagement details pages :)</a>
       </section>
       
-      <section class="elevation page-content">
-        <etools-table .caption="Engagements list - optional table title" 
-                      .columns="${this.listColumns}" 
-                      .items="${this.listData}"></etools-table>
+      <section class="elevation page-content no-padding" elevation="1">
+        <etools-table caption="Engagements list - optional table title"
+                      .columns="${this.listColumns}"
+                      .items="${this.listData}" 
+                      showedit showdelete
+                      @edit-item="${this.editItem}"
+                      @delete-item="${this.deleteItem}"
+                      .paginator="${this.paginator}"
+                      @page-change="${this.pageChange}" 
+                      @page-size-change="${this.pageSizeChanged}"></etools-table>
       </section>
     `;
   }
@@ -65,11 +77,15 @@ export class EngagementsList extends LitElement {
   @property({type: String})
   rootPath: string = ROOT_PATH;
 
+  @property({type: Object})
+  paginator!: EtoolsPaginator;
+
   @property({type: Array})
   listColumns: EtoolsTableColumn[] = [
     {
       label: 'Reference No.',
       name: 'ref_number',
+      link_tmpl: `${ROOT_PATH}engagements/:id/details`,
       type: EtoolsTableColumnType.Link
     },
     {
@@ -227,11 +243,31 @@ export class EngagementsList extends LitElement {
         selected: false
       }
     ];
+
+    this.paginator = getPaginator({count: this.listData.length});
   }
 
   filtersChange(e: CustomEvent) {
     console.log('filters change event handling...', e.detail);
     this.selectedFilters = {...this.selectedFilters, ...e.detail};
     // DO filter stuff here
+  }
+
+  editItem(e: CustomEvent) {
+    console.log('edit item: ', e.detail);
+  }
+
+  deleteItem(e: CustomEvent) {
+    console.log('delete item: ', e.detail);
+  }
+
+  pageChange(e: CustomEvent) {
+    console.log('page change: ', e.detail.page);
+    this.paginator = {...this.paginator, page: e.detail.page};
+  }
+
+  pageSizeChanged(e: CustomEvent) {
+    console.log('page size change: ', e.detail.size);
+    this.paginator = {...this.paginator, page_size: e.detail.size};
   }
 }
