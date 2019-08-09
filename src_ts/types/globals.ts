@@ -9,3 +9,11 @@ export type Constructor<T> = new(...args: any[]) => T;
 export interface GenericObject {
   [key: string]: any;
 }
+
+export interface UnicefUser {
+  first_name: string;
+  last_name: string;
+  middle_name: string;
+  name: string;
+  email: string;
+}
