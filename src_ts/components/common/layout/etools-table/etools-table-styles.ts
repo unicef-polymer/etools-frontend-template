@@ -17,7 +17,7 @@ export const etoolsTableStyles = html`
       box-sizing: border-box;
       display: table;
       border-spacing: 2px;
-      border-color: grey;
+      border-color: var(--dark-divider-color, gray);
     }
 
     table td, table th {
@@ -109,8 +109,6 @@ export const etoolsTableStyles = html`
     
     .row-actions paper-icon-button {
       color: var(--dark-icon-color, #6f6f70);
-      --iron-icon-width: 16px;
-      --iron-icon-height: 16px;
     }
   </style>
 `;
