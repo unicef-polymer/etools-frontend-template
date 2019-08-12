@@ -19,7 +19,12 @@ import {
   EtoolsTableColumnSort,
   EtoolsTableColumnType
 } from '../../common/layout/etools-table/etools-table';
-import {EtoolsPaginator, getPaginator} from "../../common/layout/etools-table/paginator";
+import {EtoolsPaginator, getPaginator} from '../../common/layout/etools-table/pagination/paginator';
+import {
+  EtoolsTableSortItem,
+  getSortFields,
+  getUrlQueryStringSort
+} from '../../common/layout/etools-table/etools-table-utility';
 
 /**
  * @LitElement
@@ -68,7 +73,8 @@ export class EngagementsList extends LitElement {
                       @edit-item="${this.editItem}"
                       @delete-item="${this.deleteItem}"
                       .paginator="${this.paginator}"
-                      @paginator-change="${this.paginatorChange}"></etools-table>
+                      @paginator-change="${this.paginatorChange}"
+                      @sort-change="${this.sortChange}"></etools-table>
       </section>
     `;
   }
@@ -78,6 +84,9 @@ export class EngagementsList extends LitElement {
 
   @property({type: Object})
   paginator!: EtoolsPaginator;
+
+  @property({type: Object})
+  sort: EtoolsTableSortItem[] = [];
 
   @property({type: Array})
   listColumns: EtoolsTableColumn[] = [
@@ -121,39 +130,19 @@ export class EngagementsList extends LitElement {
     }
   ];
 
+  listDataModel: any = {
+    id: 1,
+    ref_number: '2019/11',
+    assessment_date: '2019-08-01',
+    partner_name: 'Partner name',
+    status: 'Assigned',
+    assessor: 'John Doe',
+    rating: 'Low',
+    rating_points: 23
+  };
+
   @property({type: Array})
-  listData: GenericObject[] = [
-    {
-      id: 1,
-      ref_number: '2019/11',
-      assessment_date: '2019-08-01',
-      partner_name: 'Partner name 1',
-      status: 'Assigned',
-      assessor: 'John Doe',
-      rating: 'Low',
-      rating_points: 23
-    },
-    {
-      id: 2,
-      ref_number: '2019/12',
-      assessment_date: '2019-08-02',
-      partner_name: 'Partner name 2',
-      status: 'Final',
-      assessor: 'Jane Doe',
-      rating: 'Medium',
-      rating_points: 50
-    },
-    {
-      id: 3,
-      ref_number: '2019/13',
-      assessment_date: '2019-08-03',
-      partner_name: 'Partner name 3',
-      status: 'Rejected',
-      assessor: 'David Lham',
-      rating: 'Low',
-      rating_points: 100
-    }
-  ];
+  listData: GenericObject[] = [];
 
   @property({type: Array})
   partnerTypes: any[] = [
@@ -245,8 +234,11 @@ export class EngagementsList extends LitElement {
 
     let i = 0;
     const data = [];
-    while (i < 100) {
-      data.push(this.listData[0]);
+    while (i < 10) {
+      const item = {...this.listDataModel};
+      item.id = item.id + i;
+      item.partner_name = item.partner_name + i + 1;
+      data.push(item);
       i++;
     }
 
@@ -273,5 +265,23 @@ export class EngagementsList extends LitElement {
     const newPaginator: EtoolsPaginator = {...e.detail};
     // TODO: prepare pagination data for a new page data request => then update data and paginator
     console.log('paginator change: ', newPaginator);
+    this.updateListData(newPaginator);
+  }
+
+  sortChange(e: CustomEvent) {
+    console.log('sorting has changed...', e.detail);
+    this.sort = getSortFields(e.detail);
+    this.updateListData();
+  }
+
+  updateListData(newPaginatorData?: EtoolsPaginator) {
+    const qs = getUrlQueryStringSort(this.sort);
+    console.log('update url params: ', qs);
+    // TODO: update url params, use routeDetails.path and router navigation method
+
+    // TODO: fire request to get data, update paginator object to trigger pagination element update
+    if (newPaginatorData) {
+      this.paginator = newPaginatorData;
+    }
   }
 }

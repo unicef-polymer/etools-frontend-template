@@ -6,8 +6,8 @@ import {etoolsTableStyles} from './etools-table-styles';
 import {GenericObject} from '../../../../types/globals';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {prettyDate} from '../../../utils/date-utility';
-import {EtoolsPaginator} from './paginator';
-import './etools-pagination';
+import {EtoolsPaginator} from './pagination/paginator';
+import './pagination/etools-pagination';
 
 export enum EtoolsTableColumnType {
   Text,
@@ -17,8 +17,8 @@ export enum EtoolsTableColumnType {
 }
 
 export enum EtoolsTableColumnSort {
-  Asc,
-  Desc
+  Asc = 'asc',
+  Desc = 'desc'
 }
 
 export interface EtoolsTableColumn {
@@ -54,14 +54,7 @@ export class EtoolsTable extends LitElement {
         <caption ?hidden="${this.showCaption(this.caption)}">${this.caption}</caption>
         <thead>
           <tr>
-            ${this.columns.map((column: EtoolsTableColumn) => html`
-              <th class="${this.getColumnClassList(column)}">
-                ${column.label}
-                ${this.columnHasSort(column.sort) ? html`<iron-icon 
-                    .icon="${this.getSortIcon(column.sort as EtoolsTableColumnSort)}">
-                  </iron-icon>` : ''}
-              </th>
-            `)}
+            ${this.columns.map((column: EtoolsTableColumn) => this.getColumnHtml(column))}
             ${this.showRowActions() ? html`<th></th>` : ''}
           </tr>
         </thead>
@@ -73,15 +66,36 @@ export class EtoolsTable extends LitElement {
     `;
   }
 
+  getColumnHtml(column: EtoolsTableColumn) {
+    if (!this.columnHasSort(column.sort)) {
+      return html`
+        <th class="${this.getColumnClassList(column)}">${column.label}</th>
+      `;
+    } else {
+      return this.getColumnHtmlWithSort(column);
+    }
+  }
+
+  getColumnHtmlWithSort(column: EtoolsTableColumn) {
+    return html`
+      <th class="${this.getColumnClassList(column)}" @tap="${() => this.toggleAndSortBy(column)}">
+        ${column.label}
+        ${this.columnHasSort(column.sort) ? html`<iron-icon
+            .icon="${this.getSortIcon(column.sort as EtoolsTableColumnSort)}">
+          </iron-icon>` : ''}
+      </th>
+    `;
+  }
+
   getLinkTmpl(pathTmpl: string | undefined, item: any, key: string) {
     if (!pathTmpl) {
       throw new Error(`[EtoolsTable.getLinkTmpl]: column "${item[key]}" has no link tmpl defined`);
     }
     const path = pathTmpl.split('/');
-    path.forEach((p: string) => {
-      if (p.slice(0) === ':') {
+    path.forEach((p: string, index: number) => {
+      if (p.slice(0, 1) === ':') {
         const param = p.slice(1);
-        p = item[param];
+        path[index] = item[param];
       }
     });
     const aHref = path.join('/');
@@ -106,7 +120,7 @@ export class EtoolsTable extends LitElement {
       <div class="actions">
         <paper-icon-button ?hidden="${!this.showEdit}"
           icon="create" @tap="${() => this.triggerAction(EtoolsTableActionType.Edit, item)}"></paper-icon-button>
-        <paper-icon-button ?hidden="${!this.showDelete}" 
+        <paper-icon-button ?hidden="${!this.showDelete}"
           icon="delete" @tap="${() => this.triggerAction(EtoolsTableActionType.Delete, item)}"></paper-icon-button>
       </div>
     `;
@@ -220,6 +234,18 @@ export class EtoolsTable extends LitElement {
         fireEvent(this, 'delete-item', item);
         break;
     }
+  }
+
+  toggleAndSortBy(column: EtoolsTableColumn) {
+    if (column.sort === undefined) {
+      return;
+    }
+    column.sort = this.toggleColumnSort(column.sort);
+    fireEvent(this, 'sort-change', {...this.columns});
+  }
+
+  toggleColumnSort(sort: EtoolsTableColumnSort): EtoolsTableColumnSort {
+    return sort === EtoolsTableColumnSort.Asc ? EtoolsTableColumnSort.Desc : EtoolsTableColumnSort.Asc;
   }
 
 }

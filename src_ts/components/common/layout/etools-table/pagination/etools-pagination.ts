@@ -5,7 +5,7 @@ import '@polymer/paper-item/paper-item';
 import {customElement, LitElement, html, property} from 'lit-element';
 import {etoolsPaginationStyles} from './etools-pagination-style';
 import {EtoolsPaginator} from './paginator';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {fireEvent} from '../../../../utils/fire-custom-event';
 
 /**
  * TODO: add some page btns between page navigation controls
@@ -92,6 +92,5 @@ export class EtoolsPagination extends LitElement {
   firePaginatorChangeEvent(paginatorData: any) {
     fireEvent(this, 'paginator-change', {...this.paginator, ...paginatorData});
   }
-
 
 }
