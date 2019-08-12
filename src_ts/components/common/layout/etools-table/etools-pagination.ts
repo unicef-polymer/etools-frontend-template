@@ -8,6 +8,7 @@ import {EtoolsPaginator} from './paginator';
 import {fireEvent} from '../../../utils/fire-custom-event';
 
 /**
+ * TODO: add some page btns between page navigation controls
  * @customElement
  * @LitElement
  */
@@ -20,7 +21,7 @@ export class EtoolsPagination extends LitElement {
       <span class="pagination-item">
         <span id="rows">Rows per page:</span>
         <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink no-label-float 
-          @value-changed="${this.onPageChanged}">
+          @value-changed="${this.onPageSizeChanged}">
           <paper-listbox slot="dropdown-content" attr-for-selected="name" .selected="${this.paginator.page_size}">
             ${this.pageSizeOptions.map((sizeOption: number) => html`<paper-item name="${sizeOption}">
               ${sizeOption}</paper-item>`)}
@@ -56,29 +57,40 @@ export class EtoolsPagination extends LitElement {
 
   goToFirstPage() {
     if (this.paginator.page > 1) {
-      fireEvent(this, 'page-change', {page: 1});
+      this.firePaginatorChangeEvent({page: 1});
     }
   }
 
   goToLastPage() {
     if (this.paginator.page < this.paginator.total_pages) {
-      fireEvent(this, 'page-change', {page: this.paginator.total_pages});
+      this.firePaginatorChangeEvent({page: this.paginator.total_pages});
     }
   }
 
   pageLeft() {
     if (this.paginator.page > 1) {
-      fireEvent(this, 'page-change', {page: this.paginator.page - 1});
+      this.firePaginatorChangeEvent({page: this.paginator.page - 1});
     }
   }
 
   pageRight() {
     if (this.paginator.page < this.paginator.total_pages) {
-      fireEvent(this, 'page-change', {page: this.paginator.page + 1});
+      this.firePaginatorChangeEvent({page: this.paginator.page + 1});
     }
   }
-  onPageChanged(e: CustomEvent) {
-    fireEvent(this, 'page-size-change', {size: Number(e.detail.value)});
+
+  onPageSizeChanged(e: CustomEvent) {
+    if (!e.detail.value) {
+      return;
+    }
+    const newPageSize = Number(e.detail.value);
+    if (newPageSize !== this.paginator.page_size) {
+      this.firePaginatorChangeEvent({page_size: newPageSize});
+    }
+  }
+
+  firePaginatorChangeEvent(paginatorData: any) {
+    fireEvent(this, 'paginator-change', {...this.paginator, ...paginatorData});
   }
 
 

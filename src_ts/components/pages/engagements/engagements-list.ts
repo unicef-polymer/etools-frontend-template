@@ -68,8 +68,7 @@ export class EngagementsList extends LitElement {
                       @edit-item="${this.editItem}"
                       @delete-item="${this.deleteItem}"
                       .paginator="${this.paginator}"
-                      @page-change="${this.pageChange}" 
-                      @page-size-change="${this.pageSizeChanged}"></etools-table>
+                      @paginator-change="${this.paginatorChange}"></etools-table>
       </section>
     `;
   }
@@ -244,6 +243,15 @@ export class EngagementsList extends LitElement {
       }
     ];
 
+    let i = 0;
+    const data = [];
+    while (i < 100) {
+      data.push(this.listData[0]);
+      i++;
+    }
+
+    this.listData = data;
+
     this.paginator = getPaginator({count: this.listData.length});
   }
 
@@ -261,13 +269,9 @@ export class EngagementsList extends LitElement {
     console.log('delete item: ', e.detail);
   }
 
-  pageChange(e: CustomEvent) {
-    console.log('page change: ', e.detail.page);
-    this.paginator = {...this.paginator, page: e.detail.page};
-  }
-
-  pageSizeChanged(e: CustomEvent) {
-    console.log('page size change: ', e.detail.size);
-    this.paginator = {...this.paginator, page_size: e.detail.size};
+  paginatorChange(e: CustomEvent) {
+    const newPaginator: EtoolsPaginator = {...e.detail};
+    // TODO: prepare pagination data for a new page data request => then update data and paginator
+    console.log('paginator change: ', newPaginator);
   }
 }

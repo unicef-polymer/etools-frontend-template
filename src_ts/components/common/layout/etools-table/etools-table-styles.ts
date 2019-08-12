@@ -73,6 +73,7 @@ export const etoolsTableStyles = html`
       text-align: left;
       color: var(--etools-table-text-color, #2b2b2b);
       padding: 0 var(--etools-table-side-padding, 24px);
+      box-sizing: border-box;
     }
     
     table tr th:first-child,
