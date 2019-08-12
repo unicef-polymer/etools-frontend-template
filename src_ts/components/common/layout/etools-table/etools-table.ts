@@ -241,7 +241,7 @@ export class EtoolsTable extends LitElement {
       return;
     }
     column.sort = this.toggleColumnSort(column.sort);
-    fireEvent(this, 'sort-change', {...this.columns});
+    fireEvent(this, 'sort-change', [...this.columns]);
   }
 
   toggleColumnSort(sort: EtoolsTableColumnSort): EtoolsTableColumnSort {
