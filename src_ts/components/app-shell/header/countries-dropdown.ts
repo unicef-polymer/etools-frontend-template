@@ -21,10 +21,10 @@ import {ROOT_PATH} from '../../../config/config';
 @customElement('countries-dropdown')
 export class CountriesDropdown extends connect(store)(LitElement) {
 
-    public render() {
-        // main template
-        // language=HTML
-        return html`
+  public render() {
+    // main template
+    // language=HTML
+    return html`
       ${countriesDropdownStyles}
       <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown id="countrySelector"
@@ -42,10 +42,10 @@ export class CountriesDropdown extends connect(store)(LitElement) {
                        hide-search></etools-dropdown>
 
     `;
-    }
+  }
 
     @property({type: Object})
-    currentCountry: GenericObject = {};
+  currentCountry: GenericObject = {};
 
     @property({type: Array})
     countries: any[] = [];
@@ -59,78 +59,78 @@ export class CountriesDropdown extends connect(store)(LitElement) {
     @query('#countrySelector') private countryDropdown!: EtoolsDropdownEl;
 
     public connectedCallback() {
-        super.connectedCallback();
+      super.connectedCallback();
 
-        setTimeout(() => {
-            const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-            this.countryDropdown.set('fitInto', fitInto);
-        }, 0);
+      setTimeout(() => {
+        const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
+        this.countryDropdown.set('fitInto', fitInto);
+      }, 0);
     }
 
     public stateChanged(state: RootState) {
-        if (!state.user || !state.user.data || JSON.stringify(this.userData) === JSON.stringify(state.user.data)) {
-            return;
-        }
-        this.userData = state.user.data;
-        this.userDataChanged(this.userData);
+      if (!state.user || !state.user.data || JSON.stringify(this.userData) === JSON.stringify(state.user.data)) {
+        return;
+      }
+      this.userData = state.user.data;
+      this.userDataChanged(this.userData);
     }
 
     userDataChanged(userData: EtoolsUserModel) {
-        if (userData) {
-            this.countries = userData.countries_available;
-            this.currentCountry = userData.country;
+      if (userData) {
+        this.countries = userData.countries_available;
+        this.currentCountry = userData.country;
 
-            this.showCountrySelector(this.countries);
-        }
+        this.showCountrySelector(this.countries);
+      }
 
     }
 
     protected showCountrySelector(countries: any) {
-        if (Array.isArray(countries) && (countries.length > 1)) {
-            this.countrySelectorVisible = true;
-        }
+      if (Array.isArray(countries) && (countries.length > 1)) {
+        this.countrySelectorVisible = true;
+      }
     }
 
     protected countrySelected(e: CustomEvent) {
-        if (!e.detail.selectedItem) {
-            return;
-        }
+      if (!e.detail.selectedItem) {
+        return;
+      }
 
-        const selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
+      const selectedCountryId = parseInt(e.detail.selectedItem.id, 10);
 
-        if (selectedCountryId !== this.currentCountry.id) {
-            // send post request to change_country endpoint
-            this.triggerCountryChangeRequest(selectedCountryId);
-        }
+      if (selectedCountryId !== this.currentCountry.id) {
+        // send post request to change_country endpoint
+        this.triggerCountryChangeRequest(selectedCountryId);
+      }
     }
 
     protected triggerCountryChangeRequest(selectedCountryId: number) {
+      fireEvent(this, 'global-loading', {
+        message: 'Please wait while country data is changing...',
+        active: true,
+        loadingSource: 'country-change'
+      });
+      changeCurrentUserCountry(selectedCountryId).then(() => {
+        // country change req returns 204
+        // redirect to default page
+        // TODO: clear all cached data related to old country
+        updateAppLocation(DEFAULT_ROUTE);
+        // force page reload to load all data specific to the new country
+        document.location.assign(window.location.origin + ROOT_PATH);
+      }).catch((error: any) => {
+        this.handleCountryChangeError(error);
+      }).then(() => {
         fireEvent(this, 'global-loading', {
-            message: 'Please wait while country data is changing...',
-            active: true,
-            loadingSource: 'country-change'
+          active: false,
+          loadingSource: 'country-change'
         });
-        changeCurrentUserCountry(selectedCountryId).then(() => {
-            // country change req returns 204
-            // redirect to default page
-            // TODO: clear all cached data related to old country
-            updateAppLocation(DEFAULT_ROUTE);
-            // force page reload to load all data specific to the new country
-            document.location.assign(window.location.origin + ROOT_PATH);
-        }).catch((error: any) => {
-            this.handleCountryChangeError(error);
-        }).then(() => {
-            fireEvent(this, 'global-loading', {
-                active: false,
-                loadingSource: 'country-change'
-            });
-        });
+      });
     }
 
     protected handleCountryChangeError(error: any) {
-        logError('Country change failed!', 'countries-dropdown', error);
-        this.countryDropdown.set('selected', this.currentCountry.id);
-        fireEvent(this, 'toast', {text: 'Something went wrong changing your workspace. Please try again'});
+      logError('Country change failed!', 'countries-dropdown', error);
+      this.countryDropdown.set('selected', this.currentCountry.id);
+      fireEvent(this, 'toast', {text: 'Something went wrong changing your workspace. Please try again'});
     }
 
 }

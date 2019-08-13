@@ -13,6 +13,18 @@ import '../../common/layout/filters/etools-filters';
 import {EtoolsFilter, EtoolsFilterTypes} from '../../common/layout/filters/etools-filters';
 import {ROOT_PATH} from '../../../config/config';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
+import '../../common/layout/etools-table/etools-table';
+import {
+  EtoolsTableColumn,
+  EtoolsTableColumnSort,
+  EtoolsTableColumnType
+} from '../../common/layout/etools-table/etools-table';
+import {EtoolsPaginator, getPaginator} from '../../common/layout/etools-table/pagination/paginator';
+import {
+  EtoolsTableSortItem,
+  getSortFields,
+  getUrlQueryStringSort
+} from '../../common/layout/etools-table/etools-table-utility';
 
 /**
  * @LitElement
@@ -30,6 +42,11 @@ export class EngagementsList extends LitElement {
     // language=HTML
     return html`
       ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
+      <style>
+        etools-table {
+          /*--etools-table-side-padding: 0;*/
+        }
+      </style>
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
 
@@ -47,11 +64,82 @@ export class EngagementsList extends LitElement {
         Engagements list will go here.... TODO<br>
         <a href="${this.rootPath}engagements/23/details">Go to engagement details pages :)</a>
       </section>
+      
+      <section class="elevation page-content no-padding" elevation="1">
+        <etools-table caption="Engagements list - optional table title"
+                      .columns="${this.listColumns}"
+                      .items="${this.listData}" 
+                      showedit showdelete
+                      @edit-item="${this.editItem}"
+                      @delete-item="${this.deleteItem}"
+                      .paginator="${this.paginator}"
+                      @paginator-change="${this.paginatorChange}"
+                      @sort-change="${this.sortChange}"></etools-table>
+      </section>
     `;
   }
 
   @property({type: String})
   rootPath: string = ROOT_PATH;
+
+  @property({type: Object})
+  paginator!: EtoolsPaginator;
+
+  @property({type: Object})
+  sort: EtoolsTableSortItem[] = [];
+
+  @property({type: Array})
+  listColumns: EtoolsTableColumn[] = [
+    {
+      label: 'Reference No.',
+      name: 'ref_number',
+      link_tmpl: `${ROOT_PATH}engagements/:id/details`,
+      type: EtoolsTableColumnType.Link
+    },
+    {
+      label: 'Assessment Date',
+      name: 'assessment_date',
+      type: EtoolsTableColumnType.Date,
+      sort: EtoolsTableColumnSort.Desc
+    },
+    {
+      label: 'Partner Org',
+      name: 'partner_name',
+      type: EtoolsTableColumnType.Text,
+      sort: EtoolsTableColumnSort.Asc
+    },
+    {
+      label: 'Status',
+      name: 'status',
+      type: EtoolsTableColumnType.Text
+    },
+    {
+      label: 'Assessor',
+      name: 'assessor',
+      type: EtoolsTableColumnType.Text
+    },
+    {
+      label: 'Rating',
+      name: 'rating',
+      type: EtoolsTableColumnType.Text
+    },
+    {
+      label: 'Rating Pts',
+      name: 'rating_points',
+      type: EtoolsTableColumnType.Number
+    }
+  ];
+
+  listDataModel: any = {
+    id: 1,
+    ref_number: '2019/11',
+    assessment_date: '2019-08-01',
+    partner_name: 'Partner name',
+    status: 'Assigned',
+    assessor: 'John Doe',
+    rating: 'Low',
+    rating_points: 23
+  };
 
   @property({type: Array})
   listData: GenericObject[] = [];
@@ -143,11 +231,57 @@ export class EngagementsList extends LitElement {
         selected: false
       }
     ];
+
+    let i = 0;
+    const data = [];
+    while (i < 10) {
+      const item = {...this.listDataModel};
+      item.id = item.id + i;
+      item.partner_name = item.partner_name + i + 1;
+      data.push(item);
+      i++;
+    }
+
+    this.listData = data;
+
+    this.paginator = getPaginator({count: this.listData.length});
   }
 
   filtersChange(e: CustomEvent) {
     console.log('filters change event handling...', e.detail);
     this.selectedFilters = {...this.selectedFilters, ...e.detail};
     // DO filter stuff here
+  }
+
+  editItem(e: CustomEvent) {
+    console.log('edit item: ', e.detail);
+  }
+
+  deleteItem(e: CustomEvent) {
+    console.log('delete item: ', e.detail);
+  }
+
+  paginatorChange(e: CustomEvent) {
+    const newPaginator: EtoolsPaginator = {...e.detail};
+    // TODO: prepare pagination data for a new page data request => then update data and paginator
+    console.log('paginator change: ', newPaginator);
+    this.updateListData(newPaginator);
+  }
+
+  sortChange(e: CustomEvent) {
+    console.log('sorting has changed...', e.detail);
+    this.sort = getSortFields(e.detail);
+    this.updateListData();
+  }
+
+  updateListData(newPaginatorData?: EtoolsPaginator) {
+    const qs = getUrlQueryStringSort(this.sort);
+    console.log('update url params: ', qs);
+    // TODO: update url params, use routeDetails.path and router navigation method
+
+    // TODO: fire request to get data, update paginator object to trigger pagination element update
+    if (newPaginatorData) {
+      this.paginator = newPaginatorData;
+    }
   }
 }
