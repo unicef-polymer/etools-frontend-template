@@ -17,24 +17,24 @@ const UNICEF_USERS = 'unicefUsers';
  */
 export class EtoolsCommonData extends connect(store)(EtoolsAjaxRequestMixin(PolymerElement)) {
 
-    @property({type: Object, notify: true})
-    unicefUsers!: UnicefUser[];
+  @property({type: Object, notify: true})
+  unicefUsers!: UnicefUser[];
 
-    private unicefUsersEndpoint = getEndpoint(UNICEF_USERS);
+  private unicefUsersEndpoint = getEndpoint(UNICEF_USERS);
 
-    public stateChanged(state: RootState) {
-        this.unicefUsers = state.commonData!.unicefUsers;
-        console.log('[EtoolsUsersData]: store unicef user data received', state.commonData!.unicefUsers);
-    }
+  public stateChanged(state: RootState) {
+    this.unicefUsers = state.commonData!.unicefUsers;
+    console.log('[EtoolsUsersData]: store unicef user data received', state.commonData!.unicefUsers);
+  }
 
-    public getUnicefUserData() {
-        return this.sendRequest({endpoint: this.unicefUsersEndpoint}).then((response: GenericObject) => {
-            store.dispatch(updateUnicefUsersData(response));
-        }).catch((error: GenericObject) => {
-            console.error('[EtoolsUnicefUser]: getUnicefUserData req error...', error);
-            throw error;
-        });
-    }
+  public getUnicefUserData() {
+    return this.sendRequest({endpoint: this.unicefUsersEndpoint}).then((response: GenericObject) => {
+      store.dispatch(updateUnicefUsersData(response));
+    }).catch((error: GenericObject) => {
+      console.error('[EtoolsUnicefUser]: getUnicefUserData req error...', error);
+      throw error;
+    });
+  }
 
 }
 

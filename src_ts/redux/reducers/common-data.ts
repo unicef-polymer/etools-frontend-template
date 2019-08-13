@@ -4,24 +4,24 @@ import {RootAction} from '../store';
 import {UnicefUser} from '../../types/globals';
 
 export interface CommonDataState {
-    unicefUsers: UnicefUser[];
+  unicefUsers: UnicefUser[];
 }
 
 const INITIAL_COMMON_DATA: CommonDataState = {
-    unicefUsers: []
+  unicefUsers: []
 //  TODO: add more commondata subproperties
 };
 
 const commonData: Reducer<CommonDataState, RootAction> = (state = INITIAL_COMMON_DATA, action) => {
-    switch (action.type) {
-        case UPDATE_UNICEF_USERS_DATA:
-            return {
-                ...state,
-                unicefUsers: action.unicefUsersData
-            };
-        default:
-            return state;
-    }
+  switch (action.type) {
+    case UPDATE_UNICEF_USERS_DATA:
+      return {
+        ...state,
+        unicefUsers: action.unicefUsersData
+      };
+    default:
+      return state;
+  }
 };
 
 export default commonData;
