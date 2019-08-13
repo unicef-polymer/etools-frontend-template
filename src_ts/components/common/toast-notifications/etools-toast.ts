@@ -1,4 +1,4 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element';
+import {LitElement, html, customElement} from 'lit-element';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-toast/paper-toast';
 import '@polymer/paper-button/paper-button';
@@ -7,12 +7,13 @@ import {PaperButtonElement} from '@polymer/paper-button/paper-button';
 import {GenericObject} from '../../../types/globals';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-export class EtoolsToast extends PolymerElement {
+@customElement('etools-toast')
+export class EtoolsToast extends LitElement {
 
-  public static get template() {
+  public render() {
     // main template
     // language=HTML
     return html`
@@ -70,15 +71,19 @@ export class EtoolsToast extends PolymerElement {
 
   private toast: PaperToastElement | null = null;
   public toastLabelEl: HTMLSpanElement | null = null;
-  private _confirmBtn: PaperButtonElement | null = null;
+  private confirmBtn: PaperButtonElement | null = null;
 
   public fitInto: object | null = null;
 
   connectedCallback() {
     super.connectedCallback();
-    this.toast = this.shadowRoot!.querySelector('#toast') as PaperToastElement;
-    this.toastLabelEl = this.toast!.shadowRoot!.querySelector('#label');
-    this._confirmBtn = this.shadowRoot!.querySelector('#confirmBtn');
+    setTimeout(() => {
+      this.toast = this.shadowRoot!.querySelector('#toast') as PaperToastElement;
+      if (this.toast) {
+        this.toastLabelEl = this.toast!.shadowRoot!.querySelector('#label');
+      }
+      this.confirmBtn = this.shadowRoot!.querySelector('#confirmBtn');
+    }, 200);
   }
 
   public show(details: object) {
@@ -109,7 +114,7 @@ export class EtoolsToast extends PolymerElement {
     }));
   }
 
-  protected _isMultiLine(message: string) {
+  protected isMultiLine(message: string) {
     return !message ? false : (message.toString().length > 80);
   }
 
@@ -119,9 +124,9 @@ export class EtoolsToast extends PolymerElement {
       this.toast.classList.add('toast-multi-line');
     }
 
-    if (this._confirmBtn) {
-      this._confirmBtn.classList.remove('toast-dismiss-btn');
-      this._confirmBtn.classList.add('toast-dismiss-btn-multi-line');
+    if (this.confirmBtn) {
+      this.confirmBtn.classList.remove('toast-dismiss-btn');
+      this.confirmBtn.classList.add('toast-dismiss-btn-multi-line');
     }
   }
 
@@ -131,20 +136,20 @@ export class EtoolsToast extends PolymerElement {
       this.toast.classList.add('toast');
     }
 
-    if (this._confirmBtn) {
-      this._confirmBtn.classList.remove('toast-dismiss-btn-multi-line');
-      this._confirmBtn.classList.add('toast-dismiss-btn');
+    if (this.confirmBtn) {
+      this.confirmBtn.classList.remove('toast-dismiss-btn-multi-line');
+      this.confirmBtn.classList.add('toast-dismiss-btn');
     }
   }
 
   public prepareToastAndGetShowProperties(detail: GenericObject) {
-    if (this._isMultiLine(detail.text)) {
+    if (this.isMultiLine(detail.text)) {
       this.applyMultilineStyle();
     } else {
       this.removeMultilineStyle();
     }
-    if (this._confirmBtn) {
-      this._confirmBtn.updateStyles();
+    if (this.confirmBtn) {
+      this.confirmBtn.updateStyles();
     }
 
     // clone detail obj
@@ -153,12 +158,12 @@ export class EtoolsToast extends PolymerElement {
     toastProperties.duration = 0;
     if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
       if (detail.showCloseBtn === true) {
-        if (this._confirmBtn) {
-          this._confirmBtn.removeAttribute('hidden');
+        if (this.confirmBtn) {
+          this.confirmBtn.removeAttribute('hidden');
         }
       } else {
-        if (this._confirmBtn) {
-          this._confirmBtn.setAttribute('hidden', '');
+        if (this.confirmBtn) {
+          this.confirmBtn.setAttribute('hidden', '');
         }
         if (!detail.duration) {
           toastProperties.duration = 5000;
@@ -166,8 +171,8 @@ export class EtoolsToast extends PolymerElement {
       }
       delete toastProperties.showCloseBtn;
     } else {
-      if (this._confirmBtn) {
-        this._confirmBtn.setAttribute('hidden', '');
+      if (this.confirmBtn) {
+        this.confirmBtn.setAttribute('hidden', '');
       }
     }
 
@@ -175,5 +180,3 @@ export class EtoolsToast extends PolymerElement {
   }
 
 }
-
-window.customElements.define('etools-toast', EtoolsToast);
