@@ -8,7 +8,6 @@ export const etoolsPaginationStyles = html`
       @apply --layout-horizontal;
       @apply --layout-center;
       @apply --layout-end-justified;
-
       font-size: 12px;
       color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
     }
@@ -18,17 +17,18 @@ export const etoolsPaginationStyles = html`
     }
 
     paper-item {
+      cursor: pointer;
       height: 24px; /* for IE */
     }
 
     paper-icon-button {
       color: color: var(--dark-icon-color, #6f6f70);
     }
-    
+
     paper-icon-button[disabled] {
       opacity: .33;
     }
-    
+
     paper-icon-button:not([disabled]):hover {
       color: var(--primary-text-color);
     }
@@ -45,7 +45,6 @@ export const etoolsPaginationStyles = html`
       width: 40px;
       bottom: 9px;
       bottom: -1px;
-
       --paper-input-container-input: {
         color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
         font-size: 12px;
@@ -55,7 +54,6 @@ export const etoolsPaginationStyles = html`
         align-items: strech;
         max-width: 24px;
       };
-
       --paper-input-container-underline: {
         display: none;
       };
@@ -67,7 +65,7 @@ export const etoolsPaginationStyles = html`
     }
 
     /* Mobile view CSS */
-    :host([low-resolution-layout]){
+    :host([low-resolution-layout]) {
       padding: 8px 0;
       height: auto;
       @apply --layout-vertical;
@@ -81,4 +79,5 @@ export const etoolsPaginationStyles = html`
     :host([low-resolution-layout]) .pagination-btns {
       margin-left: -12px;
     }
+
   </style>`;

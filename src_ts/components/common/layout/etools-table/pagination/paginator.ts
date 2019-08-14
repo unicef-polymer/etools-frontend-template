@@ -6,7 +6,7 @@ export interface EtoolsPaginator {
   visible_range: string[] | number[];
 }
 
-const defaultPaginator: EtoolsPaginator = {
+export const defaultPaginator: EtoolsPaginator = {
   page: 1,
   page_size: 20,
   total_pages: 0,
@@ -45,12 +45,11 @@ const computeVisibleRange = (paginator: EtoolsPaginator) => {
   return [start, end];
 };
 
-export const getPaginator = (data: any) => {
+export const getPaginator = (currentPaginator: EtoolsPaginator, data: any) => {
   // init paginator
-  const paginator: EtoolsPaginator = {...defaultPaginator};
+  const paginator: EtoolsPaginator = {...currentPaginator};
   paginator.count = updatePaginatorTotalResults(data);
   paginator.total_pages = computeTotalPages(paginator.page_size, paginator.count);
   paginator.visible_range = computeVisibleRange(paginator);
   return paginator;
 };
-

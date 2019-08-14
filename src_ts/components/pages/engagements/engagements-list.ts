@@ -1,16 +1,18 @@
 import '@polymer/paper-button/paper-button';
-import {LitElement, html, property, customElement} from 'lit-element';
+import {customElement, html, LitElement, property} from 'lit-element';
+import {connect} from 'pwa-helpers/connect-mixin';
+import {RootState, store} from '../../../redux/store';
 
 import {SharedStyles} from '../../styles/shared-styles';
 import '../../common/layout/page-content-header/page-content-header';
-import {pageContentHeaderSlottedStyles} from
-  '../../common/layout/page-content-header/page-content-header-slotted-styles';
+import {pageContentHeaderSlottedStyles}
+  from '../../common/layout/page-content-header/page-content-header-slotted-styles';
 
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 
 import {GenericObject} from '../../../types/globals';
 import '../../common/layout/filters/etools-filters';
-import {EtoolsFilter, EtoolsFilterTypes} from '../../common/layout/filters/etools-filters';
+import {EtoolsFilter} from '../../common/layout/filters/etools-filters';
 import {ROOT_PATH} from '../../../config/config';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
 import '../../common/layout/etools-table/etools-table';
@@ -19,19 +21,27 @@ import {
   EtoolsTableColumnSort,
   EtoolsTableColumnType
 } from '../../common/layout/etools-table/etools-table';
-import {EtoolsPaginator, getPaginator} from '../../common/layout/etools-table/pagination/paginator';
+import {defaultPaginator, EtoolsPaginator, getPaginator} from '../../common/layout/etools-table/pagination/paginator';
 import {
-  EtoolsTableSortItem,
-  getSortFields,
+  buildUrlQueryString,
+  EtoolsTableSortItem, getSelectedFiltersFromUrlParams,
+  getSortFields, getSortFieldsFromUrlSortParams,
   getUrlQueryStringSort
 } from '../../common/layout/etools-table/etools-table-utility';
+
+import {defaultSelectedFilters, engagementsFilters, updateFiltersSelectedValues} from './list/filters';
+import {RouteDetails, RouteQueryParams} from '../../../routing/router';
+import {updateAppLocation} from '../../../routing/routes';
+import {getListDummydata} from './list/list-dummy-data';
+import {buttonsStyles} from '../../styles/button-styles';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @LitElement
  * @customElement
  */
 @customElement('engagements-list')
-export class EngagementsList extends LitElement {
+export class EngagementsList extends connect(store)(LitElement) {
 
   static get styles() {
     return [elevationStyles];
@@ -41,17 +51,22 @@ export class EngagementsList extends LitElement {
     // main template
     // language=HTML
     return html`
-      ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
+      ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles} ${buttonsStyles}
       <style>
         etools-table {
-          /*--etools-table-side-padding: 0;*/
+          padding-top: 12px;
         }
       </style>
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
-
         <div slot="title-row-actions" class="content-header-actions">
-          <paper-button raised>Export</paper-button>
+          <paper-button class="default left-icon" raised @tap="${this.exportEngagements}">
+            <iron-icon icon="file-download"></iron-icon>Export
+          </paper-button>
+          
+          <paper-button class="primary left-icon" raised @tap="${this.goToAddnewPage}">
+            <iron-icon icon="add"></iron-icon>Add new engagement
+          </paper-button>
         </div>
       </page-content-header>
       
@@ -59,19 +74,11 @@ export class EngagementsList extends LitElement {
         <etools-filters .filters="${this.filters}"
                         @filter-change="${this.filtersChange}"></etools-filters>
       </section>
-      
-      <section class="elevation page-content" elevation="1">
-        Engagements list will go here.... TODO<br>
-        <a href="${this.rootPath}engagements/23/details">Go to engagement details pages :)</a>
-      </section>
-      
+     
       <section class="elevation page-content no-padding" elevation="1">
         <etools-table caption="Engagements list - optional table title"
                       .columns="${this.listColumns}"
                       .items="${this.listData}" 
-                      showedit showdelete
-                      @edit-item="${this.editItem}"
-                      @delete-item="${this.deleteItem}"
                       .paginator="${this.paginator}"
                       @paginator-change="${this.paginatorChange}"
                       @sort-change="${this.sortChange}"></etools-table>
@@ -79,14 +86,37 @@ export class EngagementsList extends LitElement {
     `;
   }
 
+  /**
+   * TODO:
+   *  1. init filters and sort params: default values or values from routeDetails object
+   *  2. make engagements data request using filters and sorting params
+   *  3. on engagements req success init paginator, list page data and update url params if needed
+   *  4. on filters-change, parinator-change, sort-change trigger a new request for engagements data (repeat 2 and 3)
+   *  5. add loading...
+   *  6. hide etools-pagination if there are fewer results then first page_size option
+   *  7. when navigating from details page to list all list req params are preserved and we need to avoid
+   *  a duplicated request to get data. This can be done by adding a new list queryParams state in redux
+   *  and use it in app-menu component to update menu option url
+   *  8. test filters menu and prevend request triggered by filter select only action
+   */
+
+  @property({type: Object})
+  routeDetails!: RouteDetails;
+
   @property({type: String})
   rootPath: string = ROOT_PATH;
 
   @property({type: Object})
-  paginator!: EtoolsPaginator;
+  paginator: EtoolsPaginator = {...defaultPaginator};
 
   @property({type: Object})
-  sort: EtoolsTableSortItem[] = [];
+  sort: EtoolsTableSortItem[] = [{name: 'ref_number', sort: EtoolsTableColumnSort.Desc}];
+
+  @property({type: Array})
+  filters: EtoolsFilter[] = [...engagementsFilters];
+
+  @property({type: Array})
+  selectedFilters: GenericObject = {...defaultSelectedFilters};
 
   @property({type: Array})
   listColumns: EtoolsTableColumn[] = [
@@ -122,166 +152,130 @@ export class EngagementsList extends LitElement {
       label: 'Rating',
       name: 'rating',
       type: EtoolsTableColumnType.Text
-    },
-    {
-      label: 'Rating Pts',
-      name: 'rating_points',
-      type: EtoolsTableColumnType.Number
     }
   ];
-
-  listDataModel: any = {
-    id: 1,
-    ref_number: '2019/11',
-    assessment_date: '2019-08-01',
-    partner_name: 'Partner name',
-    status: 'Assigned',
-    assessor: 'John Doe',
-    rating: 'Low',
-    rating_points: 23
-  };
 
   @property({type: Array})
   listData: GenericObject[] = [];
 
-  @property({type: Array})
-  partnerTypes: any[] = [
-    {
-      value: 'cso',
-      label: 'CSO Partner'
-    },
-    {
-      value: 'gov',
-      label: 'Government Partner'
-    },
-    {
-      value: 'cso_national',
-      label: 'CSO/National Partner'
+  stateChanged(state: RootState) {
+    if (state.app!.routeDetails.routeName === 'engagements' &&
+        state.app!.routeDetails.subRouteName === 'list') {
+
+      const stateRouteDetails = {...state.app!.routeDetails};
+      if (JSON.stringify(stateRouteDetails) !== JSON.stringify(this.routeDetails)) {
+        this.routeDetails = stateRouteDetails;
+        console.log('new engagements list route details...', this.routeDetails);
+
+        if (!this.routeDetails.queryParams || Object.keys(this.routeDetails.queryParams).length === 0) {
+          // update url with params
+          this.updateUrlListQueryParams();
+          return;
+        } else {
+          // init filters, sort, page, page_size from url params
+          this.updateListParamsFromRouteDetails(this.routeDetails.queryParams);
+          this.getEngagementsData();
+        }
+      }
     }
-  ];
+    // common data used for filter options should update without page restriction
+    // TODO: init filters options here!
+  }
 
-  @property({type: Array})
-  partnerSyncedOpts: any[] = [
-    {
-      value: 'no',
-      label: 'No'
-    },
-    {
-      value: 'yes',
-      label: 'Yes'
+  updateUrlListQueryParams() {
+    const params = {
+      ...this.selectedFilters,
+      page: this.paginator.page,
+      page_size: this.paginator.page_size,
+      sort: getUrlQueryStringSort(this.sort)
+    };
+    const qs = buildUrlQueryString(params);
+    updateAppLocation(`${this.routeDetails.path}?${qs}`, true);
+  }
+
+  updateListParamsFromRouteDetails(queryParams: RouteQueryParams) {
+    // update sort fields
+    if (queryParams.sort) {
+      this.sort = getSortFieldsFromUrlSortParams(queryParams.sort);
     }
-  ];
 
-  @property({type: Array})
-  selectedFilters: GenericObject = {
-    q: '',
-    partner_type: [],
-    synced: null,
-    show_hidden: true,
-    created_after: null
-  };
+    // update paginator fields
+    const paginatorParams: GenericObject = {};
+    if (queryParams.page) {
+      paginatorParams.page = Number(queryParams.page);
+    }
+    if (queryParams.page_size) {
+      paginatorParams.page_size = Number(queryParams.page_size);
+    }
+    this.paginator = {...this.paginator, ...paginatorParams};
 
-  @property({type: Array})
-  filters: EtoolsFilter[] = [];
+    // update filters
+    this.selectedFilters = getSelectedFiltersFromUrlParams(this.selectedFilters, queryParams);
+    this.filters = updateFiltersSelectedValues(this.selectedFilters, this.filters);
+  }
 
   connectedCallback(): void {
     super.connectedCallback();
-    this.filters = [
-      {
-        filterName: 'Search partner',
-        filterKey: 'q',
-        type: EtoolsFilterTypes.Search,
-        selectedValue: '',
-        selected: true
-      },
-      {
-        filterName: 'Partner Type',
-        filterKey: 'partner_type',
-        type: EtoolsFilterTypes.DropdownMulti,
-        selectionOptions: this.partnerTypes,
-        selectedValue: [],
-        selected: true,
-        minWidth: '350px',
-        hideSearch: true,
-        disabled: this.partnerTypes.length === 0
-      },
-      {
-        filterName: 'Synced',
-        filterKey: 'synced',
-        type: EtoolsFilterTypes.Dropdown,
-        selectionOptions: this.partnerSyncedOpts,
-        selectedValue: null,
-        selected: false,
-        minWidth: '350px',
-        hideSearch: true,
-        disabled: this.partnerSyncedOpts.length === 0
-      },
-      {
-        filterName: 'Show hidden',
-        filterKey: 'show_hidden',
-        type: EtoolsFilterTypes.Toggle,
-        selectedValue: true,
-        selected: true
-      },
-      {
-        filterName: 'Created After',
-        filterKey: 'created_after',
-        type: EtoolsFilterTypes.Date,
-        selectedValue: null,
-        selected: false
-      }
-    ];
-
-    let i = 0;
-    const data = [];
-    while (i < 10) {
-      const item = {...this.listDataModel};
-      item.id = item.id + i;
-      item.partner_name = item.partner_name + i + 1;
-      data.push(item);
-      i++;
-    }
-
-    this.listData = data;
-
-    this.paginator = getPaginator({count: this.listData.length});
+    // TODO: remove method, might not be needed
+    console.log('filters, sort, paginator initialized, engagements list attached...');
   }
 
   filtersChange(e: CustomEvent) {
     console.log('filters change event handling...', e.detail);
     this.selectedFilters = {...this.selectedFilters, ...e.detail};
-    // DO filter stuff here
-  }
-
-  editItem(e: CustomEvent) {
-    console.log('edit item: ', e.detail);
-  }
-
-  deleteItem(e: CustomEvent) {
-    console.log('delete item: ', e.detail);
+    this.updateUrlListQueryParams();
   }
 
   paginatorChange(e: CustomEvent) {
-    const newPaginator: EtoolsPaginator = {...e.detail};
-    // TODO: prepare pagination data for a new page data request => then update data and paginator
+    const newPaginator = {...e.detail};
     console.log('paginator change: ', newPaginator);
-    this.updateListData(newPaginator);
+    this.paginator = newPaginator;
+    this.updateUrlListQueryParams();
   }
 
   sortChange(e: CustomEvent) {
     console.log('sorting has changed...', e.detail);
     this.sort = getSortFields(e.detail);
-    this.updateListData();
+    this.updateUrlListQueryParams();
   }
 
-  updateListData(newPaginatorData?: EtoolsPaginator) {
-    const qs = getUrlQueryStringSort(this.sort);
-    console.log('update url params: ', qs);
-    // TODO: update url params, use routeDetails.path and router navigation method
+  /**
+   * This method runs each time new data is received from routeDetails state
+   * (sort, filters, paginator init/change)
+   */
+  getEngagementsData() {
+    /**
+     * TODO:
+     *  - replace getListDummydata with the request to /engagements/list endpoint
+     *  - include in req params filters, sort, page, page_size
+     */
+    // const requestParams = {
+    //   ...this.selectedFilters,
+    //   page: this.paginator.page,
+    //   page_size: this.paginator.page_size,
+    //   sort: this.sort
+    // };
+    console.log('get engagements data...');
+    getListDummydata(this.paginator).then((response: any) => {
+      // update paginator (total_pages, visible_range, count...)
+      this.paginator = getPaginator(this.paginator, response);
+      this.listData = [...response.results];
+    }).catch((err: any) => {
+      // TODO: handle req errors
+      console.error(err);
+    });
+  }
 
-    // TODO: fire request to get data, update paginator object to trigger pagination element update
-    if (newPaginatorData) {
-      this.paginator = newPaginatorData;
-    }
+  exportEngagements() {
+    // const exportParams = {
+    //   ...this.selectedFilters
+    // };
+
+    // TODO: implement export using API endpoint
+    fireEvent(this, 'toast', {text: 'Not implemented... waiting for API...'});
+  }
+
+  goToAddnewPage() {
+    updateAppLocation('/engagements/new/details', true);
   }
 }
