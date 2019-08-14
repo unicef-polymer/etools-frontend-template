@@ -59,7 +59,6 @@ export class EngagementsList extends connect(store)(LitElement) {
       </style>
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
-
         <div slot="title-row-actions" class="content-header-actions">
           <paper-button class="default left-icon" raised @tap="${this.exportEngagements}">
             <iron-icon icon="file-download"></iron-icon>Export
@@ -77,7 +76,8 @@ export class EngagementsList extends connect(store)(LitElement) {
       </section>
      
       <section class="elevation page-content no-padding" elevation="1">
-        <etools-table .columns="${this.listColumns}"
+        <etools-table caption="Engagements list - optional table title"
+                      .columns="${this.listColumns}"
                       .items="${this.listData}" 
                       .paginator="${this.paginator}"
                       @paginator-change="${this.paginatorChange}"

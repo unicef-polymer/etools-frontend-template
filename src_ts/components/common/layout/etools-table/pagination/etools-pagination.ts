@@ -31,21 +31,16 @@ export class EtoolsPagination extends LitElement {
           ${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count}
         </span>
       </span>
-
       <span class="pagination-item pagination-btns">
         <paper-icon-button icon="first-page" @tap="${this.goToFirstPage}"
                            ?disabled="${this.paginator.page === 1}"></paper-icon-button>
-
         <paper-icon-button icon="chevron-left" @tap="${this.pageLeft}"
                            ?disabled="${this.paginator.page === 1}"></paper-icon-button>
-
         <paper-icon-button icon="chevron-right" @tap="${this.pageRight}"
                            ?disabled="${this.paginator.page === this.paginator.total_pages}"></paper-icon-button>
-
         <paper-icon-button icon="last-page" @tap="${this.goToLastPage}"
                            ?disabled="${this.paginator.page === this.paginator.total_pages}"></paper-icon-button>
       </span>
-
     `;
   }
 
@@ -85,7 +80,7 @@ export class EtoolsPagination extends LitElement {
     }
     const newPageSize = Number(e.detail.value);
     if (newPageSize !== this.paginator.page_size) {
-      this.firePaginatorChangeEvent({page_size: newPageSize});
+      this.firePaginatorChangeEvent({page: 1, page_size: newPageSize});
     }
   }
 

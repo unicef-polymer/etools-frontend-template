@@ -1,18 +1,16 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element';
+import {LitElement, html, customElement} from 'lit-element';
 import '@polymer/iron-icons/communication-icons';
 
 /* eslint-disable max-len */
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-class SupportBtn extends PolymerElement {
-  static get is() {
-    return 'support-btn';
-  }
+@customElement('support-btn')
+export class SupportBtn extends LitElement {
 
-  static get template() {
+  public render() {
     return html`
       <style>
         :host(:hover) {
@@ -36,5 +34,3 @@ class SupportBtn extends PolymerElement {
     `;
   }
 }
-
-window.customElements.define('support-btn', SupportBtn);
