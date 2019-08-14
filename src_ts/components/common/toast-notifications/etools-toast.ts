@@ -59,7 +59,7 @@ export class EtoolsToast extends LitElement {
       </style>
       <paper-toast id="toast"
                    class="toast-general-style"
-                   on-iron-overlay-closed="toastClosed">
+                   @iron-overlay-closed="${() => this.toastClosed()}">
         <paper-button id="confirmBtn"
                       @tap="${() => this.confirmToast()}"
                       class="toast-dismiss-btn-general-style">
@@ -156,7 +156,7 @@ export class EtoolsToast extends LitElement {
     const toastProperties: GenericObject = JSON.parse(JSON.stringify(detail));
 
     toastProperties.duration = 0;
-    if (typeof detail === 'object' && typeof detail.showCloseBtn !== 'undefined') {
+    if (detail) {
       if (detail.showCloseBtn === true) {
         if (this.confirmBtn) {
           this.confirmBtn.removeAttribute('hidden');
