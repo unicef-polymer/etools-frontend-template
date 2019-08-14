@@ -34,7 +34,7 @@ import {RouteDetails, RouteQueryParams} from '../../../routing/router';
 import {updateAppLocation} from '../../../routing/routes';
 import {getListDummydata} from './list/list-dummy-data';
 import {buttonsStyles} from '../../styles/button-styles';
-import {fireEvent} from "../../utils/fire-custom-event";
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @LitElement
