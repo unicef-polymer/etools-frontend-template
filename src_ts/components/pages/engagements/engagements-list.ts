@@ -33,6 +33,8 @@ import {defaultSelectedFilters, engagementsFilters, updateFiltersSelectedValues}
 import {RouteDetails, RouteQueryParams} from '../../../routing/router';
 import {updateAppLocation} from '../../../routing/routes';
 import {getListDummydata} from './list/list-dummy-data';
+import {buttonsStyles} from '../../styles/button-styles';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @LitElement
@@ -49,7 +51,7 @@ export class EngagementsList extends connect(store)(LitElement) {
     // main template
     // language=HTML
     return html`
-      ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
+      ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles} ${buttonsStyles}
       <style>
         etools-table {
           padding-top: 12px;
@@ -58,7 +60,13 @@ export class EngagementsList extends connect(store)(LitElement) {
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
         <div slot="title-row-actions" class="content-header-actions">
-          <paper-button raised>Export</paper-button>
+          <paper-button class="default left-icon" raised @tap="${this.exportEngagements}">
+            <iron-icon icon="file-download"></iron-icon>Export
+          </paper-button>
+          
+          <paper-button class="primary left-icon" raised @tap="${this.goToAddnewPage}">
+            <iron-icon icon="add"></iron-icon>Add new engagement
+          </paper-button>
         </div>
       </page-content-header>
       
@@ -68,7 +76,8 @@ export class EngagementsList extends connect(store)(LitElement) {
       </section>
      
       <section class="elevation page-content no-padding" elevation="1">
-        <etools-table .columns="${this.listColumns}"
+        <etools-table caption="Engagements list - optional table title"
+                      .columns="${this.listColumns}"
                       .items="${this.listData}" 
                       .paginator="${this.paginator}"
                       @paginator-change="${this.paginatorChange}"
@@ -255,5 +264,18 @@ export class EngagementsList extends connect(store)(LitElement) {
       // TODO: handle req errors
       console.error(err);
     });
+  }
+
+  exportEngagements() {
+    // const exportParams = {
+    //   ...this.selectedFilters
+    // };
+
+    // TODO: implement export using API endpoint
+    fireEvent(this, 'toast', {text: 'Not implemented... waiting for API...'});
+  }
+
+  goToAddnewPage() {
+    updateAppLocation('/engagements/new/details', true);
   }
 }
