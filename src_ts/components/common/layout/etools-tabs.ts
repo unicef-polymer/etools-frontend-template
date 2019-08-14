@@ -1,21 +1,19 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element';
-import {timeOut} from '@polymer/polymer/lib/utils/async';
-import {Debouncer} from '@polymer/polymer/lib/utils/debounce';
-
+import {LitElement, html, property, customElement} from 'lit-element';
 import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-tabs/paper-tabs';
 import '@polymer/paper-tabs/paper-tab';
-import {PaperTabsElement} from '@polymer/paper-tabs';
+import {GenericObject} from '../../../types/globals';
 
-import {property} from '@polymer/decorators';
 
 /**
- * @polymer
+ * @LitElement
  * @customElement
  */
-export class EtoolsTabs extends PolymerElement {
 
-  public static get template() {
+@customElement('etools-tabs')
+export class EtoolsTabs extends LitElement {
+
+  public render() {
     // main template
     // language=HTML
     return html`
@@ -60,53 +58,28 @@ export class EtoolsTabs extends PolymerElement {
       </style>
 
       <paper-tabs id="tabs"
-                  selected="{{activeTab}}"
+                  selected="${this.activeTab}"
                   attr-for-selected="name"
-                  noink
-                  on-iron-select="_handleTabSelection">
-
-        <template is="dom-repeat" items="[[tabs]]">
-          <paper-tab name$="[[item.tab]]" link hidden$="[[item.hidden]]">
-          <span class="tab-content">
-            [[item.tabLabel]]
-            <template is="dom-if" if="[[item.showTabCounter]]" restamp>
-              ([[item.counter]])
-            </template>
-          </span>
-          </paper-tab>
-        </template>
-
+                  noink>
+      ${this.tabs.map(item => this.getTabHtml(item))}
       </paper-tabs>
     `;
   }
 
-  @property({type: String, notify: true})
-  activeTab: string | null = null;
+  @property({type: String})
+  activeTab: string = '';
 
   @property({type: Array})
-  tabs = [];
+  tabs!: GenericObject[];
 
-  private _debouncer: Debouncer | null = null;
-
-  static get observers() {
-    return [
-      'notifyTabsResize(tabs.*)'
-    ];
-  }
-
-  _handleTabSelection() {
-    this.notifyTabsResize();
-  }
-
-  notifyTabsResize(tabsChange?: any) {
-    if (!tabsChange) {
-      return;
-    }
-
-    this._debouncer = Debouncer.debounce(this._debouncer,
-      timeOut.after(50), () => (this.$.tabs as PaperTabsElement).notifyResize());
+  getTabHtml(item: any) {
+    return html`
+    <paper-tab name="${item.tab}" link ?hidden="${item.hidden}">
+    <span class="tab-content">
+        ${item.tabLabel} ${item.showTabCounter ? html`(item.counter)` : ''}
+    </span>
+    </paper-tab>
+    `;
   }
 
 }
-
-window.customElements.define('etools-tabs', EtoolsTabs);

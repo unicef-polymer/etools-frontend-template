@@ -1,9 +1,5 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
-import '@polymer/polymer/lib/elements/dom-repeat';
-import '@polymer/polymer/lib/elements/dom-if';
+import {LitElement, html, property, customElement} from 'lit-element';
 import '@polymer/iron-flex-layout/iron-flex-layout';
-import {property} from '@polymer/decorators/lib/decorators';
-
 import '@polymer/iron-icons/iron-icons';
 import {completedStatusIcon} from './status-icons';
 
@@ -18,12 +14,14 @@ export interface EtoolsStatusModel extends EtoolsStatusItem {
 }
 
 /**
+ * @LitElement
  * @customElement
- * @polymer
  */
-class EtoolsStatus extends PolymerElement {
 
-  static get template() {
+@customElement('etools-status')
+export class EtoolsStatus extends LitElement {
+
+  public render() {
     // language=HTML
     return html`
       <style>
@@ -74,24 +72,9 @@ class EtoolsStatus extends PolymerElement {
           fill: #ffffff;
         }
       </style>
-      <template is="dom-repeat" items="[[filteredStatuses]]">
-        <div class$="status [[getStatusClasses(index, activeStatusIndex)]]">
-          <span class="icon">
-            <template is="dom-if" if="[[!isCompleted(index, activeStatusIndex)]]" restamp>
-              [[getBaseOneIndex(index)]]
-            </template>
-            <template is="dom-if" if="[[isCompleted(index, activeStatusIndex)]]" restamp>
-              ${completedStatusIcon}
-            </template>
-          </span>
-          <span class="label">[[item.label]]</span>
-        </div>
-      </template>
+       ${this.filteredStatuses.map((item: any, index: number) => this.getStatusHtml(item, index))}
     `;
   }
-
-  @property({type: Array, computed: 'filterStatuses(statuses, activeStatus)'})
-  filteredStatuses: EtoolsStatusItem[] = [];
 
   @property({type: String})
   activeStatus: string = 'submitted-accepted';
@@ -127,6 +110,22 @@ class EtoolsStatus extends PolymerElement {
       label: 'Completed'
     }
   ];
+
+  get filteredStatuses() {
+    return this.filterStatuses(this.statuses, this.activeStatus);
+  }
+
+  getStatusHtml(item: any, index: number) {
+    const completed = this.isCompleted(index, this.activeStatusIndex);
+    return html`
+    <div class="status ${this.getStatusClasses(index, this.activeStatusIndex)}">
+      <span class="icon">
+          ${completed ? html`${completedStatusIcon}` : html`${this.getBaseOneIndex(index)}`}
+      </span>
+      <span class="label">${item.label}</span>
+    </div>
+    `;
+  }
 
   /**
    * Filter statuses list and prepare the ones that will be displayed
@@ -182,5 +181,3 @@ class EtoolsStatus extends PolymerElement {
   }
 
 }
-
-window.customElements.define('etools-status', EtoolsStatus);

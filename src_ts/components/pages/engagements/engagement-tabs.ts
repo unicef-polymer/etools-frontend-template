@@ -14,7 +14,7 @@ import {RootState, store} from '../../../redux/store';
 import {updateAppLocation} from '../../../routing/routes';
 import {customElement, LitElement, html, property} from 'lit-element';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
-import {RouteDetails} from "../../../routing/router";
+import {RouteDetails} from '../../../routing/router';
 
 /**
  * @LitElement
@@ -51,7 +51,8 @@ export class EngagementTabs extends connect(store)(LitElement) {
       
       <section class="elevation page-content" elevation="1">
         ${this.isActiveTab(this.activeTab, 'details') ? html`<engagement-details></engagement-details>` : ''}
-        ${this.isActiveTab(this.activeTab, 'questionnaires') ? html`<engagement-questionnaires></engagement-questionnaires>` : ''}
+        ${this.isActiveTab(this.activeTab, 'questionnaires') ? html`<engagement-questionnaires>
+          </engagement-questionnaires>` : ''}
       </section>
     `;
   }
