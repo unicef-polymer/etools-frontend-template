@@ -23,7 +23,7 @@ export const getSortFields = (columns: EtoolsTableColumn[]): EtoolsTableSortItem
   const sortedColumns: any[] = columns.filter((c: EtoolsTableColumn) => c.sort !== undefined);
   if (sortedColumns.length > 0) {
     sortItems = sortedColumns.map((c: EtoolsTableColumn) =>
-        Object.assign({}, {name: c.name, sort: c.sort})) as EtoolsTableSortItem[];
+      Object.assign({}, {name: c.name, sort: c.sort})) as EtoolsTableSortItem[];
   }
   return sortItems;
 };
@@ -50,7 +50,7 @@ export const buildUrlQueryString = (params: GenericObject): string => {
       let filterUrlValue;
 
       if (paramValue instanceof Array && paramValue.length > 0) {
-        filterUrlValue = paramValue.join('|');
+        filterUrlValue = paramValue.join(',');
       } else if (typeof paramValue === 'boolean') {
         if (paramValue) { // ignore if it's false
           filterUrlValue = 'true';
@@ -76,7 +76,7 @@ export const getSelectedFiltersFromUrlParams = (selectedFilters: GenericObject,
   for (const param in params) {
     if (params[param]) {
       if (filters[param] instanceof Array) {
-        filters[param] = params[param].split('|');
+        filters[param] = params[param].split(',');
       } else if (typeof filters[param] === 'boolean') {
         filters[param] = params[param] === 'true';
       } else {

@@ -36,3 +36,10 @@ export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
   }
   return null;
 }
+
+export function formatDate(date: Date, format: string) {
+  if (!date) {
+    return null;
+  }
+  return moment(date).format(format);
+}
