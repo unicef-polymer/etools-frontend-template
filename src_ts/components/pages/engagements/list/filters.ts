@@ -1,9 +1,9 @@
 import {EtoolsFilter, EtoolsFilterTypes} from '../../../common/layout/filters/etools-filters';
 import {GenericObject} from '../../../../types/globals';
+import {isJsonStrMatch} from '../../../utils/utils';
 
 export const defaultSelectedFilters: GenericObject = {
   q: '',
-  staff_member: [],
   status: [],
   unicef_focal_point: [],
   partner: [],
@@ -12,28 +12,44 @@ export const defaultSelectedFilters: GenericObject = {
 
 export const engagementsFilters: EtoolsFilter[] = [
   {
-    filterName: 'Search engagement',
+    filterName: 'Search assessment',
     filterKey: 'q',
     type: EtoolsFilterTypes.Search,
     selectedValue: '',
     selected: true
   },
   {
-    filterName: 'Staff Member',
-    filterKey: 'staff_member',
-    type: EtoolsFilterTypes.DropdownMulti,
-    selectionOptions: [],
-    selectedValue: [],
-    selected: true,
-    minWidth: '350px',
-    hideSearch: true,
-    disabled: false
-  },
-  {
     filterName: 'Status',
     filterKey: 'status',
     type: EtoolsFilterTypes.DropdownMulti,
-    selectionOptions: [],
+    selectionOptions: [
+      {
+        id: 'draft',
+        name: 'Draft'
+      },
+      {
+        id: 'in_progress',
+        name: 'In Progress'
+      },
+      {
+        id: 'submitted',
+        name: 'Submitted'
+      },
+      {
+        id: 'rejected',
+        name: 'Rejected'
+      },
+      {
+        id: 'final',
+        name: 'Final'
+      },
+      {
+        id: 'cancelled',
+        name: 'Cancelled'
+      }
+    ],
+    optionValue: 'id',
+    optionLabel: 'name',
     selectedValue: [],
     selected: true,
     minWidth: '350px',
@@ -48,8 +64,10 @@ export const engagementsFilters: EtoolsFilter[] = [
     selectedValue: [],
     selected: true,
     minWidth: '350px',
-    hideSearch: true,
-    disabled: false
+    hideSearch: false,
+    disabled: false,
+    optionValue: 'id',
+    optionLabel: 'name'
   },
   {
     filterName: 'Partner Org',
@@ -59,8 +77,10 @@ export const engagementsFilters: EtoolsFilter[] = [
     selectedValue: [],
     selected: true,
     minWidth: '350px',
-    hideSearch: true,
-    disabled: false
+    hideSearch: false,
+    disabled: false,
+    optionValue: 'id',
+    optionLabel: 'name'
   },
   {
     filterName: 'Assessment Date',
@@ -68,6 +88,45 @@ export const engagementsFilters: EtoolsFilter[] = [
     type: EtoolsFilterTypes.Date,
     selectedValue: null,
     selected: false
+  },
+  {
+    filterName: 'Assessor Unicef Staff',
+    filterKey: 'assessor_staff',
+    type: EtoolsFilterTypes.DropdownMulti,
+    selectionOptions: [],
+    selectedValue: [],
+    selected: false,
+    minWidth: '350px',
+    hideSearch: false,
+    disabled: false,
+    optionValue: 'id',
+    optionLabel: 'name'
+  },
+  {
+    filterName: 'Assessor Assessing Firm',
+    filterKey: 'assessor_firm',
+    type: EtoolsFilterTypes.DropdownMulti,
+    selectionOptions: [],
+    selectedValue: [],
+    selected: false,
+    minWidth: '350px',
+    hideSearch: false,
+    disabled: false,
+    optionValue: 'id',
+    optionLabel: 'name'
+  },
+  {
+    filterName: 'Assessor External Individual',
+    filterKey: 'assessor_external',
+    type: EtoolsFilterTypes.DropdownMulti,
+    selectionOptions: [],
+    selectedValue: [],
+    selected: false,
+    minWidth: '350px',
+    hideSearch: false,
+    disabled: false,
+    optionValue: 'id',
+    optionLabel: 'name'
   }
 ];
 
@@ -78,9 +137,21 @@ export const updateFiltersSelectedValues = (selectedFilters: GenericObject, filt
       const filter = updatedFilters.find((f: EtoolsFilter) => f.filterKey === fKey);
       if (filter) {
         filter.selectedValue = selectedFilters[fKey] instanceof Array
-            ? [...selectedFilters[fKey]]
-            : selectedFilters[fKey];
+          ? [...selectedFilters[fKey]]
+          : selectedFilters[fKey];
       }
+    }
+  }
+  return updatedFilters;
+};
+
+export const updateFilterSelectionOptions = (filters: EtoolsFilter[], fKey: string, options: GenericObject[]) => {
+  let updatedFilters: EtoolsFilter[] = [...filters];
+  const filter = updatedFilters.find((f: EtoolsFilter) => f.filterKey === fKey);
+  if (filter && options) {
+    if (!isJsonStrMatch(filter.selectionOptions, options)) {
+      filter.selectionOptions = [...options];
+      updatedFilters = [...updatedFilters];
     }
   }
   return updatedFilters;

@@ -15,6 +15,7 @@ import {updateAppLocation} from '../../../routing/routes';
 import {customElement, LitElement, html, property} from 'lit-element';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
 import {RouteDetails} from '../../../routing/router';
+import {buttonsStyles} from "../../styles/button-styles";
 
 /**
  * @LitElement
@@ -31,7 +32,7 @@ export class EngagementTabs extends connect(store)(LitElement) {
     // main template
     // language=HTML
     return html`
-      ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles}
+      ${SharedStyles} ${pageContentHeaderSlottedStyles} ${pageLayoutStyles} ${buttonsStyles}
       <etools-status></etools-status>
 
       <page-content-header with-tabs-visible>
@@ -39,8 +40,8 @@ export class EngagementTabs extends connect(store)(LitElement) {
         <h1 slot="page-title">${this.engagement.title}</h1>
 
         <div slot="title-row-actions" class="content-header-actions">
-          <paper-button raised>Action 1</paper-button>
-          <paper-button raised>Action 2</paper-button>
+          <paper-button class="primary" raised>Action 1</paper-button>
+          <paper-button class="error" raised>Action 2</paper-button>
         </div>
 
         <etools-tabs slot="tabs"

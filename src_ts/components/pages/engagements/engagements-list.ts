@@ -35,7 +35,7 @@ import {updateAppLocation} from '../../../routing/routes';
 import {getListDummydata} from './list/list-dummy-data';
 import {buttonsStyles} from '../../styles/button-styles';
 import {fireEvent} from '../../utils/fire-custom-event';
-
+import '../../common/layout/export-data';
 /**
  * @LitElement
  * @customElement
@@ -60,10 +60,8 @@ export class EngagementsList extends connect(store)(LitElement) {
       <page-content-header>
         <h1 slot="page-title">Engagements list</h1>
         <div slot="title-row-actions" class="content-header-actions">
-          <paper-button class="default left-icon" raised @tap="${this.exportEngagements}">
-            <iron-icon icon="file-download"></iron-icon>Export
-          </paper-button>
-          
+          <export-data .endpoint="#someExportUrl" .params="${this.queryParams}" @tap="${this.exportEngagements}"></export-data>
+                    
           <paper-button class="primary left-icon" raised @tap="${this.goToAddnewPage}">
             <iron-icon icon="add"></iron-icon>Add new engagement
           </paper-button>
@@ -110,13 +108,17 @@ export class EngagementsList extends connect(store)(LitElement) {
   paginator: EtoolsPaginator = {...defaultPaginator};
 
   @property({type: Object})
-  sort: EtoolsTableSortItem[] = [{name: 'ref_number', sort: EtoolsTableColumnSort.Desc}];
+  sort: EtoolsTableSortItem[] = [{name: 'assessment_date', sort: EtoolsTableColumnSort.Desc},
+    {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}];
 
   @property({type: Array})
   filters: EtoolsFilter[] = [...engagementsFilters];
 
   @property({type: Array})
   selectedFilters: GenericObject = {...defaultSelectedFilters};
+
+  @property({type: String})
+  queryParams = '';
 
   @property({type: Array})
   listColumns: EtoolsTableColumn[] = [
@@ -190,6 +192,7 @@ export class EngagementsList extends connect(store)(LitElement) {
       sort: getUrlQueryStringSort(this.sort)
     };
     const qs = buildUrlQueryString(params);
+    this.queryParams = qs;
     updateAppLocation(`${this.routeDetails.path}?${qs}`, true);
   }
 
