@@ -38,6 +38,10 @@ export class PageHeader extends connect(store)(LitElement) {
         app-toolbar {
           background-color: ${this.headerColor};
         }
+
+        support-btn {
+          color: var(--header-icon-color);
+        }
       </style>
 
       <app-toolbar sticky class="content-align">
