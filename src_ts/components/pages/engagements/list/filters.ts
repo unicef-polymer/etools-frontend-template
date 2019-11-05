@@ -10,7 +10,7 @@ export const defaultSelectedFilters: GenericObject = {
   assessment_date: null
 };
 
-export const assessmentsFilters: EtoolsFilter[] = [
+export const engagementsFilters: EtoolsFilter[] = [
   {
     filterName: 'Search assessment',
     filterKey: 'q',
