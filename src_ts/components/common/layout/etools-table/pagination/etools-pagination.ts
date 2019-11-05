@@ -20,7 +20,7 @@ export class EtoolsPagination extends LitElement {
       ${etoolsPaginationStyles}
       <span class="pagination-item">
         <span id="rows">Rows per page:</span>
-        <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink no-label-float 
+        <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink no-label-float
           @value-changed="${this.onPageSizeChanged}">
           <paper-listbox slot="dropdown-content" attr-for-selected="name" .selected="${this.paginator.page_size}">
             ${this.pageSizeOptions.map((sizeOption: number) => html`<paper-item name="${sizeOption}">
@@ -31,16 +31,21 @@ export class EtoolsPagination extends LitElement {
           ${this.paginator.visible_range[0]}-${this.paginator.visible_range[1]} of ${this.paginator.count}
         </span>
       </span>
+
       <span class="pagination-item pagination-btns">
         <paper-icon-button icon="first-page" @tap="${this.goToFirstPage}"
                            ?disabled="${this.paginator.page === 1}"></paper-icon-button>
+
         <paper-icon-button icon="chevron-left" @tap="${this.pageLeft}"
                            ?disabled="${this.paginator.page === 1}"></paper-icon-button>
+
         <paper-icon-button icon="chevron-right" @tap="${this.pageRight}"
                            ?disabled="${this.paginator.page === this.paginator.total_pages}"></paper-icon-button>
+
         <paper-icon-button icon="last-page" @tap="${this.goToLastPage}"
                            ?disabled="${this.paginator.page === this.paginator.total_pages}"></paper-icon-button>
       </span>
+
     `;
   }
 

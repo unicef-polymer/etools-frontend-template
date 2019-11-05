@@ -2,21 +2,23 @@ import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
-import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+
 import {customElement, LitElement, html, property} from 'lit-element';
 
 import '../../common/layout/support-btn';
 import './countries-dropdown';
+import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {RootState, store} from '../../../redux/store';
-import {isProductionServer, isStagingServer, ROOT_PATH} from '../../../config/config';
+import {isProductionServer, isStagingServer, isDevServer, isDemoServer, ROOT_PATH} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
-import {EtoolsUserModel} from '../../user/user-model';
+import {EtoolsUserModel} from '../../../types/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
-import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUserData} from '../../user/user-actions';
 import {GenericObject} from '../../../types/globals';
+import isEmpty from 'lodash-es/isEmpty';
+
 import {pageHeaderStyles} from './page-header-styles';
 
 /**
@@ -30,31 +32,31 @@ export class PageHeader extends connect(store)(LitElement) {
   public render() {
     // main template
     // language=HTML
-    return html`  
-      ${pageHeaderStyles}      
+    return html`
+      ${pageHeaderStyles}
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
         }
       </style>
-      
+
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" @tap="${() => this.menuBtnClicked()}"></paper-icon-button>
         <div class="titlebar content-align">
-          <etools-app-selector id="selector"></etools-app-selector>
+          <etools-app-selector .user="${this.profile}"></etools-app-selector>
           <img id="app-logo" src="${this.rootPath}images/etools-logo-color-white.svg" alt="eTools">
-          ${this.isStaging ? html`<div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>` : ''}
+          ${!this.isProduction ? html`<div class="envWarning"> - ${this.environment} TESTING ENVIRONMENT</div>` : ''}
         </div>
         <div class="content-align">
           <countries-dropdown></countries-dropdown>
 
-          <support-btn></support-btn> 
+          <support-btn></support-btn>
 
           <etools-profile-dropdown
               .sections="${this.profileDrSections}"
               .offices="${this.profileDrOffices}"
               .users="${this.profileDrUsers}"
-              .profile="${ this.profile ? {...this.profile} : {} }"
+              .profile="${ this.profile ? {...this.profile} : {}}"
               @save-profile="${this.handleSaveProfile}"
               @sign-out="${this._signOut}">
           </etools-profile-dropdown>
@@ -65,7 +67,7 @@ export class PageHeader extends connect(store)(LitElement) {
   }
 
   @property({type: Boolean})
-  public isStaging: boolean = false;
+  public isProduction: boolean = false;
 
   @property({type: String})
   rootPath: string = ROOT_PATH;
@@ -97,13 +99,16 @@ export class PageHeader extends connect(store)(LitElement) {
   @property({type: Array})
   profileDrUsers: any[] = [];
 
+  @property({type: String})
+  environment: string = 'LOCAL';
+
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
 
   public connectedCallback() {
     super.connectedCallback();
     this.setBgColor();
-    this.isStaging = isStagingServer();
+    this.checkEnvironment();
   }
 
   public stateChanged(state: RootState) {
@@ -145,13 +150,21 @@ export class PageHeader extends connect(store)(LitElement) {
 
   protected _getModifiedFields(originalData: any, newData: any) {
     const modifiedFields: GenericObject = {};
-    this.editableFields.forEach(function(field: any) {
+    this.editableFields.forEach(function (field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];
       }
     });
 
     return modifiedFields;
+  }
+
+  protected checkEnvironment() {
+    this.isProduction = isProductionServer();
+    this.environment = isDevServer() ? 'DEVELOPMENT' :
+      isDemoServer() ? 'DEMO' :
+        isStagingServer() ? 'STAGING' :
+          'LOCAL';
   }
 
   public menuBtnClicked() {

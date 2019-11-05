@@ -4,7 +4,7 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
  * @customElement
  * @polymer
  */
-class EngagementQuestionnaires extends PolymerElement {
+class AssessmentQuestionnaires extends PolymerElement {
 
   static get template() {
     // language=HTML
@@ -35,4 +35,4 @@ class EngagementQuestionnaires extends PolymerElement {
 
 }
 
-window.customElements.define('engagement-questionnaires', EngagementQuestionnaires);
+window.customElements.define('assessment-questionnaires', AssessmentQuestionnaires);

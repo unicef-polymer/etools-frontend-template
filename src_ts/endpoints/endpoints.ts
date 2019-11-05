@@ -1,5 +1,5 @@
 import {GenericObject} from '../types/globals';
-import {etoolsEndpoints} from './endpoints-list';
+import {EtoolsEndpoint} from './endpoints-list';
 
 const generateUrlFromTemplate = (tmpl: string, data: object | undefined) => {
   if (!tmpl) {
@@ -18,8 +18,7 @@ const generateUrlFromTemplate = (tmpl: string, data: object | undefined) => {
   return tmpl;
 };
 
-export const getEndpoint = (endpointName: string, data?: GenericObject) => {
-  const endpoint = etoolsEndpoints[endpointName];
+export const getEndpoint = (endpoint: EtoolsEndpoint, data?: GenericObject) => {
   const baseSite = window.location.origin;
 
   if (endpoint && endpoint.template) {

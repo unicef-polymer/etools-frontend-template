@@ -1,5 +1,5 @@
 import {Action, ActionCreator} from 'redux';
-import {EtoolsUserModel} from '../../components/user/user-model';
+import {EtoolsUserModel} from '../../types/user-model';
 // import {ThunkAction} from 'redux-thunk';
 // import {RootState} from '../store';
 import {GenericObject} from '../../types/globals';

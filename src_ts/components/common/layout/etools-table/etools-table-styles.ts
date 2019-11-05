@@ -7,6 +7,7 @@ export const etoolsTableStyles = html`
     :host {
       display: block;
       width: 100%;
+      overflow-x: hidden;
     }
 
     table {

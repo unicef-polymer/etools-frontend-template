@@ -40,15 +40,26 @@ import './app-theme.js';
 import {ToastNotificationHelper} from '../common/toast-notifications/toast-notification-helper';
 import user from '../../redux/reducers/user';
 import commonData from '../../redux/reducers/common-data';
-import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../config/config';
+import pageData from '../../redux/reducers/page-data';
+import {setLoggingLevel, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../config/config';
 import {getCurrentUserData} from '../user/user-actions';
-import {getUnicefUsersData} from '../common-data/common-data-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
+import {
+  loadPartners,
+  loadOffices,
+  loadSections,
+  loadExternalIndividuals,
+  loadAssessingFirms,
+  loadUnicefUsers
+} from '../../redux/actions/common-data';
+import {checkEnvFlags} from '../common/environment-flags';
+import {logInfo} from '@unicef-polymer/etools-behaviors/etools-logging';
 
 store.addReducers({
   user,
-  commonData
+  commonData,
+  pageData
 });
 
 /**
@@ -63,11 +74,11 @@ export class AppShell extends connect(store)(LitElement) {
     // language=HTML
     return html`
     ${AppShellStyles}
-   
+
     <app-drawer-layout id="layout" responsive-width="850px"
                        fullbleed ?narrow="${this.narrow}" ?small-menu="${this.smallMenu}">
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" transition-duration="350" 
+      <app-drawer id="drawer" slot="drawer" transition-duration="350"
                   @app-drawer-transitioned="${this.onDrawerToggle}"
                   ?opened="${this.drawerOpened}"
                   ?swipe-open="${this.narrow}" ?small-menu="${this.smallMenu}">
@@ -86,13 +97,17 @@ export class AppShell extends connect(store)(LitElement) {
 
         <!-- Main content -->
         <main role="main" class="main-content">
-          <engagements-list class="page" 
-              ?active="${this.isActivePage(this.mainPage, 'engagements', this.subPage, 'list')}"></engagements-list>
-          <engagement-tabs class="page" 
-              ?active="${this.isActivePage(this.mainPage, 'engagements', this.subPage, 'details|questionnaires')}">
-          </engagement-tabs>
-          <page-two class="page" ?active="${this.isActivePage(this.mainPage, 'page-two')}"></page-two>
-          <page-not-found class="page" ?active="${this.isActivePage(this.mainPage, 'page-not-found')}"></page-not-found>
+          <assessments-list class="page"
+            ?active="${this.isActivePage(this.mainPage, 'assessments',
+      this.subPage, 'list')}">
+          </assessments-list>
+          <assessment-tabs class="page"
+            ?active="${this.isActivePage(this.mainPage, 'assessments',
+        this.subPage, 'details|questionnaire|followup')}">
+          </assessment-tabs>
+          <page-not-found class="page"
+            ?active="${this.isActivePage(this.mainPage, 'page-not-found')}">
+          </page-not-found>
         </main>
 
         <page-footer></page-footer>
@@ -128,6 +143,8 @@ export class AppShell extends connect(store)(LitElement) {
 
   constructor() {
     super();
+
+    setLoggingLevel();
     // Gesture events like tap and track generated from touch will not be
     // preventable, allowing for better scrolling performance.
     setPassiveTouchGestures(true);
@@ -141,6 +158,15 @@ export class AppShell extends connect(store)(LitElement) {
     } else {
       this.smallMenu = !!parseInt(menuTypeStoredVal, 10);
     }
+
+    checkEnvFlags();
+    getCurrentUserData();
+    store.dispatch(loadPartners());
+    store.dispatch(loadOffices());
+    store.dispatch(loadSections());
+    store.dispatch(loadExternalIndividuals());
+    store.dispatch(loadAssessingFirms());
+    store.dispatch(loadUnicefUsers());
   }
 
   public connectedCallback() {
@@ -151,9 +177,13 @@ export class AppShell extends connect(store)(LitElement) {
     installMediaQueryWatcher(`(min-width: 460px)`,
       () => store.dispatch(updateDrawerState(false)));
 
-    // TODO: just testing...
-    getCurrentUserData();
-    getUnicefUsersData();
+    // this will prevent the header to overlap etools-dropdown
+    customElements.whenDefined('app-header-layout').then(() => {
+      if (this.appHeaderLayout !== null) {
+        window.EtoolsEsmmFitIntoEl = this.appHeaderLayout!.shadowRoot!.querySelector('#contentContainer');
+      }
+    });
+
   }
 
   public disconnectedCallback() {
@@ -171,7 +201,7 @@ export class AppShell extends connect(store)(LitElement) {
 
   // TODO: just for testing...
   public getState() {
-    console.log(store.getState());
+    logInfo('Current redux state', 'AppShell', store.getState());
   }
 
   // Testing router (from console)

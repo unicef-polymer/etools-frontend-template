@@ -7,25 +7,25 @@ export const EtoolsRouter = new Router(ROOT_PATH);
 const routeParamRegex = '([^\\/?#=+]+)';
 
 EtoolsRouter
-  .addRoute(new RegExp('^engagements/list$'),
+  .addRoute(new RegExp('^assessments/list$'),
     (params: RouteCallbackParams): RouteDetails => {
       return {
-        routeName: 'engagements',
+        routeName: 'assessments',
         subRouteName: 'list',
         path: params.matchDetails[0],
         queryParams: params.queryParams,
         params: null
       };
     })
-  .addRoute(new RegExp(`^engagements\\/${routeParamRegex}\\/${routeParamRegex}$`),
+  .addRoute(new RegExp(`^assessments\\/${routeParamRegex}\\/${routeParamRegex}$`),
     (params: RouteCallbackParams): RouteDetails => {
       return {
-        routeName: 'engagements',
+        routeName: 'assessments',
         subRouteName: params.matchDetails[2], // tab name
         path: params.matchDetails[0],
         queryParams: params.queryParams,
         params: {
-          engagementId: params.matchDetails[1]
+          assessmentId: params.matchDetails[1]
         }
       };
     })
@@ -53,16 +53,26 @@ EtoolsRouter
 /**
  * Utility used to update location based on routes and dispatch navigate action (optional)
  */
+// TODO this method calls app.ts/navigate and app.ts/navigate calls this method ?!!
 export const updateAppLocation = (newLocation: string, dispatchNavigation: boolean = true): void => {
   const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
-  let navigationCallback = null;
+
+  EtoolsRouter.pushState(_newLocation);
+
   if (dispatchNavigation) {
-    navigationCallback = () => {
-      store.dispatch(navigate(decodeURIComponent(_newLocation)));
-    };
+    store.dispatch(navigate(decodeURIComponent(_newLocation)));
   }
-  EtoolsRouter.navigate(_newLocation, navigationCallback);
+};
+
+export const replaceAppLocation = (newLocation: string, dispatchNavigation: boolean = true): void => {
+  const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
+
+  EtoolsRouter.replaceState(_newLocation);
+
+  if (dispatchNavigation) {
+    store.dispatch(navigate(decodeURIComponent(_newLocation)));
+  }
 };
 
 export const ROUTE_404 = '/page-not-found';
-export const DEFAULT_ROUTE = '/engagements/list';
+export const DEFAULT_ROUTE = '/assessments/list';

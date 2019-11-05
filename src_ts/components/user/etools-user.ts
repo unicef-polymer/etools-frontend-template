@@ -1,7 +1,7 @@
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
 import {property} from '@polymer/decorators/lib/decorators';
-import {EtoolsUserModel} from './user-model';
+import {EtoolsUserModel} from '../../types/user-model';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../redux/store';
 import {getEndpoint} from '../../endpoints/endpoints';

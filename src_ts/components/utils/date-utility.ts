@@ -7,7 +7,7 @@ export function isValidDate(date: any) {
 
 export function prettyDate(dateString: string, format?: string, placeholder: string = '-') {
   const date = convertDate(dateString);
-  return (!date) ? (placeholder ? placeholder : ''): _utcDate(date, format);
+  return (!date) ? (placeholder ? placeholder : '') : _utcDate(date, format);
 }
 
 function _utcDate(date: any, format?: string) {

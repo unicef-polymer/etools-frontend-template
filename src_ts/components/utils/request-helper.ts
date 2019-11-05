@@ -30,43 +30,36 @@ export class RequestEndpoint {
 }
 
 const createIronRequestElement = () => {
-  let ironRequestElem = document.createElement('iron-request');
+  const ironRequestElem = document.createElement('iron-request');
   return ironRequestElem;
 };
 
-const generateRequestConfigOptions = (endpoint: RequestEndpoint, body: any) => {
-  let config = {
-    url: endpoint.url,
-    method: endpoint.method || 'GET',
-    handleAs: endpoint.handleAs || 'json',
-    headers: _getRequestHeaders({}),
-    body: body,
-  };
-  return config;
+const _getClientConfiguredHeaders = (additionalHeaders: any) => {
+  let header;
+  const clientHeaders: any = {};
+  if (additionalHeaders && additionalHeaders instanceof Object) {
+    /* eslint-disable guard-for-in */
+    for (header in additionalHeaders) {
+      clientHeaders[header] = additionalHeaders[header].toString();
+    }
+    /* eslint-enable guard-for-in */
+  }
+  return clientHeaders;
 };
 
-export const makeRequest = (endpoint: RequestEndpoint, data = {}) => {
-
-  let reqConfig = generateRequestConfigOptions(endpoint, data);
-  let requestElem = createIronRequestElement();
-
-  requestElem.send(reqConfig);
-  return requestElem!.completes!.then((result) => {
-    return result.response;
-  }).catch((error) => {
-    throw new RequestError(error, requestElem!.xhr!.status, requestElem!.xhr!.statusText,
-      requestElem!.xhr!.response);
-  });
+const _csrfSafeMethod = (method: string) => {
+  // these HTTP methods do not require CSRF protection
+  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
 };
 
 const _getCSRFCookie = () => {
   // check for a csrftoken cookie and return its value
-  let csrfCookieName = 'csrftoken';
+  const csrfCookieName = 'csrftoken';
   let csrfToken = null;
   if (document.cookie && document.cookie !== '') {
-    let cookies = document.cookie.split(';');
+    const cookies = document.cookie.split(';');
     for (let i = 0; i < cookies.length; i++) {
-      let cookie = cookies[i].trim();
+      const cookie = cookies[i].trim();
       // Does this cookie string begin with the name we want?
       if (cookie.substring(0, csrfCookieName.length + 1) === (csrfCookieName + '=')) {
         csrfToken = decodeURIComponent(cookie.substring(csrfCookieName.length + 1));
@@ -78,9 +71,9 @@ const _getCSRFCookie = () => {
 };
 
 const _getCsrfHeader = (csrfCheck: any) => {
-  let csrfHeaders: any = {};
+  const csrfHeaders: any = {};
   if (csrfCheck !== 'disabled') {
-    let csrfToken = _getCSRFCookie();
+    const csrfToken = _getCSRFCookie();
 
     if (csrfToken) {
       csrfHeaders['x-csrftoken'] = csrfToken;
@@ -89,13 +82,12 @@ const _getCsrfHeader = (csrfCheck: any) => {
   return csrfHeaders;
 };
 
-
 const _getRequestHeaders = (reqConfig: any) => {
   let headers: any = {};
 
   headers['content-type'] = 'application/json';
 
-  let clientConfiguredHeaders = _getClientConfiguredHeaders(reqConfig.headers);
+  const clientConfiguredHeaders = _getClientConfiguredHeaders(reqConfig.headers);
 
   let csrfHeaders = {};
   if (!_csrfSafeMethod(reqConfig.method)) {
@@ -107,23 +99,27 @@ const _getRequestHeaders = (reqConfig: any) => {
   return headers;
 };
 
-const _getClientConfiguredHeaders = (additionalHeaders: any) => {
-  let header;
-  let clientHeaders: any = {};
-  if (additionalHeaders && additionalHeaders instanceof Object) {
-    /* eslint-disable guard-for-in */
-    for (header in additionalHeaders) {
-      clientHeaders[header] = additionalHeaders[header].toString();
-    }
-    /* eslint-enable guard-for-in */
-  }
-  return clientHeaders;
+const generateRequestConfigOptions = (endpoint: RequestEndpoint, body: any) => {
+  const config = {
+    url: endpoint.url,
+    method: endpoint.method || 'GET',
+    handleAs: endpoint.handleAs || 'json',
+    headers: _getRequestHeaders({}),
+    body: body
+  };
+  return config;
 };
 
+export const makeRequest = (endpoint: RequestEndpoint, data = {}) => {
 
-const _csrfSafeMethod = (method: string) => {
-  // these HTTP methods do not require CSRF protection
-  return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+  const reqConfig = generateRequestConfigOptions(endpoint, data);
+  const requestElem = createIronRequestElement();
+
+  requestElem.send(reqConfig);
+  return requestElem!.completes!.then((result) => {
+    return result.response;
+  }).catch((error) => {
+    throw new RequestError(error, requestElem!.xhr!.status, requestElem!.xhr!.statusText,
+      requestElem!.xhr!.response);
+  });
 };
-
-

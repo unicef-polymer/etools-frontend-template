@@ -21,29 +21,28 @@ export class AppMenu extends LitElement {
     // main template
     // language=HTML
     return html`
-        ${navMenuStyles}
-
+      ${navMenuStyles}
       <div class="menu-header">
-      <span id="app-name">
-        Frontend <br>
-        Template
-      </span>
+        <span id="app-name">
+          Frontend <br>
+          Template
+        </span>
 
         <span class="ripple-wrapper main">
-        <iron-icon id="menu-header-top-icon"
-                   icon="assignment-ind"
-                    @tap="${() => this._toggleSmallMenu()}"></iron-icon>
-        <paper-ripple class="circle" center></paper-ripple>
-      </span>
+          <iron-icon id="menu-header-top-icon"
+                     icon="assignment-ind"
+                     @tap="${() => this._toggleSmallMenu()}"></iron-icon>
+          <paper-ripple class="circle" center></paper-ripple>
+        </span>
 
         <paper-tooltip for="menu-header-top-icon" position="right">
-          Frontend Template
+          Assessments
         </paper-tooltip>
 
         <span class="ripple-wrapper">
         <iron-icon id="minimize-menu"
                    icon="chevron-left"
-                    @tap="${() => this._toggleSmallMenu()}"></iron-icon>
+                   @tap="${() => this._toggleSmallMenu()}"></iron-icon>
         <paper-ripple class="circle" center></paper-ripple>
       </span>
       </div>
@@ -51,25 +50,18 @@ export class AppMenu extends LitElement {
       <div class="nav-menu">
         <iron-selector .selected="${this.selectedOption}"
                        attr-for-selected="menu-name"
-                       selectable="a"
                        role="navigation">
 
-          <a class="nav-menu-item" menu-name="engagements" href="${this.rootPath + 'engagements'}">
-            <iron-icon id="page1-icon" icon="accessibility"></iron-icon>
-            <paper-tooltip for="page1-icon" position="right">
-              Engagements
+          <a class="nav-menu-item"
+              href="${this.rootPath + 'assessments/list'}"
+              menu-name="assessments">
+            <iron-icon id="assessments-list-opt" icon="settings-applications"></iron-icon>
+            <paper-tooltip for="assessments-list-opt" position="right">
+             Assessments
             </paper-tooltip>
-            <div class="name">Engagements</div>
+            <div class="name"> Assessments</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="page-two" href="${this.rootPath + 'page-two'}">
-            <iron-icon id="page2-icon" icon="extension"></iron-icon>
-            <paper-tooltip for="page2-icon" position="right">
-              Page Two
-            </paper-tooltip>
-            <div class="name">Page Two</div>
-          </a>
-          
         </iron-selector>
 
         <div class="nav-menu-item section-title">

@@ -6,16 +6,16 @@ export interface RoutesLazyLoadComponentsPath {
 // each key from this object is computed from routeName_routeSubPage (if subRoute exists)
 export const componentsLazyLoadConfig: RoutesLazyLoadComponentsPath = {
 
-  'engagements_list': [
-    'components/pages/engagements/engagements-list.js'
+  'assessments_list': [
+    'components/pages/assessments/assessments-list.js'
   ],
-  'engagements_details': [
-    'components/pages/engagements/engagement-tabs.js',
-    'components/pages/engagements/engagement-tab-pages/engagement-details.js'
+  'assessments_details': [
+    'components/pages/assessments/assessment-tabs.js',
+    'components/pages/assessments/assessment-tab-pages/assessment-details.js'
   ],
-  'engagements_questionnaires': [
-    'components/pages/engagements/engagement-tabs.js',
-    'components/pages/engagements/engagement-tab-pages/engagement-questionnaires.js'
+  'assessments_questionnaire': [
+    'components/pages/assessments/assessment-tabs.js',
+    'components/pages/assessments/assessment-tab-pages/assessment-questionnaire.js'
   ],
   'page-not-found': [
     'components/pages/page-not-found.js'

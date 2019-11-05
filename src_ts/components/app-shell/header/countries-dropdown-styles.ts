@@ -19,6 +19,11 @@ export const countriesDropdownStyles = html`
     etools-dropdown {
       width: 160px;
 
+      --esmm-external-wrapper: {
+        width: 100%;
+        margin: 0;
+      };
+
       --paper-listbox: {
         max-height: 600px;
       };

@@ -1,6 +1,6 @@
 import {Reducer} from 'redux';
 import {UPDATE_USER_DATA, UPDATE_USER_PERMISSIONS} from '../actions/user';
-import {EtoolsUserModel} from '../../components/user/user-model';
+import {EtoolsUserModel} from '../../types/user-model';
 import {RootAction} from '../store';
 import {GenericObject} from '../../types/globals';
 
