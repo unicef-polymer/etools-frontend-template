@@ -10,14 +10,9 @@ import {pageContentHeaderSlottedStyles} from
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 
 import {GenericObject} from '../../../types/globals';
-import {Assessment} from '../../../types/assessment';
 import '../../common/layout/filters/etools-filters';
 import {
-  assessmentsFilters,
   defaultSelectedFilters,
-  updateFilterSelectionOptions,
-  updateFiltersSelectedValues,
-  onlyForUnicefFilters,
   FilterKeysAndTheirSelectedValues
 } from './list/filters';
 import {EtoolsFilter} from '../../common/layout/filters/etools-filters';
@@ -43,7 +38,6 @@ import {updateAppLocation, replaceAppLocation} from '../../../routing/routes';
 import {buttonsStyles} from '../../styles/button-styles';
 import {SharedStylesLit} from '../../styles/shared-styles-lit';
 import {etoolsEndpoints} from '../../../endpoints/endpoints-list';
-import {makeRequest} from '../../utils/request-helper';
 import '../../common/layout/export-data';
 import '@unicef-polymer/etools-loading';
 import get from 'lodash-es/get';
@@ -103,20 +97,6 @@ export class AssessmentsList extends connect(store)(LitElement) {
       </section>
     `;
   }
-
-  /**
-   * TODO:
-   *  1. init filters and sort params: default values or values from routeDetails object
-   *  2. make engagements data request using filters and sorting params
-   *  3. on engagements req success init paginator, list page data and update url params if needed
-   *  4. on filters-change, parinator-change, sort-change trigger a new request for engagements data (repeat 2 and 3)
-   *  5. add loading...
-   *  6. hide etools-pagination if there are fewer results then first page_size option
-   *  7. when navigating from details page to list all list req params are preserved and we need to avoid
-   *  a duplicated request to get data. This can be done by adding a new list queryParams state in redux
-   *  and use it in app-menu component to update menu option url
-   *  8. test filters menu and prevend request triggered by filter select only action
-   */
 
   @property({type: Object})
   routeDetails!: RouteDetails;
@@ -214,64 +194,8 @@ export class AssessmentsList extends connect(store)(LitElement) {
       } else {
         // init selectedFilters, sort, page, page_size from url params
         this.updateListParamsFromRouteDetails(this.routeDetails.queryParams);
-        // get assessments based on filters, sort and pagination
-        this.getFilteredAssessments();
       }
     }
-
-    if (state.user) {
-      if (state.user.data) {
-        this.isUnicefUser = state.user.data.is_unicef_user;
-      }
-      if (state.user.permissions) {
-        this.canAdd = state.user.permissions.canAddAssessment;
-        this.canExport = state.user.permissions.canExportAssessment;
-      }
-    }
-
-    this.initFiltersForDisplay(state);
-  }
-
-  initFiltersForDisplay(state: RootState) {
-    if (this.dataRequiredByFiltersHasBeenLoaded(state)) {
-
-      const availableFilters = this.isUnicefUser ?
-        [...assessmentsFilters] : [...assessmentsFilters.filter(x => onlyForUnicefFilters.indexOf(x.filterKey) < 0)];
-
-      this.populateDropdownFilterOptionsFromCommonData(state.commonData, availableFilters);
-
-      // update filter selection and assign the result to etools-filters(trigger render)
-      this.filters = updateFiltersSelectedValues(this.selectedFilters, availableFilters);
-      lastSelectedFilters = {...this.selectedFilters};
-    }
-  }
-
-  /**
-    * TODO
-    * We might avoid the issues of waiting and also reduce multiple stateChanged execution by updating
-    * redux state only after all endpoint requests (currentUser, partners, unicefUsers, externals) have finished
-    */
-  private dataRequiredByFiltersHasBeenLoaded(state: RootState) {
-    if (get(state, 'user.data') && state.commonData &&
-      // Avoid selectedValue being set before the dropdown is populated with options
-      // And take into account that for non unicef users, the users endpoint returns 403
-      (!this.isUnicefUser || get(state, 'commonData.unicefUsers.length')) &&
-      get(state, 'commonData.partners.length') &&
-      this.routeDetails.queryParams &&
-      Object.keys(this.routeDetails.queryParams).length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  populateDropdownFilterOptionsFromCommonData(commonData: any, currentFilters: EtoolsFilter[]) {
-    if (this.isUnicefUser) {
-      updateFilterSelectionOptions(currentFilters, 'assessor_staff', commonData.unicefUsers);
-      updateFilterSelectionOptions(currentFilters, 'assessor_external', commonData.externalIndividuals);
-      updateFilterSelectionOptions(currentFilters, 'assessor_firm', commonData.assessingFirms);
-    }
-    updateFilterSelectionOptions(currentFilters, 'unicef_focal_point', commonData.unicefUsers);
-    updateFilterSelectionOptions(currentFilters, 'partner', commonData.partners);
   }
 
   updateUrlListQueryParams() {
@@ -325,26 +249,6 @@ export class AssessmentsList extends connect(store)(LitElement) {
   sortChange(e: CustomEvent) {
     this.sort = getSortFields(e.detail);
     this.updateUrlListQueryParams();
-  }
-
-  /**
-   * This method runs each time new data is received from routeDetails state
-   * (sort, filters, paginator init/change)
-   */
-  getFilteredAssessments() {
-    this.showLoading = true;
-    const endpoint = {url: etoolsEndpoints.assessment.url + `?${this.getParamsForQuery()}`};
-    return makeRequest(endpoint).then((response: GenericObject) => {
-      this.paginator = getPaginator(this.paginator, response);
-      const assessments = response.results;
-      assessments.forEach((assessment: Assessment) => {
-        if (assessment.status === 'in_progress') {
-          assessment.status = 'in progress';
-        }
-      });
-      this.listData = [...assessments];
-    }).catch((err: any) => logError('Assessments list req error', 'AssessmentsList', err))
-      .then(() => this.showLoading = false);
   }
 
   goToAddNewPage() {
