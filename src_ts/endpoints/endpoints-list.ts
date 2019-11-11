@@ -21,9 +21,4 @@ export const etoolsEndpoints: EtoolsEndpoints = {
     exp: 60 * 60 * 1000, // 1h
     cachingKey: 'unicefUsers'
   }
-  // agreements: {
-  //   template: '/api/v2/agreements/',
-  //   exp: 30 * 60 * 1000, // 30min
-  //   cacheTableName: 'agreements'
-  // },
 };

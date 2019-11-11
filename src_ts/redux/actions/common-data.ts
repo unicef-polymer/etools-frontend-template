@@ -1,6 +1,5 @@
 import {getPartnersDummyData, geUnicefUsersDummyData} from '../../components/pages/page-one/list/list-dummy-data';
 import {Action, ActionCreator} from 'redux';
-import {getUnicefUsersData} from '../../components/common-data/common-data-actions';
 
 export const SET_UNICEF_USERS_DATA = 'SET_UNICEF_USERS_DATA';
 export const SET_PARTNERS = 'SET_PARTNERS';
@@ -27,10 +26,11 @@ export const setPartners = (partners: object[]) => {
 };
 
 export const loadPartners = () => (dispatch: any) => {
+  // here will make request to endpoint to load data
   dispatch(setPartners(getPartnersDummyData()));
 };
 
 export const loadUnicefUsers = () => (dispatch: any) => {
-  // TO BE used real method getUnicefUsersData from above
+  // here will make request to endpoint to load data
   dispatch(setUnicefUsers(geUnicefUsersDummyData()));
 };
