@@ -13,6 +13,4 @@ export const pageContentHeaderSlottedStyles = html`
       @apply --layout-horizontal;
       @apply --layout-end;
     }
-    
-    /* TODO: add more styles as needed */
   </style>`;

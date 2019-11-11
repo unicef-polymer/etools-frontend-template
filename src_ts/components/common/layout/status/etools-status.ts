@@ -45,7 +45,7 @@ export class EtoolsStatus extends LitElement {
           display: inline-block;
           vertical-align: middle;
           width: 40px;
-          height: 0;
+          height: 1px;
           margin: 0 24px;
           border-top: 1px solid var(--secondary-text-color);
         }
@@ -166,7 +166,7 @@ export class EtoolsStatus extends LitElement {
   }
 
   isCompleted(index: number, activeStatusIndex: number): boolean {
-    return index < activeStatusIndex;
+    return index < activeStatusIndex || activeStatusIndex === this.statuses.length - 1;
   }
 
   getStatusClasses(index: number, activeStatusIndex: number): string {

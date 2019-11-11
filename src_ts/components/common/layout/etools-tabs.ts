@@ -22,6 +22,15 @@ export class EtoolsTabs extends LitElement {
           display: none !important;
         }
 
+        paper-tab[disabled] {
+          opacity: .3;
+        }
+
+        *[disabled] {
+          cursor: not-allowed !important;
+          pointer-events: auto !important;
+        }
+
         :host {
           @apply --layout-horizontal;
           @apply --layout-start-justified;
@@ -74,7 +83,7 @@ export class EtoolsTabs extends LitElement {
 
   getTabHtml(item: any) {
     return html`
-    <paper-tab name="${item.tab}" link ?hidden="${item.hidden}">
+    <paper-tab name="${item.tab}" link ?hidden="${item.hidden}" ?disabled="${item.disabled}">
     <span class="tab-content">
         ${item.tabLabel} ${item.showTabCounter ? html`(item.counter)` : ''}
     </span>

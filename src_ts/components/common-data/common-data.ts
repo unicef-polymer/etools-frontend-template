@@ -5,7 +5,7 @@ import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-requ
 import {property} from '@polymer/decorators/lib/decorators';
 import {GenericObject, UnicefUser} from '../../types/globals';
 import {getEndpoint} from '../../endpoints/endpoints';
-import {updateUnicefUsersData} from '../../redux/actions/common-data';
+import {setUnicefUsers} from '../../redux/actions/common-data';
 
 
 const UNICEF_USERS = 'unicefUsers';
@@ -29,7 +29,7 @@ export class EtoolsCommonData extends connect(store)(EtoolsAjaxRequestMixin(Poly
 
   public getUnicefUserData() {
     return this.sendRequest({endpoint: this.unicefUsersEndpoint}).then((response: GenericObject) => {
-      store.dispatch(updateUnicefUsersData(response));
+      store.dispatch(setUnicefUsers(response));
     }).catch((error: GenericObject) => {
       console.error('[EtoolsUnicefUser]: getUnicefUserData req error...', error);
       throw error;

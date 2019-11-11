@@ -54,12 +54,12 @@ export class AppMenu extends LitElement {
                        selectable="a"
                        role="navigation">
 
-          <a class="nav-menu-item" menu-name="engagements" href="${this.rootPath + 'engagements'}">
+          <a class="nav-menu-item" menu-name="page-one" href="${this.rootPath + 'page-one'}">
             <iron-icon id="page1-icon" icon="accessibility"></iron-icon>
             <paper-tooltip for="page1-icon" position="right">
-              Engagements
+              Page One
             </paper-tooltip>
-            <div class="name">Engagements</div>
+            <div class="name">Page One</div>
           </a>
 
           <a class="nav-menu-item" menu-name="page-two" href="${this.rootPath + 'page-two'}">
@@ -69,7 +69,7 @@ export class AppMenu extends LitElement {
             </paper-tooltip>
             <div class="name">Page Two</div>
           </a>
-          
+
         </iron-selector>
 
         <div class="nav-menu-item section-title">

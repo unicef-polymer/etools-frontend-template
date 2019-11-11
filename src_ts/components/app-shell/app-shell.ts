@@ -42,9 +42,12 @@ import user from '../../redux/reducers/user';
 import commonData from '../../redux/reducers/common-data';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../config/config';
 import {getCurrentUserData} from '../user/user-actions';
-import {getUnicefUsersData} from '../common-data/common-data-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
+import {
+  loadPartners,
+  loadUnicefUsers
+} from '../../redux/actions/common-data';
 
 store.addReducers({
   user,
@@ -63,11 +66,11 @@ export class AppShell extends connect(store)(LitElement) {
     // language=HTML
     return html`
     ${AppShellStyles}
-   
+
     <app-drawer-layout id="layout" responsive-width="850px"
                        fullbleed ?narrow="${this.narrow}" ?small-menu="${this.smallMenu}">
       <!-- Drawer content -->
-      <app-drawer id="drawer" slot="drawer" transition-duration="350" 
+      <app-drawer id="drawer" slot="drawer" transition-duration="350"
                   @app-drawer-transitioned="${this.onDrawerToggle}"
                   ?opened="${this.drawerOpened}"
                   ?swipe-open="${this.narrow}" ?small-menu="${this.smallMenu}">
@@ -86,11 +89,11 @@ export class AppShell extends connect(store)(LitElement) {
 
         <!-- Main content -->
         <main role="main" class="main-content">
-          <engagements-list class="page" 
-              ?active="${this.isActivePage(this.mainPage, 'engagements', this.subPage, 'list')}"></engagements-list>
-          <engagement-tabs class="page" 
-              ?active="${this.isActivePage(this.mainPage, 'engagements', this.subPage, 'details|questionnaires')}">
-          </engagement-tabs>
+          <page-one-list class="page"
+              ?active="${this.isActivePage(this.mainPage, 'page-one', this.subPage, 'list')}"></page-one-list>
+          <page-one-tabs class="page"
+              ?active="${this.isActivePage(this.mainPage, 'page-one', this.subPage, 'details|questionnaires')}">
+          </page-one-tabs>
           <page-two class="page" ?active="${this.isActivePage(this.mainPage, 'page-two')}"></page-two>
           <page-not-found class="page" ?active="${this.isActivePage(this.mainPage, 'page-not-found')}"></page-not-found>
         </main>
@@ -141,6 +144,9 @@ export class AppShell extends connect(store)(LitElement) {
     } else {
       this.smallMenu = !!parseInt(menuTypeStoredVal, 10);
     }
+
+    store.dispatch(loadPartners());
+    store.dispatch(loadUnicefUsers());
   }
 
   public connectedCallback() {
@@ -151,9 +157,7 @@ export class AppShell extends connect(store)(LitElement) {
     installMediaQueryWatcher(`(min-width: 460px)`,
       () => store.dispatch(updateDrawerState(false)));
 
-    // TODO: just testing...
     getCurrentUserData();
-    getUnicefUsersData();
   }
 
   public disconnectedCallback() {

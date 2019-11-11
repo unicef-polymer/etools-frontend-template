@@ -7,6 +7,11 @@ export const etoolsTableStyles = html`
     :host {
       display: block;
       width: 100%;
+      overflow-x: hidden;
+    }
+
+    a:focus {
+      border-bottom: 2px solid var(--paper-input-container-focus-color, var(--primary-color));
     }
 
     table {
@@ -26,7 +31,7 @@ export const etoolsTableStyles = html`
       display: table-cell;
       text-align: left;
     }
-    
+
     table th {
       font-size: var(--etools-table-col-header-font-size, 12px);
     }
@@ -39,7 +44,7 @@ export const etoolsTableStyles = html`
       border-top: 1px solid var(--etools-table-rows-border-color, #dee2e6);
       font-size: var(--etools-table-col-font-size, 13px);
     }
-    
+
     table td a {
       color: var(--primary-color);
       text-decoration: none;
@@ -75,7 +80,7 @@ export const etoolsTableStyles = html`
       padding: 0 var(--etools-table-side-padding, 24px);
       box-sizing: border-box;
     }
-    
+
     table tr th:first-child,
     table tr td:first-child {
       padding-left: var(--etools-table-side-padding, 24px);
@@ -85,18 +90,19 @@ export const etoolsTableStyles = html`
     table tr td:last-of-type {
       padding-right: var(--etools-table-side-padding, 24px);
     }
-    
+
     table tr td.pagination {
       padding-right: 16px;
     }
-    
+
     /* action styles */
     .row-actions {
       position: relative;
       min-width: 100px;
     }
-    
+
     .row-actions .actions {
+      visibility: hidden;
       position: absolute;
       right: var(--etools-table-side-padding, 16px);
       top: 0;
@@ -106,9 +112,21 @@ export const etoolsTableStyles = html`
       @apply --layout-end-justified;
       background: transparent;
     }
-    
+
+    tr:hover .row-actions .actions {
+      visibility: visible;
+    }
+
     .row-actions paper-icon-button {
       color: var(--dark-icon-color, #6f6f70);
+    }
+
+    .capitalize {
+      text-transform: capitalize;
+    }
+
+    paper-checkbox[readonly] {
+      pointer-events: none;
     }
   </style>
 `;
