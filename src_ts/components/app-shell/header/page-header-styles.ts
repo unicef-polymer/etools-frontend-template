@@ -58,5 +58,20 @@ export const pageHeaderStyles = html`
         display: none;
       }
     }
+
+    @media (max-width: 768px) {
+      #envWarning {
+        display: none;
+      }
+      .titlebar img {
+        margin: 0 8px 0 12px;
+      }
+      support-btn {
+        margin-left: 14px;
+      }
+      etools-profile-dropdown{
+        margin-left: 12px;
+        width: 40px;
+      }
   </style>
 `;

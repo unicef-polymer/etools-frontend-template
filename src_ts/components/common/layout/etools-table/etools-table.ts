@@ -1,5 +1,6 @@
 import '@polymer/iron-icons/iron-icons';
 import '@polymer/paper-icon-button/paper-icon-button';
+import '@polymer/paper-checkbox/paper-checkbox';
 import {customElement, LitElement, html, property} from 'lit-element';
 
 import {etoolsTableStyles} from './etools-table-styles';
@@ -8,12 +9,16 @@ import {fireEvent} from '../../../utils/fire-custom-event';
 import {prettyDate} from '../../../utils/date-utility';
 import {EtoolsPaginator} from './pagination/paginator';
 import './pagination/etools-pagination';
+import get from 'lodash-es/get';
+import {etoolsTableResponsiveStyles} from "./etools-table-responsive-styles";
 
 export enum EtoolsTableColumnType {
   Text,
   Date,
   Link,
-  Number
+  Number,
+  Checkbox,
+  Custom
 }
 
 export enum EtoolsTableColumnSort {
@@ -28,15 +33,20 @@ export interface EtoolsTableColumn {
   sort?: EtoolsTableColumnSort;
   /**
    * used only for EtoolsTableColumnType.Link to specify url template (route with a single param)
-   * ex: `${ROOT_PATH}engagements/:id/details`
+   * ex: `${ROOT_PATH}page-one/:id/details`
    *    - id will be replaced with item object id property
    */
   link_tmpl?: string;
+  isExternalLink?: boolean;
+  capitalize?: boolean;
+  placeholder?: string;
+  customMethod?: Function;
 }
 
 export enum EtoolsTableActionType {
   Edit,
-  Delete
+  Delete,
+  Copy
 }
 
 /**
@@ -45,7 +55,9 @@ export enum EtoolsTableActionType {
  */
 @customElement('etools-table')
 export class EtoolsTable extends LitElement {
-
+  static get styles() {
+    return [etoolsTableResponsiveStyles];
+  }
   public render() {
     // language=HTML
     return html`
@@ -59,12 +71,41 @@ export class EtoolsTable extends LitElement {
           </tr>
         </thead>
         <tbody>
-          ${this.items.map((item: any) => this.getRowDataHtml(item))}
+          ${this.items.map((item: any) => this.getRowDataHtml(item, this.showEdit))}
           ${this.paginator ? this.paginationHtml : ''}
         </tbody>
       </table>
     `;
   }
+
+  @property({type: String})
+  dateFormat: string = 'D MMM YYYY';
+
+  @property({type: Boolean, reflect: true})
+  showEdit!: boolean;
+
+  @property({type: Boolean, reflect: true})
+  showDelete!: boolean;
+
+  @property({type: Boolean, reflect: true})
+  showCopy!: boolean;
+
+  @property({type: String})
+  caption: string = '';
+
+  @property({type: String})
+  actionsLabel: string = 'Actions';
+
+  @property({type: Array})
+  columns: EtoolsTableColumn[] = [];
+
+  @property({type: Array})
+  items: GenericObject[] = [];
+
+  @property({type: Object})
+  paginator!: EtoolsPaginator;
+
+  private defaultPlaceholder: string = '—';
 
   getColumnHtml(column: EtoolsTableColumn) {
     if (!this.columnHasSort(column.sort)) {
@@ -87,7 +128,7 @@ export class EtoolsTable extends LitElement {
     `;
   }
 
-  getLinkTmpl(pathTmpl: string | undefined, item: any, key: string) {
+  getLinkTmpl(pathTmpl: string | undefined, item: any, key: string, isExternalLink?: boolean) {
     if (!pathTmpl) {
       throw new Error(`[EtoolsTable.getLinkTmpl]: column "${item[key]}" has no link tmpl defined`);
     }
@@ -99,18 +140,19 @@ export class EtoolsTable extends LitElement {
       }
     });
     const aHref = path.join('/');
-    return html`
-      <a class="" href="${aHref}">${item[key]}</a>
-    `;
+    return isExternalLink
+      ? html`<a class="" @click="${() => window.location.href = aHref}" href="#">${item[key]}</a>`
+      : html`<a class="" href="${aHref}">${item[key]}</a>`;
   }
 
-  getRowDataHtml(item: any) {
+  getRowDataHtml(item: any, showEdit: boolean) {
     const columnsKeys = this.getColumnsKeys();
     return html`
       <tr>
-        ${columnsKeys.map((k: string) => html`<td class="${this.getRowDataColumnClassList(k)}">
-          ${this.getItemValue(item, k)}</td>`)}
-        ${this.showRowActions() ? html`<td class="row-actions">${this.getRowActionsTmpl(item)}` : ''}
+        ${columnsKeys.map((k: string) => html`<td data-label="${this.getColumnDetails(k).label}" class="${this.getRowDataColumnClassList(k)}">
+          ${this.getItemValue(item, k, showEdit)}</td>`)}
+
+        ${this.showRowActions() ? html`<td data-label="${this.actionsLabel}" class="row-actions">&nbsp;${this.getRowActionsTmpl(item)}` : ''}
       </tr>
     `;
   }
@@ -122,35 +164,20 @@ export class EtoolsTable extends LitElement {
           icon="create" @tap="${() => this.triggerAction(EtoolsTableActionType.Edit, item)}"></paper-icon-button>
         <paper-icon-button ?hidden="${!this.showDelete}"
           icon="delete" @tap="${() => this.triggerAction(EtoolsTableActionType.Delete, item)}"></paper-icon-button>
+        <paper-icon-button ?hidden="${!this.showCopy}"
+          icon="content-copy" @tap="${() => this.triggerAction(EtoolsTableActionType.Copy, item)}"></paper-icon-button>
       </div>
     `;
   }
 
   get paginationHtml() {
-    return html`<tr><td class="pagination" colspan="${this.columns.length + (this.showRowActions() ? 1 : 0)}">
-      <etools-pagination .paginator="${this.paginator}"></etools-pagination></td></tr>`;
+    return html`
+    <tr>
+      <td class="pagination" colspan="${this.columns.length + (this.showRowActions() ? 1 : 0)}">
+        <etools-pagination .paginator="${this.paginator}"></etools-pagination>
+      </td>
+    </tr>`;
   }
-
-  @property({type: String})
-  dateFormat: string = 'D MMM YYYY';
-
-  @property({type: Boolean, reflect: true})
-  showEdit!: boolean;
-
-  @property({type: Boolean, reflect: true})
-  showDelete!: boolean;
-
-  @property({type: String})
-  caption: string = '';
-
-  @property({type: Array})
-  columns: EtoolsTableColumn[] = [];
-
-  @property({type: Array})
-  items: GenericObject[] = [];
-
-  @property({type: Object})
-  paginator!: EtoolsPaginator;
 
   showCaption(caption: string): boolean {
     return !caption;
@@ -190,11 +217,12 @@ export class EtoolsTable extends LitElement {
   // Rows
   getRowDataColumnClassList(key: string) {
     const column: EtoolsTableColumn = this.getColumnDetails(key);
+    const cssClass: string = column.capitalize ? 'capitalize ' : '';
     switch (column.type) {
       case EtoolsTableColumnType.Number:
-        return 'right-align';
+        return `${cssClass}right-align`;
       default:
-        return '';
+        return cssClass;
     }
   }
 
@@ -202,19 +230,44 @@ export class EtoolsTable extends LitElement {
     return this.columns.map((c: EtoolsTableColumn) => c.name);
   }
 
-  getItemValue(item: any, key: string) {
+  getItemValue(item: any, key: string, showEdit: boolean) {
     // get column object to determine how data should be displayed (date, string, link, number...)
     const column: EtoolsTableColumn = this.getColumnDetails(key);
     switch (column.type) {
       case EtoolsTableColumnType.Date:
-        return prettyDate(item[key], this.dateFormat);
+        return item[key]
+          ? prettyDate(item[key], this.dateFormat)
+          : (column.placeholder ? column.placeholder : this.defaultPlaceholder);
       case EtoolsTableColumnType.Link:
-        return this.getLinkTmpl(column.link_tmpl, item, key);
+        return this.getLinkTmpl(column.link_tmpl, item, key, column.isExternalLink);
       case EtoolsTableColumnType.Number:
+      case EtoolsTableColumnType.Checkbox:
+        return this._getCheckbox(item, key, showEdit);
+      case EtoolsTableColumnType.Custom:
+        return column.customMethod
+          ? column.customMethod(item, key)
+          : this._getValueByKey(item, key, column.placeholder);
       default:
-        return item[key];
-
+        return this._getValueByKey(item, key, column.placeholder);
     }
+  }
+
+  _getCheckbox(item: any, key: string, showEdit: boolean) {
+    return html`
+      <paper-checkbox ?checked="${this._getValueByKey(item, key, '', true)}"
+        ?readonly="${!showEdit}"
+        @change="${(e: CustomEvent) => this.triggerItemChanged(item, key, (e.currentTarget as any).checked)}">
+      </paper-checkbox>`;
+
+  }
+
+  _getValueByKey(item: any, key: string, placeholder?: string, ignorePlaceholder: boolean = false) {
+    const value = get(item, key, '');
+
+    if (!ignorePlaceholder && (!value || value === '')) {
+      return placeholder ? placeholder : this.defaultPlaceholder;
+    }
+    return value;
   }
 
   // row actions
@@ -233,6 +286,9 @@ export class EtoolsTable extends LitElement {
       case EtoolsTableActionType.Delete:
         fireEvent(this, 'delete-item', item);
         break;
+      case EtoolsTableActionType.Copy:
+        fireEvent(this, 'copy-item', item);
+        break;
     }
   }
 
@@ -246,6 +302,12 @@ export class EtoolsTable extends LitElement {
 
   toggleColumnSort(sort: EtoolsTableColumnSort): EtoolsTableColumnSort {
     return sort === EtoolsTableColumnSort.Asc ? EtoolsTableColumnSort.Desc : EtoolsTableColumnSort.Asc;
+  }
+
+  triggerItemChanged(item: any, field: string, filedValue: any) {
+    const changedItem = {...item};
+    changedItem[field] = filedValue;
+    fireEvent(this, 'item-changed', changedItem);
   }
 
 }

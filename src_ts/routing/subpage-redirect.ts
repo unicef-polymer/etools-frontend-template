@@ -3,7 +3,7 @@ import {ROOT_PATH} from '../config/config';
 import {Router} from './router';
 
 export const redirectToListSubpageList = [
-  'engagements'
+  'page-one'
 ];
 export const getRedirectToListPath = (path: string): undefined | string => {
   path = path.replace(ROOT_PATH, '');

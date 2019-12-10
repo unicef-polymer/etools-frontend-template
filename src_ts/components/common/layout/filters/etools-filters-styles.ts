@@ -6,7 +6,7 @@ export const etoolsFiltersStyles = css`
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    
+
     -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
@@ -14,7 +14,7 @@ export const etoolsFiltersStyles = css`
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
-    
+
     box-sizing: border-box;
     min-height: 62px;
     height: auto;
@@ -34,7 +34,7 @@ export const etoolsFiltersStyles = css`
     flex: 1;
     -webkit-flex-basis: 0.000000001px;
     flex-basis: 0.000000001px;
-    
+
     margin-right: auto;
   }
 
@@ -74,7 +74,7 @@ export const etoolsFiltersStyles = css`
     display: -ms-flexbox;
     display: -webkit-flex;
     display: flex;
-    
+
     -ms-flex-direction: row;
     -webkit-flex-direction: row;
     flex-direction: row;
@@ -82,7 +82,7 @@ export const etoolsFiltersStyles = css`
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
-    
+
     cursor: pointer;
     font-weight: normal;
     font-size: 16px;
@@ -108,7 +108,7 @@ export const etoolsFiltersStyles = css`
     -ms-align-self: stretch;
     -webkit-align-self: stretch;
     align-self: stretch;
-    
+
     padding: 0 0 0 8px;
     margin: 8px 0 8px 24px;
     border-left: 2px solid var(--light-divider-color, rgba(0, 0, 0, 0.12));
@@ -167,7 +167,7 @@ export const etoolsFiltersStyles = css`
     -ms-flex-wrap: wrap;
     -webkit-flex-wrap: wrap;
     flex-wrap: wrap;
-    
+
     min-height: 48px;
     box-sizing: border-box;
     width: 100%;
