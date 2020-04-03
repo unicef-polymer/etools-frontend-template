@@ -6,7 +6,7 @@ import '@polymer/paper-ripple/paper-ripple.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
 import {fireEvent} from '../../utils/fire-custom-event';
-import {ROOT_PATH, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
+import {getDomainByEnv, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {customElement, html, LitElement, property} from 'lit-element';
 
 /**
@@ -54,7 +54,7 @@ export class AppMenu extends LitElement {
                        selectable="a"
                        role="navigation">
 
-          <a class="nav-menu-item" menu-name="page-one" href="${this.rootPath + 'page-one'}">
+          <a class="nav-menu-item" menu-name="page-one" href="${this.rootPath + '/page-one'}">
             <iron-icon id="page1-icon" icon="accessibility"></iron-icon>
             <paper-tooltip for="page1-icon" position="right">
               Page One
@@ -62,14 +62,14 @@ export class AppMenu extends LitElement {
             <div class="name">Page One</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="page-two" href="${this.rootPath + 'page-two'}">
+          <a class="nav-menu-item" menu-name="page-two" href="${this.rootPath + '/page-two'}">
             <iron-icon id="page2-icon" icon="extension"></iron-icon>
             <paper-tooltip for="page2-icon" position="right">
               Page Two
             </paper-tooltip>
             <div class="name">Page Two</div>
           </a>
-
+          
         </iron-selector>
 
         <div class="nav-menu-item section-title">
@@ -110,7 +110,7 @@ export class AppMenu extends LitElement {
   public selectedOption: string = '';
 
   @property({type: String})
-  rootPath: string = ROOT_PATH;
+  rootPath: string = getDomainByEnv();
 
   @property({type: Boolean, attribute: 'small-menu'})
   public smallMenu: boolean = false;
