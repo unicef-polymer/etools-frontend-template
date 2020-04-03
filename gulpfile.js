@@ -54,5 +54,5 @@ gulp.task('serve', () => {
     stdio: 'inherit'
   };
   spawn('tsc', ['--watch'], spawnOptions);
-  spawn('polymer', ['serve'], spawnOptions);
+  spawn('polymer', ['serve -H 0.0.0.0 -p 8080'], spawnOptions);
 });
