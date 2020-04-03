@@ -3,10 +3,10 @@
   "shell": "src/components/app-shell/app-shell.js",
   "fragments": [
     "src/components/pages/page-not-found.js",
-    "src/components/pages/engagements/engagements-list.js",
-    "src/components/pages/engagements/engagement-tabs.js",
-    "src/components/pages/engagements/engagement-tab-pages/engagement-details.js",
-    "src/components/pages/engagements/engagement-tab-pages/engagement-questionnaires.js",
+    "src/components/pages/page-one/page-one-list.js",
+    "src/components/pages/page-one/page-one-tabs.js",
+    "src/components/pages/page-one/page-one-tab-pages/page-one-details.js",
+    "src/components/pages/page-one/page-one-tab-pages/page-one-questionnaires.js",
     "src/components/pages/page-two.js"
   ],
   "sources": [
@@ -22,8 +22,13 @@
     "node_modules/moment/min/moment.min.js"
   ],
   "lint": {
-    "rules": ["polymer-3"],
-    "ignoreWarnings": ["could-not-resolve-reference", "non-literal-import"]
+    "rules": [
+      "polymer-3"
+    ],
+    "ignoreWarnings": [
+      "could-not-resolve-reference",
+      "non-literal-import"
+    ]
   },
   "builds": [
     {

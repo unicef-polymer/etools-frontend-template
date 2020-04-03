@@ -30,14 +30,17 @@ export class PageHeader extends connect(store)(LitElement) {
   public render() {
     // main template
     // language=HTML
-    return html`  
-      ${pageHeaderStyles}      
+    return html`
+      ${pageHeaderStyles}
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
         }
+        support-btn {
+          color: var(--header-icon-color);
+        }
       </style>
-      
+
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" @tap="${() => this.menuBtnClicked()}"></paper-icon-button>
         <div class="titlebar content-align">
@@ -48,13 +51,13 @@ export class PageHeader extends connect(store)(LitElement) {
         <div class="content-align">
           <countries-dropdown></countries-dropdown>
 
-          <support-btn></support-btn> 
+          <support-btn></support-btn>
 
           <etools-profile-dropdown
               .sections="${this.profileDrSections}"
               .offices="${this.profileDrOffices}"
               .users="${this.profileDrUsers}"
-              .profile="${ this.profile ? {...this.profile} : {} }"
+              .profile="${ this.profile ? {...this.profile} : {}}"
               @save-profile="${this.handleSaveProfile}"
               @sign-out="${this._signOut}">
           </etools-profile-dropdown>
@@ -145,7 +148,7 @@ export class PageHeader extends connect(store)(LitElement) {
 
   protected _getModifiedFields(originalData: any, newData: any) {
     const modifiedFields: GenericObject = {};
-    this.editableFields.forEach(function(field: any) {
+    this.editableFields.forEach(function (field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];
       }
