@@ -39,7 +39,7 @@ import {
 import {RouteDetails, RouteQueryParams} from '../../../routing/router';
 import {updateAppLocation, replaceAppLocation} from '../../../routing/routes';
 import {SharedStylesLit} from '../../styles/shared-styles-lit';
-import '../../common/layout/export-data';
+
 import '@unicef-polymer/etools-loading';
 import {getListDummydata} from '../page-one/list/list-dummy-data';
 import get from 'lodash-es/get';
