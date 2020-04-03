@@ -10,7 +10,7 @@ import './countries-dropdown';
 
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {RootState, store} from '../../../redux/store';
-import {isProductionServer, isStagingServer, ROOT_PATH} from '../../../config/config';
+import {isProductionServer, ROOT_PATH} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
 import {EtoolsUserModel} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
@@ -42,7 +42,7 @@ export class PageHeader extends connect(store)(LitElement) {
         <paper-icon-button id="menuButton" icon="menu" @tap="${() => this.menuBtnClicked()}"></paper-icon-button>
         <div class="titlebar content-align">
           <etools-app-selector id="selector"></etools-app-selector>
-          <img id="app-logo" src="${this.rootPath}images/etools-logo-color-white.svg" alt="eTools">
+          <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools">
           ${this.isStaging ? html`<div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>` : ''}
         </div>
         <div class="content-align">
@@ -103,7 +103,7 @@ export class PageHeader extends connect(store)(LitElement) {
   public connectedCallback() {
     super.connectedCallback();
     this.setBgColor();
-    this.isStaging = isStagingServer();
+    this.isStaging = !isProductionServer();
   }
 
   public stateChanged(state: RootState) {
