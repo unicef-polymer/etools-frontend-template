@@ -1,5 +1,5 @@
 import {css} from 'lit-element';
-// language=HTML
+// language=CSS
 export const pageLayoutStyles = css`
   .page-content {
     margin: 24px;

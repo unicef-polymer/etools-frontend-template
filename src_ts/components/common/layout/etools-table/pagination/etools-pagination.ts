@@ -15,12 +15,15 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
 @customElement('etools-pagination')
 export class EtoolsPagination extends LitElement {
 
+  static get styles() {
+    return [etoolsPaginationStyles];
+  }
+
   public render() {
     return html`
-      ${etoolsPaginationStyles}
       <span class="pagination-item">
         <span id="rows">Rows per page:</span>
-        <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink no-label-float 
+        <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink no-label-float
           @value-changed="${this.onPageSizeChanged}">
           <paper-listbox slot="dropdown-content" attr-for-selected="name" .selected="${this.paginator.page_size}">
             ${this.pageSizeOptions.map((sizeOption: number) => html`<paper-item name="${sizeOption}">

@@ -24,14 +24,14 @@ import {RouteDetails} from '../../../routing/router';
 export class PageOneTabs extends connect(store)(LitElement) {
 
   static get styles() {
-    return [elevationStyles, pageLayoutStyles];
+    return [elevationStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
   }
 
   public render() {
     // main template
     // language=HTML
     return html`
-      ${SharedStylesLit} ${pageContentHeaderSlottedStyles}
+      ${SharedStylesLit}
       <style>
         etools-status {
           justify-content: center;

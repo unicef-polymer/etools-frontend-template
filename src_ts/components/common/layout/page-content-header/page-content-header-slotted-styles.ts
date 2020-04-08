@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import {css} from 'lit-element';
 import {layoutHorizontal, layoutEndJustified} from '../../../styles/lit-styles/flex-layout-styles';
 
 /**
@@ -7,12 +7,9 @@ import {layoutHorizontal, layoutEndJustified} from '../../../styles/lit-styles/f
  */
 
 // language=CSS
-export const pageContentHeaderSlottedStyles = html`
-  <style>
-    .content-header-actions {
-      ${layoutHorizontal}
-      ${layoutEndJustified}
-    }
-  </style>
-  `
-;
+export const pageContentHeaderSlottedStyles = css`
+  .content-header-actions {
+    ${layoutHorizontal}
+    ${layoutEndJustified}
+  }
+`;

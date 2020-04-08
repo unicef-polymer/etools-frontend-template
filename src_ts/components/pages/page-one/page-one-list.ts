@@ -54,14 +54,14 @@ let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedF
 export class PageOneList extends connect(store)(LitElement) {
 
   static get styles() {
-    return [elevationStyles, buttonsStyles, pageLayoutStyles];
+    return [elevationStyles, buttonsStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
   }
 
   public render() {
     // main template
     // language=HTML
     return html`
-      ${SharedStylesLit} ${pageContentHeaderSlottedStyles}
+      ${SharedStylesLit}
       <style>
         etools-table {
           padding-top: 12px;
@@ -108,7 +108,7 @@ export class PageOneList extends connect(store)(LitElement) {
 
   @property({type: Array})
   sort: EtoolsTableSortItem[] = [{name: 'assessment_date', sort: EtoolsTableColumnSort.Desc},
-  {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}];
+    {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}];
 
   @property({type: Array})
   filters!: EtoolsFilter[];
@@ -205,7 +205,7 @@ export class PageOneList extends connect(store)(LitElement) {
   initFiltersForDisplay(state: RootState) {
     if (this.dataRequiredByFiltersHasBeenLoaded(state)) {
 
-      const availableFilters = [...defaultFilters]
+      const availableFilters = [...defaultFilters];
       this.populateDropdownFilterOptionsFromCommonData(state.commonData, availableFilters);
 
       // update filter selection and assign the result to etools-filters(trigger render)

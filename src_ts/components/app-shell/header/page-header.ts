@@ -26,11 +26,14 @@ import {pageHeaderStyles} from './page-header-styles';
 @customElement('page-header')
 export class PageHeader extends connect(store)(LitElement) {
 
+  static get styles() {
+    return [pageHeaderStyles];
+  }
+
   public render() {
     // main template
     // language=HTML
     return html`
-      ${pageHeaderStyles}
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
