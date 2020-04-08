@@ -1,5 +1,5 @@
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import {html} from 'lit-element';
+import {layoutHorizontal, layoutCenter, layoutEndJustified} from '../../../styles/lit-styles/flex-layout-styles';
 
 // language=HTML
 export const etoolsTableStyles = html`
@@ -107,9 +107,9 @@ export const etoolsTableStyles = html`
       right: var(--etools-table-side-padding, 16px);
       top: 0;
       bottom: 0;
-      @apply --layout-horizontal;
-      @apply --layout-center;
-      @apply --layout-end-justified;
+      ${layoutHorizontal}
+      ${layoutCenter}
+      ${layoutEndJustified}
       background: transparent;
     }
 

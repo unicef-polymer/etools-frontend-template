@@ -1,4 +1,5 @@
 import {html} from 'lit-element';
+import {layoutFlex, layoutHorizontal, layoutCenter} from '../../styles/lit-styles/flex-layout-styles';
 
 // language=HTML
 export const pageHeaderStyles = html`
@@ -27,7 +28,7 @@ export const pageHeaderStyles = html`
     }
 
     .titlebar {
-      @apply --layout-flex;
+      ${layoutFlex}
       font-size: 28px;
       font-weight: 300;
     }
@@ -38,8 +39,8 @@ export const pageHeaderStyles = html`
     }
 
     .content-align {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      ${layoutHorizontal}
+      ${layoutCenter}
     }
 
     #app-logo {

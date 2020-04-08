@@ -1,13 +1,14 @@
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import {html} from 'lit-element';
+import {layoutHorizontal, layoutCenter, layoutEndJustified, layoutVertical, layoutStart}
+  from '../../../../styles/lit-styles/flex-layout-styles';
 
-// language=HTML
+// language=CSS
 export const etoolsPaginationStyles = html`
   <style>
     :host {
-      @apply --layout-horizontal;
-      @apply --layout-center;
-      @apply --layout-end-justified;
+      ${layoutHorizontal}
+      ${layoutCenter}
+      ${layoutEndJustified}
       font-size: 12px;
       color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
     }
@@ -50,7 +51,7 @@ export const etoolsPaginationStyles = html`
         font-size: 12px;
         height: 24px;
         /* For IE below */
-        @apply --layout-horizontal;
+        ${layoutHorizontal}
         align-items: strech;
         max-width: 24px;
       };
@@ -60,16 +61,16 @@ export const etoolsPaginationStyles = html`
     }
 
     .pagination-item {
-      @apply --layout-horizontal;
-      @apply --layout-center;
+      ${layoutHorizontal}
+      ${layoutCenter}
     }
 
     /* Mobile view CSS */
     :host([low-resolution-layout]) {
       padding: 8px 0;
       height: auto;
-      @apply --layout-vertical;
-      @apply --layout-start;
+      ${layoutVertical}
+      ${layoutStart}
     }
 
     :host([low-resolution-layout]) #range {
@@ -79,5 +80,5 @@ export const etoolsPaginationStyles = html`
     :host([low-resolution-layout]) .pagination-btns {
       margin-left: -12px;
     }
-
-  </style>`;
+  </style>`
+;

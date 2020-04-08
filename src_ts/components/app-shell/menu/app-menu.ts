@@ -21,8 +21,7 @@ export class AppMenu extends LitElement {
     // main template
     // language=HTML
     return html`
-        ${navMenuStyles}
-
+      ${navMenuStyles}
       <div class="menu-header">
       <span id="app-name">
         Frontend <br>
@@ -69,7 +68,7 @@ export class AppMenu extends LitElement {
             </paper-tooltip>
             <div class="name">Page Two</div>
           </a>
-          
+
         </iron-selector>
 
         <div class="nav-menu-item section-title">
