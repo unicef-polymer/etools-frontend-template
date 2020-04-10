@@ -1,6 +1,6 @@
 import {css} from 'lit-element';
 
-// language=HTML
+// language=CSS
 export const labelAndvalueStylesLit = css`
   .paper-label {
     font-size: 12px;

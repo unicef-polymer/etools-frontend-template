@@ -1,7 +1,6 @@
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import {css} from 'lit-element';
 
-// language=HTML
+// language=CSS
 export const etoolsTableResponsiveStyles = css`
   /*
     Max width before this PARTICULAR table gets nasty

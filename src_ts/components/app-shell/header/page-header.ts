@@ -1,4 +1,3 @@
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
@@ -27,11 +26,14 @@ import {pageHeaderStyles} from './page-header-styles';
 @customElement('page-header')
 export class PageHeader extends connect(store)(LitElement) {
 
+  static get styles() {
+    return [pageHeaderStyles];
+  }
+
   public render() {
     // main template
     // language=HTML
     return html`
-      ${pageHeaderStyles}
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
@@ -148,7 +150,7 @@ export class PageHeader extends connect(store)(LitElement) {
 
   protected _getModifiedFields(originalData: any, newData: any) {
     const modifiedFields: GenericObject = {};
-    this.editableFields.forEach(function (field: any) {
+    this.editableFields.forEach(function(field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];
       }
