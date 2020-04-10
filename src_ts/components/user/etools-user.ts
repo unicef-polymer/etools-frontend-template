@@ -1,5 +1,5 @@
 import {PolymerElement} from '@polymer/polymer/polymer-element.js';
-import EtoolsAjaxRequestMixin from '@unicef-polymer/etools-ajax/etools-ajax-request-mixin';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 import {property} from '@polymer/decorators/lib/decorators';
 import {EtoolsUserModel} from './user-model';
 import {connect} from 'pwa-helpers/connect-mixin';
@@ -16,7 +16,7 @@ const CHANGE_COUNTRY_ENDPOINT = 'changeCountry';
  * @polymer
  * @appliesMixin EtoolsAjaxRequestMixin
  */
-export class EtoolsUser extends connect(store)(EtoolsAjaxRequestMixin(PolymerElement)) {
+export class EtoolsUser extends connect(store)(PolymerElement) {
 
   @property({type: Object, notify: true})
   userData: EtoolsUserModel | null = null;
@@ -30,7 +30,9 @@ export class EtoolsUser extends connect(store)(EtoolsAjaxRequestMixin(PolymerEle
   }
 
   public getUserData() {
-    return this.sendRequest({endpoint: this.profileEndpoint}).then((response: GenericObject) => {
+    return sendRequest({
+      endpoint: {url: this.profileEndpoint.url}
+    }).then((response: GenericObject) => {
       // console.log('response', response);
       store.dispatch(updateUserData(response));
     }).catch((error: GenericObject) => {
@@ -40,9 +42,9 @@ export class EtoolsUser extends connect(store)(EtoolsAjaxRequestMixin(PolymerEle
   }
 
   public updateUserData(profile: GenericObject) {
-    return this.sendRequest({
+    return sendRequest({
       method: 'PATCH',
-      endpoint: this.profileEndpoint,
+      endpoint: {url: this.profileEndpoint.url},
       body: profile
     }).then((response: GenericObject) => {
       store.dispatch(updateUserData(response));
@@ -53,12 +55,12 @@ export class EtoolsUser extends connect(store)(EtoolsAjaxRequestMixin(PolymerEle
   }
 
   public changeCountry(countryId: number) {
-    return this.sendRequest({
+    return sendRequest({
       method: 'POST',
-      endpoint: this.changeCountryEndpoint,
+      endpoint: {url: this.changeCountryEndpoint.url},
       body: {country: countryId}
     }).catch((error: GenericObject) => {
-      console.error('[EtoolsUser]: updateUserData req error ', error);
+      console.error('[EtoolsUser]: changeCountry req error ', error);
       throw error;
     });
   }
