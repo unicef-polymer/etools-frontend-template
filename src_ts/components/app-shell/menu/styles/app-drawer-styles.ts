@@ -1,8 +1,7 @@
-import {html} from 'lit-element';
+import {css} from 'lit-element';
 
 // language=HTML
-export const appDrawerStyles = html`
-  <style>
+export const appDrawerStyles = css`
     /** app-drawer-layout and app-drawer are using the same width variable, we need to apply it only at parent level*/
     app-drawer-layout:not([small-menu]) {
       --app-drawer-width: 220px;
@@ -24,5 +23,4 @@ export const appDrawerStyles = html`
     app-drawer {
       z-index: 100;
     }
-  </style>
 `;

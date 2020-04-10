@@ -61,11 +61,14 @@ store.addReducers({
 @customElement('app-shell')
 export class AppShell extends connect(store)(LitElement) {
 
+  static get styles() {
+    return [AppShellStyles];
+  }
+
   public render() {
     // main template
     // language=HTML
     return html`
-    ${AppShellStyles}
 
     <app-drawer-layout id="layout" responsive-width="850px"
                        fullbleed ?narrow="${this.narrow}" ?small-menu="${this.smallMenu}">
