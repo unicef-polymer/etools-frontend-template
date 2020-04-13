@@ -53,6 +53,7 @@
     "@unicef-polymer/etools-loading": "4.0.1",
     "@unicef-polymer/etools-profile-dropdown": "4.0.1-rc.1",
     "@unicef-polymer/etools-upload": "3.0.1",
+    "@unicef-polymer/etools-table": "^1.0.1-rc.4",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "lit-element": "^2.2.1",
     "lodash-es": "^4.17.11",

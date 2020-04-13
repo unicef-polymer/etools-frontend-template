@@ -41,6 +41,26 @@ export class PageHeader extends connect(store)(LitElement) {
         support-btn {
           color: var(--header-icon-color);
         }
+
+        @media (max-width: 576px) {
+          etools-app-selector {
+            --app-selector-button-padding: 18px 8px;
+          }
+          #app-logo {
+            display: none;
+          }
+          .envWarning {
+            font-size: 10px;
+            margin-left: 2px;
+          }
+          #refresh{
+            width: 24px;
+            padding: 0px
+          }
+          app-toolbar {
+            padding-right: 4px;
+          }
+        }
       </style>
 
       <app-toolbar sticky class="content-align">

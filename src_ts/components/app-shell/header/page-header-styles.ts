@@ -53,6 +53,10 @@ export const pageHeaderStyles = css`
     font-size: 18px;
   }
 
+  support-btn {
+      color: var(--header-icon-color);
+    }
+
   @media (min-width: 850px) {
     #menuButton {
       display: none;
@@ -74,4 +78,25 @@ export const pageHeaderStyles = css`
       width: 40px;
     }
   }
+
+  @media (max-width: 576px) {
+      etools-app-selector {
+        --app-selector-button-padding: 18px 8px;
+      }
+      #app-logo {
+        display: none;
+      }
+      .titlebar img {
+        margin: 0 8px 0 4px;
+      }
+      .envWarning {
+        font-size: 10px;
+        line-height: 12px;
+        white-space: nowrap;
+        margin-left: 2px;
+      }
+      app-toolbar {
+        padding-right: 0px;
+      }
+    }
 `;

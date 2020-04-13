@@ -21,13 +21,11 @@ import {EtoolsFilter} from '../../common/layout/filters/etools-filters';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {buttonsStyles} from '../../styles/button-styles';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
-import '../../common/layout/etools-table/etools-table';
-import {
-  EtoolsTableColumn,
-  EtoolsTableColumnSort,
-  EtoolsTableColumnType
-} from '../../common/layout/etools-table/etools-table';
-import {defaultPaginator, EtoolsPaginator, getPaginator} from '../../common/layout/etools-table/pagination/paginator';
+import '@unicef-polymer/etools-table/etools-table';
+import {EtoolsTableColumn, EtoolsTableColumnSort, EtoolsTableColumnType}
+  from '@unicef-polymer/etools-table/etools-table';
+import {EtoolsPaginator, defaultPaginator, getPaginatorWithBackend}
+  from '@unicef-polymer/etools-table/pagination/etools-pagination';
 import {
   buildUrlQueryString,
   EtoolsTableSortItem,
@@ -66,6 +64,22 @@ export class PageOneList extends connect(store)(LitElement) {
         etools-table {
           padding-top: 12px;
         }
+
+        @media (max-width: 576px) {
+          .action {
+            text-align: right;
+          }
+          #addBtn{
+            padding-right: 16px;
+            margin-right: 32px
+          }
+          .shortAddText {
+            display: block;
+          }
+          .longAddText {
+            display: none;
+          }
+        }
       </style>
       <page-content-header>
         <h1 slot="page-title">Page One list</h1>
@@ -74,8 +88,9 @@ export class PageOneList extends connect(store)(LitElement) {
             <iron-icon icon="file-download"></iron-icon>Export
           </paper-button>
 
-          <paper-button class="primary left-icon" raised @tap="${this.goToAddnewPage}">
-            <iron-icon icon="add"></iron-icon>Add new record
+          <paper-button id="addBtn" class="primary left-icon" raised @tap="${this.goToAddnewPage}">
+            <iron-icon icon="add"></iron-icon><span class='longAddText'>Add new record</span>
+            <span class='shortAddText'>Add</span>
           </paper-button>
         </div>
       </page-content-header>
@@ -87,7 +102,7 @@ export class PageOneList extends connect(store)(LitElement) {
 
       <section class="elevation page-content no-padding" elevation="1">
         <etools-loading loading-text="Loading..." .active="${this.showLoading}"></etools-loading>
-        <etools-table caption="Page One list - optional table title"
+        <etools-table caption="Page One"
                       .columns="${this.listColumns}"
                       .items="${this.listData}"
                       .paginator="${this.paginator}"
@@ -283,7 +298,7 @@ export class PageOneList extends connect(store)(LitElement) {
   getListData() {
     getListDummydata(this.paginator).then((response: any) => {
       // update paginator (total_pages, visible_range, count...)
-      this.paginator = getPaginator(this.paginator, response);
+      this.paginator = getPaginatorWithBackend(this.paginator, response);
       this.listData = [...response.results];
     }).catch((err: any) => {
       // TODO: handle req errors
