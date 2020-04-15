@@ -6,9 +6,8 @@ import {layoutHorizontal, layoutEnd} from '../../../styles/lit-styles/flex-layou
  * (styling slotted content, using ::slotted will not work on Edge)
  */
 
-// language=css
+// language=CSS
 export const pageContentHeaderSlottedStyles = css`
-<style>
   .content-header-actions {
     ${layoutHorizontal}
     ${layoutEnd}
@@ -18,6 +17,5 @@ export const pageContentHeaderSlottedStyles = css`
         display: block;
       }
     }
-</style>
 `;
 

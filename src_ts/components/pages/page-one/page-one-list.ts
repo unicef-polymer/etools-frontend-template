@@ -42,6 +42,7 @@ import '@unicef-polymer/etools-loading';
 import {getListDummydata} from '../page-one/list/list-dummy-data';
 import get from 'lodash-es/get';
 import {fireEvent} from '../../utils/fire-custom-event';
+import '../../common/layout/export-data';
 let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedFilters};
 
 /**
@@ -64,7 +65,12 @@ export class PageOneList extends connect(store)(LitElement) {
         etools-table {
           padding-top: 12px;
         }
-
+        .shortAddText {
+          display: none;
+        }
+        .action {
+          text-align: right;
+        }
         @media (max-width: 576px) {
           .action {
             text-align: right;
@@ -83,21 +89,22 @@ export class PageOneList extends connect(store)(LitElement) {
       </style>
       <page-content-header>
         <h1 slot="page-title">Page One list</h1>
-        <div slot="title-row-actions" class="content-header-actions">
-          <paper-button class="default left-icon" raised @tap="${this.exportRecord}">
-            <iron-icon icon="file-download"></iron-icon>Export
-          </paper-button>
 
+        <div slot="title-row-actions" class="content-header-actions">
+          <div class="action">
+            <export-data  .params="${this.queryParams}" raised ></export-data>
+          </div>
+          <div class="action">
           <paper-button id="addBtn" class="primary left-icon" raised @tap="${this.goToAddnewPage}">
             <iron-icon icon="add"></iron-icon><span class='longAddText'>Add new record</span>
             <span class='shortAddText'>Add</span>
           </paper-button>
+          </div>
         </div>
       </page-content-header>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.filters}"
-                        @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters .filters="${this.filters}" @filter-change="${this.filtersChange}"></etools-filters>
       </section>
 
       <section class="elevation page-content no-padding" elevation="1">

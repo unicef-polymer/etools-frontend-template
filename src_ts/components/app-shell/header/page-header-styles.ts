@@ -67,6 +67,9 @@ export const pageHeaderStyles = css`
     #envWarning {
       display: none;
     }
+    .envLong {
+      display: none;
+    }
     .titlebar img {
       margin: 0 8px 0 12px;
     }
