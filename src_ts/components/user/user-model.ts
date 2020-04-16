@@ -72,7 +72,7 @@ export const dummyUserData = {
   last_login: '2020-04-01 09:55:21.303242+00:00',
   last_name: 'Doe',
   middle_name: '',
-  name: '',
+  name: 'Test User',
   office: '',
   oic: 'oic',
   user: 255577,
