@@ -8,6 +8,7 @@ This an app shell for Unicef eTools apps, a starting point based on Polymer 3, R
 * requirements: `node`, `npm`, `polymer-cli`, `typescript`, `gulp`
 * `npm install`
 * `npm run start`
+* To work on localhost in `index.html` we must change `<base href="/demo/">` to `<base href="/">`
 
 Check `package.json` `scripts` for more...
 

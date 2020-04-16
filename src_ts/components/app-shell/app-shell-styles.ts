@@ -1,10 +1,9 @@
-import {html} from 'lit-element';
-import '@polymer/iron-flex-layout/iron-flex-layout';
+import {css} from 'lit-element';
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
+import {layoutFlex} from '../styles/lit-styles/flex-layout-styles';
 
-export const AppShellStyles = html`
+export const AppShellStyles = css`
 ${appDrawerStyles}
-<style>
   :host {
     display: block;
   }
@@ -14,7 +13,7 @@ ${appDrawerStyles}
   }
 
   .main-content {
-    @apply --layout-flex;
+    ${layoutFlex}
   }
 
   .page {
@@ -24,6 +23,4 @@ ${appDrawerStyles}
   .page[active] {
     display: block;
   }
-
-</style>
 `;

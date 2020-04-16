@@ -21,13 +21,11 @@ import {EtoolsFilter} from '../../common/layout/filters/etools-filters';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {buttonsStyles} from '../../styles/button-styles';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
-import '../../common/layout/etools-table/etools-table';
-import {
-  EtoolsTableColumn,
-  EtoolsTableColumnSort,
-  EtoolsTableColumnType
-} from '../../common/layout/etools-table/etools-table';
-import {defaultPaginator, EtoolsPaginator, getPaginator} from '../../common/layout/etools-table/pagination/paginator';
+import '@unicef-polymer/etools-table/etools-table';
+import {EtoolsTableColumn, EtoolsTableColumnSort, EtoolsTableColumnType}
+  from '@unicef-polymer/etools-table/etools-table';
+import {EtoolsPaginator, defaultPaginator, getPaginatorWithBackend}
+  from '@unicef-polymer/etools-table/pagination/etools-pagination';
 import {
   buildUrlQueryString,
   EtoolsTableSortItem,
@@ -39,11 +37,12 @@ import {
 import {RouteDetails, RouteQueryParams} from '../../../routing/router';
 import {updateAppLocation, replaceAppLocation} from '../../../routing/routes';
 import {SharedStylesLit} from '../../styles/shared-styles-lit';
-import '../../common/layout/export-data';
+
 import '@unicef-polymer/etools-loading';
 import {getListDummydata} from '../page-one/list/list-dummy-data';
 import get from 'lodash-es/get';
 import {fireEvent} from '../../utils/fire-custom-event';
+import '../../common/layout/export-data';
 let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedFilters};
 
 /**
@@ -54,40 +53,63 @@ let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedF
 export class PageOneList extends connect(store)(LitElement) {
 
   static get styles() {
-    return [elevationStyles, buttonsStyles, pageLayoutStyles];
+    return [elevationStyles, buttonsStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
   }
 
   public render() {
     // main template
     // language=HTML
     return html`
-      ${SharedStylesLit} ${pageContentHeaderSlottedStyles}
+      ${SharedStylesLit}
       <style>
         etools-table {
           padding-top: 12px;
         }
+        .shortAddText {
+          display: none;
+        }
+        .action {
+          text-align: right;
+        }
+        @media (max-width: 576px) {
+          .action {
+            text-align: right;
+          }
+          #addBtn{
+            padding-right: 16px;
+            margin-right: 32px
+          }
+          .shortAddText {
+            display: block;
+          }
+          .longAddText {
+            display: none;
+          }
+        }
       </style>
       <page-content-header>
         <h1 slot="page-title">Page One list</h1>
-        <div slot="title-row-actions" class="content-header-actions">
-          <paper-button class="default left-icon" raised @tap="${this.exportRecord}">
-            <iron-icon icon="file-download"></iron-icon>Export
-          </paper-button>
 
-          <paper-button class="primary left-icon" raised @tap="${this.goToAddnewPage}">
-            <iron-icon icon="add"></iron-icon>Add new record
+        <div slot="title-row-actions" class="content-header-actions">
+          <div class="action">
+            <export-data  .params="${this.queryParams}" raised ></export-data>
+          </div>
+          <div class="action">
+          <paper-button id="addBtn" class="primary left-icon" raised @tap="${this.goToAddnewPage}">
+            <iron-icon icon="add"></iron-icon><span class='longAddText'>Add new record</span>
+            <span class='shortAddText'>Add</span>
           </paper-button>
+          </div>
         </div>
       </page-content-header>
 
       <section class="elevation page-content filters" elevation="1">
-        <etools-filters .filters="${this.filters}"
-                        @filter-change="${this.filtersChange}"></etools-filters>
+        <etools-filters .filters="${this.filters}" @filter-change="${this.filtersChange}"></etools-filters>
       </section>
 
       <section class="elevation page-content no-padding" elevation="1">
         <etools-loading loading-text="Loading..." .active="${this.showLoading}"></etools-loading>
-        <etools-table caption="Page One list - optional table title"
+        <etools-table caption="Page One"
                       .columns="${this.listColumns}"
                       .items="${this.listData}"
                       .paginator="${this.paginator}"
@@ -108,7 +130,7 @@ export class PageOneList extends connect(store)(LitElement) {
 
   @property({type: Array})
   sort: EtoolsTableSortItem[] = [{name: 'assessment_date', sort: EtoolsTableColumnSort.Desc},
-  {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}];
+    {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}];
 
   @property({type: Array})
   filters!: EtoolsFilter[];
@@ -205,7 +227,7 @@ export class PageOneList extends connect(store)(LitElement) {
   initFiltersForDisplay(state: RootState) {
     if (this.dataRequiredByFiltersHasBeenLoaded(state)) {
 
-      const availableFilters = [...defaultFilters]
+      const availableFilters = [...defaultFilters];
       this.populateDropdownFilterOptionsFromCommonData(state.commonData, availableFilters);
 
       // update filter selection and assign the result to etools-filters(trigger render)
@@ -283,7 +305,7 @@ export class PageOneList extends connect(store)(LitElement) {
   getListData() {
     getListDummydata(this.paginator).then((response: any) => {
       // update paginator (total_pages, visible_range, count...)
-      this.paginator = getPaginator(this.paginator, response);
+      this.paginator = getPaginatorWithBackend(this.paginator, response);
       this.listData = [...response.results];
     }).catch((err: any) => {
       // TODO: handle req errors

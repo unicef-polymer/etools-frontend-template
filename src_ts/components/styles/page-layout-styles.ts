@@ -1,5 +1,5 @@
 import {css} from 'lit-element';
-// language=HTML
+// language=CSS
 export const pageLayoutStyles = css`
   .page-content {
     margin: 24px;
@@ -15,5 +15,14 @@ export const pageLayoutStyles = css`
 
   section.page-content.no-padding {
     padding: 0;
+  }
+
+  @media (max-width: 576px) {
+    section.page-content.filters {
+      padding: 5px;
+    }
+    .page-content {
+      margin: 5px;
+    }
   }
 `;

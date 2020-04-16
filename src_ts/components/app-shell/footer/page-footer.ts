@@ -1,7 +1,7 @@
-import '@polymer/iron-flex-layout/iron-flex-layout.js';
 import {LitElement, html, customElement, property} from 'lit-element';
 import {ROOT_PATH} from '../../../config/config';
-
+import {layoutFlex, layoutVertical, layoutEndJustified, layoutHorizontal, layoutInline}
+  from '../../styles/lit-styles/flex-layout-styles';
 /**
  * page footer element
  * @LitElement
@@ -16,9 +16,9 @@ export class PageFooter extends LitElement {
     return html`
       <style>
         :host {
-          @apply --layout-vertical;
-          @apply --layout-flex;
-          @apply --layout-end-justified;
+          ${layoutVertical}
+          ${layoutFlex}
+          ${layoutEndJustified}
           padding: 18px 24px;
           width: 100%;
           min-height: 90px;
@@ -26,12 +26,12 @@ export class PageFooter extends LitElement {
         }
 
         #footer-content {
-          @apply --layout-horizontal;
+          ${layoutHorizontal}
         }
 
         #unicef-logo {
-          @apply --layout-horizontal;
-          @apply --layout-inline;
+          ${layoutHorizontal}
+          ${layoutInline}
           padding-right: 30px;
         }
 
@@ -60,7 +60,7 @@ export class PageFooter extends LitElement {
       <footer>
         <div id="footer-content">
         <span id="unicef-logo">
-          <img src="${this.rootPath}images/UNICEF_logo.png" alt="UNICEF logo">
+          <img src="images/UNICEF_logo.png" alt="UNICEF logo">
         </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>
