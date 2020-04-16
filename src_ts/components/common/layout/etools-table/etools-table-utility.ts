@@ -4,6 +4,7 @@
 
 import {EtoolsTableColumn, EtoolsTableColumnSort} from './etools-table';
 import {GenericObject} from '../../../../types/globals';
+import {selectedValueTypeByFilterKey, FilterKeysAndTheirSelectedValues} from '../../../pages/page-one/list/filters';
 
 export interface EtoolsTableSortItem {
   name: string;
@@ -23,7 +24,7 @@ export const getSortFields = (columns: EtoolsTableColumn[]): EtoolsTableSortItem
   const sortedColumns: any[] = columns.filter((c: EtoolsTableColumn) => c.sort !== undefined);
   if (sortedColumns.length > 0) {
     sortItems = sortedColumns.map((c: EtoolsTableColumn) =>
-        Object.assign({}, {name: c.name, sort: c.sort})) as EtoolsTableSortItem[];
+      Object.assign({}, {name: c.name, sort: c.sort})) as EtoolsTableSortItem[];
   }
   return sortItems;
 };
@@ -45,44 +46,54 @@ export const buildUrlQueryString = (params: GenericObject): string => {
   const queryParams = [];
 
   for (const param in params) {
-    if (params[param]) {
-      const paramValue = params[param];
-      let filterUrlValue;
+    if (!params[param]) {
+      continue;
+    }
+    const paramValue = params[param];
+    let filterUrlValue;
 
-      if (paramValue instanceof Array && paramValue.length > 0) {
-        filterUrlValue = paramValue.join('|');
-      } else if (typeof paramValue === 'boolean') {
-        if (paramValue) { // ignore if it's false
-          filterUrlValue = 'true';
-        }
-      } else {
-        if (!(param === 'page' && paramValue === 1)) { // do not include page if page=1
-          filterUrlValue = String(paramValue).trim();
-        }
+    if (paramValue instanceof Array) {
+      if (paramValue.length > 0) {
+        filterUrlValue = paramValue.join(',');
       }
+    } else if (typeof paramValue === 'boolean') {
+      if (paramValue) { // ignore if it's false
+        filterUrlValue = 'true';
+      }
+    } else {
+      if (!(param === 'page' && paramValue === 1)) { // do not include page if page=1
+        filterUrlValue = String(paramValue).trim();
+      }
+    }
 
-      if (filterUrlValue) {
-        queryParams.push(param + '=' + filterUrlValue);
-      }
+    if (filterUrlValue) {
+      queryParams.push(param + '=' + filterUrlValue);
     }
   }
 
   return queryParams.join('&');
 };
 
-export const getSelectedFiltersFromUrlParams = (selectedFilters: GenericObject,
-                                                params: GenericObject): GenericObject => {
-  const filters: GenericObject = {...selectedFilters};
-  for (const param in params) {
-    if (params[param]) {
-      if (filters[param] instanceof Array) {
-        filters[param] = params[param].split('|');
-      } else if (typeof filters[param] === 'boolean') {
-        filters[param] = params[param] === 'true';
+
+/**
+ * TODO - probably should move out of etools-table-utility because it uses
+ * selectedValueTypeByFilterKey specific to this application
+ */
+export const getSelectedFiltersFromUrlParams = (params: GenericObject): FilterKeysAndTheirSelectedValues => {
+  const selectedFilters: GenericObject = {};
+
+  for (const filterKey in params) {
+    if (params[filterKey]) {
+      if (selectedValueTypeByFilterKey[filterKey] === 'Array') {
+        selectedFilters[filterKey] = params[filterKey].split(',');
+      } else if (selectedValueTypeByFilterKey[filterKey] === 'boolean') {
+        selectedFilters[filterKey] = (params[filterKey] === 'true');
       } else {
-        filters[param] = params[param];
+        selectedFilters[filterKey] = params[filterKey];
       }
     }
   }
-  return filters;
+  return selectedFilters as FilterKeysAndTheirSelectedValues;
 };
+
+

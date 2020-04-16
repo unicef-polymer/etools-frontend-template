@@ -1,10 +1,11 @@
 import {LitElement, html, customElement} from 'lit-element';
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/paper-toast/paper-toast';
 import '@polymer/paper-button/paper-button';
 import {PaperToastElement} from '@polymer/paper-toast/paper-toast';
 import {PaperButtonElement} from '@polymer/paper-button/paper-button';
 import {GenericObject} from '../../../types/globals';
+import {layoutSelfEnd, layoutHorizontal, layoutCenter, layoutVertical}
+  from '../../styles/lit-styles/flex-layout-styles';
 
 /**
  * @LitElement
@@ -36,7 +37,7 @@ export class EtoolsToast extends LitElement {
             padding: 8px;
             min-width: 16px;
             margin: 16px -8px -8px 0;
-            @apply --layout-self-end;
+            ${layoutSelfEnd}
           };
         }
 
@@ -47,13 +48,13 @@ export class EtoolsToast extends LitElement {
         }
 
         .toast {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          ${layoutHorizontal}
+          ${layoutCenter}
           justify-content: space-between;
         }
 
         .toast-multi-line {
-          @apply --layout-vertical;
+          ${layoutVertical}
           text-align: justify;
         }
       </style>

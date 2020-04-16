@@ -1,3 +1,5 @@
+import {logInfo} from '@unicef-polymer/etools-behaviors/etools-logging';
+
 export interface RouteQueryParam {[key: string]: string}
 export interface RouteParams {[key: string]: number | string}
 
@@ -82,7 +84,7 @@ export class Router {
   getRouteDetails(path?: string): RouteDetails | null {
     let routeDetails: RouteDetails | null = null;
     let locationPath: string = path ? this.getLocationPath(path) : this.getLocationPath();
-    console.log('Router.getRouteDetails.locationPath: ', locationPath);
+    logInfo(locationPath, 'Router.getRouteDetails.locationPath: ');
 
     const qsStartIndex: number = locationPath.indexOf('?');
     let qs = '';
@@ -110,12 +112,15 @@ export class Router {
     return (path.indexOf(this.root) === -1) ? (this.root + Router.clearSlashes(path)) : path;
   }
 
-  navigate(path?: string, navigateCallback?: (() => void) | null) {
+  pushState(path?: string) {
     path = path ? this.prepareLocationPath(path) : '';
-    history.pushState(null, '', path);
-    if (typeof navigateCallback === 'function') {
-      navigateCallback();
-    }
+    history.pushState(window.history.state, '', path);
+    return this;
+  }
+
+  replaceState(path?: string) {
+    path = path ? this.prepareLocationPath(path) : '';
+    history.replaceState(window.history.state, '', path);
     return this;
   }
 }

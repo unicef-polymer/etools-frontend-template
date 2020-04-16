@@ -1,5 +1,5 @@
 /**
- * TODO: this file will be removed after engagements list API is ready
+ * TODO: this file provide mock-up data for list page
  */
 import {EtoolsPaginator} from '../../../common/layout/etools-table/pagination/paginator';
 
@@ -48,3 +48,19 @@ export const getListDummydata = (paginator: EtoolsPaginator) => {
     }
   });
 };
+
+export const getPartnersDummyData = () => {
+  const partners: {id: number, name: string}[] = [];
+  for (i = 0; i < 20; i++) {
+    partners.push({id: i, name: 'Partner ' + i});
+  }
+  return partners;
+}
+
+export const geUnicefUsersDummyData = () => {
+  const users: {id: number, name: string}[] = [];
+  for (i = 0; i < 20; i++) {
+    users.push({id: i, name: 'Unicef user ' + i});
+  }
+  return users;
+}

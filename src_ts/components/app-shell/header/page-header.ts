@@ -1,4 +1,3 @@
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
@@ -10,9 +9,9 @@ import './countries-dropdown';
 
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {RootState, store} from '../../../redux/store';
-import {isProductionServer, isStagingServer, ROOT_PATH} from '../../../config/config';
+import {isProductionServer, ROOT_PATH} from '../../../config/config';
 import {updateDrawerState} from '../../../redux/actions/app';
-import {EtoolsUserModel} from '../../user/user-model';
+import {EtoolsUserModel, dummyUserData} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
 import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUserData} from '../../user/user-actions';
@@ -27,34 +26,60 @@ import {pageHeaderStyles} from './page-header-styles';
 @customElement('page-header')
 export class PageHeader extends connect(store)(LitElement) {
 
+  static get styles() {
+    return [pageHeaderStyles];
+  }
+
   public render() {
     // main template
     // language=HTML
-    return html`  
-      ${pageHeaderStyles}      
+    return html`
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
         }
+        support-btn {
+          color: var(--header-icon-color);
+        }
+
+        @media (max-width: 576px) {
+          etools-app-selector {
+            --app-selector-button-padding: 18px 8px;
+          }
+          #app-logo {
+            display: none;
+          }
+          .envWarning {
+            font-size: 10px;
+            margin-left: 2px;
+          }
+          #refresh{
+            width: 24px;
+            padding: 0px
+          }
+          app-toolbar {
+            padding-right: 4px;
+          }
+        }
       </style>
-      
+
       <app-toolbar sticky class="content-align">
         <paper-icon-button id="menuButton" icon="menu" @tap="${() => this.menuBtnClicked()}"></paper-icon-button>
         <div class="titlebar content-align">
           <etools-app-selector id="selector"></etools-app-selector>
-          <img id="app-logo" src="${this.rootPath}images/etools-logo-color-white.svg" alt="eTools">
-          ${this.isStaging ? html`<div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>` : ''}
+          <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools">
+          ${this.isStaging ? html`<div class="envWarning">
+           <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>` : ''}
         </div>
         <div class="content-align">
-          <countries-dropdown></countries-dropdown>
 
-          <support-btn></support-btn> 
+          <support-btn></support-btn>
 
           <etools-profile-dropdown
               .sections="${this.profileDrSections}"
               .offices="${this.profileDrOffices}"
               .users="${this.profileDrUsers}"
-              .profile="${ this.profile ? {...this.profile} : {} }"
+              .profile="${ this.profile ? {...this.profile} : {}}"
               @save-profile="${this.handleSaveProfile}"
               @sign-out="${this._signOut}">
           </etools-profile-dropdown>
@@ -100,15 +125,19 @@ export class PageHeader extends connect(store)(LitElement) {
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
 
+  @property({type: String})
+  environment: string = 'LOCAL';
+
   public connectedCallback() {
     super.connectedCallback();
     this.setBgColor();
-    this.isStaging = isStagingServer();
+    this.checkEnvironment();
   }
 
   public stateChanged(state: RootState) {
     if (state) {
       this.profile = state.user!.data as EtoolsUserModel;
+      this.profile = dummyUserData;
     }
   }
 
@@ -179,5 +208,10 @@ export class PageHeader extends connect(store)(LitElement) {
 
   protected clearLocalStorage() {
     localStorage.clear();
+  }
+
+  protected checkEnvironment() {
+    this.isStaging = !isProductionServer();
+    this.environment = isProductionServer() ? 'DEMO' : 'LOCAL';
   }
 }

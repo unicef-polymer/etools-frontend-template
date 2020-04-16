@@ -1,5 +1,6 @@
 import {GenericObject} from '../types/globals';
 import {etoolsEndpoints} from './endpoints-list';
+import {EtoolsRequestEndpoint} from '@unicef-polymer/etools-ajax';
 
 const generateUrlFromTemplate = (tmpl: string, data: object | undefined) => {
   if (!tmpl) {
@@ -30,5 +31,5 @@ export const getEndpoint = (endpointName: string, data?: GenericObject) => {
     }
   }
 
-  return endpoint;
+  return endpoint as EtoolsRequestEndpoint;
 };

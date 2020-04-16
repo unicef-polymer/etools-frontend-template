@@ -1,21 +1,28 @@
-import {html} from 'lit-element';
-// language=HTML
-export const pageLayoutStyles = html`
-  <style>
-    .page-content {
-      margin: 24px;
-    }
+import {css} from 'lit-element';
+// language=CSS
+export const pageLayoutStyles = css`
+  .page-content {
+    margin: 24px;
+  }
 
-    section.page-content:not(.filters) {
-      padding: 18px 24px;
-    }
+  section.page-content:not(.filters) {
+    padding: 18px 24px;
+  }
 
+  section.page-content.filters {
+    padding: 8px 24px;
+  }
+
+  section.page-content.no-padding {
+    padding: 0;
+  }
+
+  @media (max-width: 576px) {
     section.page-content.filters {
-      padding: 8px 24px;
+      padding: 5px;
     }
-
-    section.page-content.no-padding {
-      padding: 0;
+    .page-content {
+      margin: 5px;
     }
-  </style>
+  }
 `;

@@ -1,7 +1,7 @@
 import {LitElement, html, property, customElement} from 'lit-element';
-import '@polymer/iron-flex-layout/iron-flex-layout';
 import '@polymer/iron-icons/iron-icons';
 import {completedStatusIcon} from './status-icons';
+import {layoutHorizontal, layoutCenter} from '../../../styles/lit-styles/flex-layout-styles';
 
 export interface EtoolsStatusItem {
   status?: string;
@@ -26,16 +26,16 @@ export class EtoolsStatus extends LitElement {
     return html`
       <style>
         :host {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          ${layoutHorizontal}
+          ${layoutCenter}
           border-bottom: 1px solid var(--dark-divider-color);
           padding: 24px;
           background-color: var(--primary-background-color);
         }
 
         .status {
-          @apply --layout-horizontal;
-          @apply --layout-center;
+          ${layoutHorizontal}
+          ${layoutCenter}
           color: var(--secondary-text-color);
           font-size: 16px;
         }
@@ -45,7 +45,7 @@ export class EtoolsStatus extends LitElement {
           display: inline-block;
           vertical-align: middle;
           width: 40px;
-          height: 0;
+          height: 1px;
           margin: 0 24px;
           border-top: 1px solid var(--secondary-text-color);
         }
@@ -166,7 +166,7 @@ export class EtoolsStatus extends LitElement {
   }
 
   isCompleted(index: number, activeStatusIndex: number): boolean {
-    return index < activeStatusIndex;
+    return index < activeStatusIndex || activeStatusIndex === this.statuses.length - 1;
   }
 
   getStatusClasses(index: number, activeStatusIndex: number): string {

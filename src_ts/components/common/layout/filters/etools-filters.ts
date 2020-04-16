@@ -1,5 +1,5 @@
 import {
-  LitElement, html, customElement, property
+  LitElement, html, customElement, property, css
 } from 'lit-element';
 import {etoolsFiltersStyles} from './etools-filters-styles';
 
@@ -15,6 +15,7 @@ import '@polymer/paper-item/paper-item-body';
 import '@unicef-polymer/etools-dropdown/etools-dropdown-multi';
 import '@unicef-polymer/etools-dropdown/etools-dropdown';
 import '@unicef-polymer/etools-date-time/datepicker-lite';
+import {elevation2} from '../../../styles/lit-styles/elevation-styles';
 
 export enum EtoolsFilterTypes {
   Search,
@@ -41,25 +42,47 @@ export interface EtoolsFilter {
 @customElement('etools-filters')
 export class EtoolsFilters extends LitElement {
 
-  @property({type: Object})
+  @property({type: Array})
   filters: EtoolsFilter[] = [];
 
   private lastSelectedValues: any = null;
 
   static get styles() {
-    return [etoolsFiltersStyles];
+    return [etoolsFiltersStyles,
+      css`
+        /* Set datepicker prefix icon color using mixin (cannot be used in etools-filter-styles) */
+        datepicker-lite {
+          --paper-input-prefix: {
+            color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+          }
+        }
+        *[hidden] {
+          display: none !important;
+        }
+
+        paper-button:focus {
+          ${elevation2}
+        }
+
+        .date {
+          margin-right:16px;
+        }
+
+      `
+    ];
   }
 
   getSearchTmpl(f: EtoolsFilter) {
     // language=HTML
     return html`
       <paper-input class="filter search"
-               type="search"
-               autocomplete="off"
-               .value="${f.selectedValue}"
-               placeholder="${f.filterName}" 
-               data-filter-key="${f.filterKey}"
-               @value-changed="${this.textInputChange}">
+          ?hidden="${!f.selected}"
+          type="search"
+          autocomplete="off"
+          .value="${f.selectedValue}"
+          placeholder="${f.filterName}"
+          data-filter-key="${f.filterKey}"
+          @value-changed="${this.textInputChange}">
         <iron-icon icon="search" slot="prefix"></iron-icon>
       </paper-input>
     `;
@@ -69,6 +92,7 @@ export class EtoolsFilters extends LitElement {
     // language=HTML
     return html`
       <etools-dropdown
+          ?hidden="${!f.selected}"
           class="filter"
           label="${f.filterName}"
           placeholder="&#8212;"
@@ -93,6 +117,8 @@ export class EtoolsFilters extends LitElement {
     // language=HTML
     return html`
       <etools-dropdown-multi
+          id="${f.filterKey}"
+          ?hidden="${!f.selected}"
           class="filter"
           label="${f.filterName}"
           placeholder="Select"
@@ -116,12 +142,13 @@ export class EtoolsFilters extends LitElement {
     // language=HTML
     return html`
       <datepicker-lite class="filter date"
-                       .label="${f.filterName}"
-                       .value="${f.selectedValue}"
-                       fire-date-has-changed
-                       @date-has-changed="${this.filterDateChange}"
-                       data-filter-key="${f.filterKey}"
-                       .selectedDateDisplayFormat="D MMM YYYY">
+          ?hidden="${!f.selected}"
+          .label="${f.filterName}"
+          .value="${f.selectedValue}"
+          fire-date-has-changed
+          @date-has-changed="${this.filterDateChange}"
+          data-filter-key="${f.filterKey}"
+          selected-date-display-format="D MMM YYYY">
       </datepicker-lite>
     `;
   }
@@ -129,49 +156,54 @@ export class EtoolsFilters extends LitElement {
   getToggleTmpl(f: EtoolsFilter) {
     // language=HTML
     return html`
-      <div class="filter toggle" style="padding: 8px 0; box-sizing: border-box;">
+      <div class="filter toggle" ?hidden="${!f.selected}" style="padding: 8px 0; box-sizing: border-box;">
         ${f.filterName}
-        <paper-toggle-button id="toggleFilter" 
-                             ?checked="${f.selectedValue}"
-                             data-filter-key="${f.filterKey}"
-                             @iron-change="${this.filterToggleChange}"></paper-toggle-button>
+        <paper-toggle-button id="toggleFilter"
+            ?checked="${f.selectedValue}"
+            data-filter-key="${f.filterKey}"
+            @iron-change="${this.filterToggleChange}">
+        </paper-toggle-button>
       </div>
     `;
   }
 
-  get selectedFiltersTmpl() {
+  selectedFiltersTmpl(filters: EtoolsFilter[]) {
+    if (!filters) {
+      return html``;
+    }
     const tmpl: any[] = [];
-    this.filters
-      .filter((f: EtoolsFilter) => f.selected)
-      .forEach((f: EtoolsFilter) => {
-        let filterHtml = null;
-        switch (f.type) {
-          case EtoolsFilterTypes.Search:
-            filterHtml = this.getSearchTmpl(f);
-            break;
-          case EtoolsFilterTypes.Dropdown:
-            filterHtml = this.getDropdownTmpl(f);
-            break;
-          case EtoolsFilterTypes.DropdownMulti:
-            filterHtml = this.getDropdownMultiTmpl(f);
-            break;
-          case EtoolsFilterTypes.Date:
-            filterHtml = this.getDateTmpl(f);
-            break;
-          case EtoolsFilterTypes.Toggle:
-            filterHtml = this.getToggleTmpl(f);
-            break;
-        }
-        if (filterHtml) {
-          tmpl.push(filterHtml);
-        }
-      });
+    filters.forEach((f: EtoolsFilter) => {
+      let filterHtml = null;
+      switch (f.type) {
+        case EtoolsFilterTypes.Search:
+          filterHtml = this.getSearchTmpl(f);
+          break;
+        case EtoolsFilterTypes.Dropdown:
+          filterHtml = this.getDropdownTmpl(f);
+          break;
+        case EtoolsFilterTypes.DropdownMulti:
+          filterHtml = this.getDropdownMultiTmpl(f);
+          break;
+        case EtoolsFilterTypes.Date:
+          filterHtml = this.getDateTmpl(f);
+          break;
+        case EtoolsFilterTypes.Toggle:
+          filterHtml = this.getToggleTmpl(f);
+          break;
+      }
+      if (filterHtml) {
+        tmpl.push(filterHtml);
+      }
+    });
     return tmpl;
   }
 
-  get filterMenuOptions() {
+  filterMenuOptions(filters: EtoolsFilter[]) {
+    if (!this.filters) {
+      return [];
+    }
     const menuOptions: any[] = [];
-    this.filters.forEach((f: EtoolsFilter) => {
+    filters.forEach((f: EtoolsFilter) => {
       // language=HTML
       menuOptions.push(html`
         <paper-icon-item @tap="${this.selectFilter}"
@@ -187,18 +219,12 @@ export class EtoolsFilters extends LitElement {
   }
 
   render() {
+    this.setDefaultLastSelectedValues();
+
     // language=HTML
     return html`
-        <style>
-          /* Set datepicker prefix icon color using mixin (cannot be used in etools-filter-styles) */
-          datepicker-lite {
-            --paper-input-prefix: {
-              color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
-            }
-          }
-        </style>
         <div id="filters">
-          ${this.selectedFiltersTmpl}
+          ${this.selectedFiltersTmpl(this.filters)}
         </div>
 
         <div id="filters-selector">
@@ -214,11 +240,17 @@ export class EtoolsFilters extends LitElement {
               </paper-button>
             </div>
             <paper-listbox slot="dropdown-content" multi>
-              ${this.filterMenuOptions}
+              ${this.filterMenuOptions(this.filters)}
             </paper-listbox>
           </paper-menu-button>
         </div>
     `;
+  }
+
+  setDefaultLastSelectedValues() {
+    if (!this.lastSelectedValues && this.filters) {
+      this.lastSelectedValues = this.getAllFiltersAndTheirValues();
+    }
   }
 
   clearAllFilterValues() {
@@ -229,17 +261,17 @@ export class EtoolsFilters extends LitElement {
       f.selectedValue = this.getFilterEmptyValue(f.type);
     });
     // repaint
-    this.requestUpdate();
+    this.requestUpdate().then(() => this.fireFiltersChangeEvent());
   }
 
   selectFilter(e: CustomEvent) {
     const menuOption = e.currentTarget as HTMLElement;
     const filterOption: EtoolsFilter = this.getFilterOption(menuOption);
-    const isSelected: boolean = menuOption.hasAttribute('selected');
+    const wasSelected: boolean = menuOption.hasAttribute('selected');
     // toggle selected state
-    filterOption.selected = !isSelected;
+    filterOption.selected = !wasSelected;
     // reset selected value if filter was unselected and had a value
-    if (isSelected) {
+    if (wasSelected) {
       filterOption.selectedValue = this.getFilterEmptyValue(filterOption.type);
     }
     // repaint&fire change event
@@ -337,7 +369,7 @@ export class EtoolsFilters extends LitElement {
     }
     const keys: string[] = Object.keys(filterValues);
     this.filters.forEach((f: EtoolsFilter) => {
-      if (keys.indexOf(f.filterKey) > -1 ) {
+      if (keys.indexOf(f.filterKey) > -1) {
         // filter found by key
         if (!f.selected) {
           // select filter is not already selected
@@ -348,30 +380,43 @@ export class EtoolsFilters extends LitElement {
       }
     });
     this.requestUpdate();
-    this.lastSelectedValues = {...this.getSelectedFilterValues(), ...filterValues};
+    this.lastSelectedValues = {...this.getAllFiltersAndTheirValues(), ...filterValues};
   }
 
   // fire change custom event to notify parent that filters were updated
   fireFiltersChangeEvent() {
-    const selectedValues = this.getSelectedFilterValues();
+    const selectedValues = this.getAllFiltersAndTheirValues();
     if (JSON.stringify(this.lastSelectedValues) === JSON.stringify(selectedValues)) {
       return;
     }
     this.lastSelectedValues = {...selectedValues};
 
     this.dispatchEvent(new CustomEvent('filter-change', {
-      detail: selectedValues,
+      detail: this.getSelectedFiltersAndTheirValues(),
       bubbles: true,
       composed: true
     }));
   }
 
   // build and return and object based on filterKey and selectedValue
-  getSelectedFilterValues() {
+  getAllFiltersAndTheirValues() {
+    const allFilters: any = {};
+    if (this.filters) {
+      this.filters
+        .forEach((f: EtoolsFilter) => {
+          allFilters[f.filterKey] = f.selectedValue;
+        });
+    }
+    return allFilters;
+  }
+
+  getSelectedFiltersAndTheirValues() {
     const selectedFilters: any = {};
     this.filters
       .forEach((f: EtoolsFilter) => {
-        selectedFilters[f.filterKey] = f.selectedValue;
+        if (f.selected) {
+          selectedFilters[f.filterKey] = f.selectedValue;
+        }
       });
     return selectedFilters;
   }
