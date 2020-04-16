@@ -63,6 +63,11 @@ export class EtoolsFilters extends LitElement {
         paper-button:focus {
           ${elevation2}
         }
+
+        .date {
+          margin-right:16px;
+        }
+
       `
     ];
   }

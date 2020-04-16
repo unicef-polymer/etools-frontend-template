@@ -41,6 +41,26 @@ export class PageHeader extends connect(store)(LitElement) {
         support-btn {
           color: var(--header-icon-color);
         }
+
+        @media (max-width: 576px) {
+          etools-app-selector {
+            --app-selector-button-padding: 18px 8px;
+          }
+          #app-logo {
+            display: none;
+          }
+          .envWarning {
+            font-size: 10px;
+            margin-left: 2px;
+          }
+          #refresh{
+            width: 24px;
+            padding: 0px
+          }
+          app-toolbar {
+            padding-right: 4px;
+          }
+        }
       </style>
 
       <app-toolbar sticky class="content-align">
@@ -48,10 +68,10 @@ export class PageHeader extends connect(store)(LitElement) {
         <div class="titlebar content-align">
           <etools-app-selector id="selector"></etools-app-selector>
           <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools">
-          ${this.isStaging ? html`<div class="envWarning"> - STAGING TESTING ENVIRONMENT</div>` : ''}
+          ${this.isStaging ? html`<div class="envWarning">
+           <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>` : ''}
         </div>
         <div class="content-align">
-          <countries-dropdown></countries-dropdown>
 
           <support-btn></support-btn>
 
@@ -105,10 +125,13 @@ export class PageHeader extends connect(store)(LitElement) {
   @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
 
+  @property({type: String})
+  environment: string = 'LOCAL';
+
   public connectedCallback() {
     super.connectedCallback();
     this.setBgColor();
-    this.isStaging = !isProductionServer();
+    this.checkEnvironment();
   }
 
   public stateChanged(state: RootState) {
@@ -185,5 +208,10 @@ export class PageHeader extends connect(store)(LitElement) {
 
   protected clearLocalStorage() {
     localStorage.clear();
+  }
+
+  protected checkEnvironment() {
+    this.isStaging = !isProductionServer();
+    this.environment = isProductionServer() ? 'DEMO' : 'LOCAL';
   }
 }
