@@ -191,4 +191,23 @@ export const etoolsFiltersStyles = css`
     padding-right: 16px;
     border-bottom: 1px solid var(--light-divider-color, rgba(0, 0, 0, 0.12));
   }
+
+  @media (max-width: 576px) {
+    :host {
+      -ms-flex-direction: column;
+      -webkit-flex-direction: column;
+      flex-direction: column;
+    }
+    #filters .filter, #filters .search {
+      width: 100%;
+    }
+    #filters .filter.date {
+      --paper-input-container_-_width: 100%
+    }
+    #filters-selector {
+      border-left: none;
+      margin: 0 auto;
+      padding: 0px;
+    }
+  }
 `;
