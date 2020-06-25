@@ -5,7 +5,6 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element.js';
  * @polymer
  */
 class PageOneQuestionnaires extends PolymerElement {
-
   static get template() {
     // language=HTML
     return html`
@@ -32,7 +31,6 @@ class PageOneQuestionnaires extends PolymerElement {
   disconnectedCallback() {
     super.disconnectedCallback();
   }
-
 }
 
 window.customElements.define('page-one-questionnaires', PageOneQuestionnaires);

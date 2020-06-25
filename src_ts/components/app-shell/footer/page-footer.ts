@@ -1,7 +1,12 @@
 import {LitElement, html, customElement, property} from 'lit-element';
 import {ROOT_PATH} from '../../../config/config';
-import {layoutFlex, layoutVertical, layoutEndJustified, layoutHorizontal, layoutInline}
-  from '../../styles/lit-styles/flex-layout-styles';
+import {
+  layoutFlex,
+  layoutVertical,
+  layoutEndJustified,
+  layoutHorizontal,
+  layoutInline
+} from '../../styles/lit-styles/flex-layout-styles';
 /**
  * page footer element
  * @LitElement
@@ -9,7 +14,6 @@ import {layoutFlex, layoutVertical, layoutEndJustified, layoutHorizontal, layout
  */
 @customElement('page-footer')
 export class PageFooter extends LitElement {
-
   public render() {
     // main template
     // language=HTML
@@ -55,13 +59,12 @@ export class PageFooter extends LitElement {
             display: none;
           }
         }
-
       </style>
       <footer>
         <div id="footer-content">
-        <span id="unicef-logo">
-          <img src="images/UNICEF_logo.png" alt="UNICEF logo">
-        </span>
+          <span id="unicef-logo">
+            <img src="images/UNICEF_logo.png" alt="UNICEF logo" />
+          </span>
           <!-- TODO: modify span to a with proper href values after footer pages are ready -->
           <!--   <span class="footer-link">Contact</span>
             <span class="footer-link">Disclaimers</span>
@@ -73,5 +76,4 @@ export class PageFooter extends LitElement {
 
   @property({type: String})
   rootPath: string = ROOT_PATH;
-
 }

@@ -1,7 +1,11 @@
 import {logInfo} from '@unicef-polymer/etools-behaviors/etools-logging';
 
-export interface RouteQueryParam {[key: string]: string}
-export interface RouteParams {[key: string]: number | string}
+export interface RouteQueryParam {
+  [key: string]: string;
+}
+export interface RouteParams {
+  [key: string]: number | string;
+}
 
 export interface RouteQueryParams {
   [key: string]: string;
@@ -26,14 +30,14 @@ export interface RouteDetails {
  */
 export class Router {
   routes: {regex: RegExp | string; handler: (params: RouteCallbackParams) => RouteDetails}[] = [];
-  root: string = '/';
+  root = '/';
 
   static clearSlashes(path: string): string {
     return path.toString().replace(/\/$/, '').replace(/^\//, '');
   }
 
   constructor(rootPath?: string) {
-    this.root = (rootPath && rootPath !== '/') ? ('/' + Router.clearSlashes(rootPath) + '/') : '/';
+    this.root = rootPath && rootPath !== '/' ? '/' + Router.clearSlashes(rootPath) + '/' : '/';
   }
 
   getLocationPath(path?: string): string {
@@ -50,19 +54,19 @@ export class Router {
 
   isRouteAdded(regex: RegExp | null): boolean {
     const filterKey: string = regex instanceof RegExp ? regex.toString() : '';
-    const route = this.routes.find(r => r.regex.toString() === filterKey);
+    const route = this.routes.find((r) => r.regex.toString() === filterKey);
     return !!route;
   }
 
   addRoute(regex: RegExp | null, handler: (params: RouteCallbackParams) => RouteDetails): Router {
-    if (!this.isRouteAdded(regex)) { // prevent adding the same route multiple times
+    if (!this.isRouteAdded(regex)) {
+      // prevent adding the same route multiple times
       this.routes.push({regex: regex === null ? '' : regex, handler: handler});
     }
     return this;
   }
 
   buildQueryParams(paramsStr: string): RouteQueryParams {
-    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     const qParams: RouteQueryParams = {} as RouteQueryParams;
     if (paramsStr) {
       const qs: string[] = paramsStr.split('&');
@@ -109,7 +113,7 @@ export class Router {
   }
 
   prepareLocationPath(path: string): string {
-    return (path.indexOf(this.root) === -1) ? (this.root + Router.clearSlashes(path)) : path;
+    return path.indexOf(this.root) === -1 ? this.root + Router.clearSlashes(path) : path;
   }
 
   pushState(path?: string) {

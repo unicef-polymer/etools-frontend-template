@@ -6,18 +6,20 @@ import {ROOT_PATH} from '../config/config';
 export const EtoolsRouter = new Router(ROOT_PATH);
 const routeParamRegex = '([^\\/?#=+]+)';
 
-EtoolsRouter
-  .addRoute(new RegExp('^page-one/list$'),
-    (params: RouteCallbackParams): RouteDetails => {
-      return {
-        routeName: 'page-one',
-        subRouteName: 'list',
-        path: params.matchDetails[0],
-        queryParams: params.queryParams,
-        params: null
-      };
-    })
-  .addRoute(new RegExp(`^page-one\\/${routeParamRegex}\\/${routeParamRegex}$`),
+EtoolsRouter.addRoute(
+  new RegExp('^page-one/list$'),
+  (params: RouteCallbackParams): RouteDetails => {
+    return {
+      routeName: 'page-one',
+      subRouteName: 'list',
+      path: params.matchDetails[0],
+      queryParams: params.queryParams,
+      params: null
+    };
+  }
+)
+  .addRoute(
+    new RegExp(`^page-one\\/${routeParamRegex}\\/${routeParamRegex}$`),
     (params: RouteCallbackParams): RouteDetails => {
       return {
         routeName: 'page-one',
@@ -28,8 +30,10 @@ EtoolsRouter
           recordId: params.matchDetails[1]
         }
       };
-    })
-  .addRoute(new RegExp(`^page-not-found$`),
+    }
+  )
+  .addRoute(
+    new RegExp(`^page-not-found$`),
     (params: RouteCallbackParams): RouteDetails => {
       return {
         routeName: 'page-not-found',
@@ -38,8 +42,10 @@ EtoolsRouter
         queryParams: null,
         params: null
       };
-    })
-  .addRoute(new RegExp(`^page-two$`),
+    }
+  )
+  .addRoute(
+    new RegExp(`^page-two$`),
     (params: RouteCallbackParams): RouteDetails => {
       return {
         routeName: 'page-two',
@@ -48,12 +54,13 @@ EtoolsRouter
         queryParams: null,
         params: null
       };
-    });
+    }
+  );
 
 /**
  * Utility used to update location based on routes and dispatch navigate action (optional)
  */
-export const updateAppLocation = (newLocation: string, dispatchNavigation: boolean = true): void => {
+export const updateAppLocation = (newLocation: string, dispatchNavigation = true): void => {
   const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
 
   EtoolsRouter.pushState(_newLocation);
@@ -63,7 +70,7 @@ export const updateAppLocation = (newLocation: string, dispatchNavigation: boole
   }
 };
 
-export const replaceAppLocation = (newLocation: string, dispatchNavigation: boolean = true): void => {
+export const replaceAppLocation = (newLocation: string, dispatchNavigation = true): void => {
   const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
 
   EtoolsRouter.replaceState(_newLocation);

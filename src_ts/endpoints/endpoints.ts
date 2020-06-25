@@ -1,8 +1,8 @@
-import {GenericObject} from '../types/globals';
+import {AnyObject} from '../types/globals';
 import {etoolsEndpoints} from './endpoints-list';
 import {EtoolsRequestEndpoint} from '@unicef-polymer/etools-ajax';
 
-const generateUrlFromTemplate = (tmpl: string, data: object | undefined) => {
+const generateUrlFromTemplate = (tmpl: string, data: AnyObject | undefined) => {
   if (!tmpl) {
     throw new Error('To generate URL from endpoint url template you need valid template string');
   }
@@ -19,7 +19,7 @@ const generateUrlFromTemplate = (tmpl: string, data: object | undefined) => {
   return tmpl;
 };
 
-export const getEndpoint = (endpointName: string, data?: GenericObject) => {
+export const getEndpoint = (endpointName: string, data?: AnyObject) => {
   const endpoint = etoolsEndpoints[endpointName];
   const baseSite = window.location.origin;
 

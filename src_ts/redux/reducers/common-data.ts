@@ -1,8 +1,5 @@
 import {Reducer} from 'redux';
-import {
-  SET_UNICEF_USERS_DATA,
-  SET_PARTNERS,
-} from '../actions/common-data';
+import {SET_UNICEF_USERS_DATA, SET_PARTNERS} from '../actions/common-data';
 import {RootAction} from '../store';
 
 export interface CommonDataState {
@@ -12,7 +9,7 @@ export interface CommonDataState {
 
 const INITIAL_COMMON_DATA: CommonDataState = {
   unicefUsers: [],
-  partners: [],
+  partners: []
 };
 
 const commonData: Reducer<CommonDataState, RootAction> = (state = INITIAL_COMMON_DATA, action) => {

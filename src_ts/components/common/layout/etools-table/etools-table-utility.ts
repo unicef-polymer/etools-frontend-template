@@ -3,7 +3,7 @@
  */
 
 import {EtoolsTableColumn, EtoolsTableColumnSort} from './etools-table';
-import {GenericObject} from '../../../../types/globals';
+import {AnyObject} from '../../../../types/globals';
 import {selectedValueTypeByFilterKey, FilterKeysAndTheirSelectedValues} from '../../../pages/page-one/list/filters';
 
 export interface EtoolsTableSortItem {
@@ -24,7 +24,8 @@ export const getSortFields = (columns: EtoolsTableColumn[]): EtoolsTableSortItem
   const sortedColumns: any[] = columns.filter((c: EtoolsTableColumn) => c.sort !== undefined);
   if (sortedColumns.length > 0) {
     sortItems = sortedColumns.map((c: EtoolsTableColumn) =>
-      Object.assign({}, {name: c.name, sort: c.sort})) as EtoolsTableSortItem[];
+      Object.assign({}, {name: c.name, sort: c.sort})
+    ) as EtoolsTableSortItem[];
   }
   return sortItems;
 };
@@ -32,7 +33,6 @@ export const getSortFields = (columns: EtoolsTableColumn[]): EtoolsTableSortItem
 export const getSortFieldsFromUrlSortParams = (param: string): EtoolsTableSortItem[] => {
   const sortFields: EtoolsTableSortItem[] = param.split('|').map((sort: string) => {
     const s = sort.split('.');
-    // eslint-disable-next-line @typescript-eslint/no-object-literal-type-assertion
     const sortItem = {
       name: s[0],
       sort: s[1]
@@ -42,7 +42,7 @@ export const getSortFieldsFromUrlSortParams = (param: string): EtoolsTableSortIt
   return sortFields;
 };
 
-export const buildUrlQueryString = (params: GenericObject): string => {
+export const buildUrlQueryString = (params: AnyObject): string => {
   const queryParams = [];
 
   for (const param in params) {
@@ -57,11 +57,13 @@ export const buildUrlQueryString = (params: GenericObject): string => {
         filterUrlValue = paramValue.join(',');
       }
     } else if (typeof paramValue === 'boolean') {
-      if (paramValue) { // ignore if it's false
+      if (paramValue) {
+        // ignore if it's false
         filterUrlValue = 'true';
       }
     } else {
-      if (!(param === 'page' && paramValue === 1)) { // do not include page if page=1
+      if (!(param === 'page' && paramValue === 1)) {
+        // do not include page if page=1
         filterUrlValue = String(paramValue).trim();
       }
     }
@@ -74,20 +76,19 @@ export const buildUrlQueryString = (params: GenericObject): string => {
   return queryParams.join('&');
 };
 
-
 /**
  * TODO - probably should move out of etools-table-utility because it uses
  * selectedValueTypeByFilterKey specific to this application
  */
-export const getSelectedFiltersFromUrlParams = (params: GenericObject): FilterKeysAndTheirSelectedValues => {
-  const selectedFilters: GenericObject = {};
+export const getSelectedFiltersFromUrlParams = (params: AnyObject): FilterKeysAndTheirSelectedValues => {
+  const selectedFilters: AnyObject = {};
 
   for (const filterKey in params) {
     if (params[filterKey]) {
       if (selectedValueTypeByFilterKey[filterKey] === 'Array') {
         selectedFilters[filterKey] = params[filterKey].split(',');
       } else if (selectedValueTypeByFilterKey[filterKey] === 'boolean') {
-        selectedFilters[filterKey] = (params[filterKey] === 'true');
+        selectedFilters[filterKey] = params[filterKey] === 'true';
       } else {
         selectedFilters[filterKey] = params[filterKey];
       }
@@ -95,5 +96,3 @@ export const getSelectedFiltersFromUrlParams = (params: GenericObject): FilterKe
   }
   return selectedFilters as FilterKeysAndTheirSelectedValues;
 };
-
-

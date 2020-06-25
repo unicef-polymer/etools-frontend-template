@@ -3,7 +3,7 @@ import {appDrawerStyles} from './menu/styles/app-drawer-styles';
 import {layoutFlex} from '../styles/lit-styles/flex-layout-styles';
 
 export const AppShellStyles = css`
-${appDrawerStyles}
+  ${appDrawerStyles}
   :host {
     display: block;
   }

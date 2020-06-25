@@ -5,7 +5,6 @@ import {PolymerElement, html} from '@polymer/polymer/polymer-element';
  * @polymer
  */
 class PageOneDetails extends PolymerElement {
-
   static get template() {
     // language=HTML
     return html`
@@ -16,7 +15,6 @@ class PageOneDetails extends PolymerElement {
       Page One Details tab content
     `;
   }
-
 }
 
 window.customElements.define('page-one-details', PageOneDetails);

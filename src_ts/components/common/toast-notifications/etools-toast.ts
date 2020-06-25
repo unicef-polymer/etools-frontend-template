@@ -3,9 +3,13 @@ import '@polymer/paper-toast/paper-toast';
 import '@polymer/paper-button/paper-button';
 import {PaperToastElement} from '@polymer/paper-toast/paper-toast';
 import {PaperButtonElement} from '@polymer/paper-button/paper-button';
-import {GenericObject} from '../../../types/globals';
-import {layoutSelfEnd, layoutHorizontal, layoutCenter, layoutVertical}
-  from '../../styles/lit-styles/flex-layout-styles';
+import {AnyObject} from '../../../types/globals';
+import {
+  layoutSelfEnd,
+  layoutHorizontal,
+  layoutCenter,
+  layoutVertical
+} from '../../styles/lit-styles/flex-layout-styles';
 
 /**
  * @LitElement
@@ -13,7 +17,6 @@ import {layoutSelfEnd, layoutHorizontal, layoutCenter, layoutVertical}
  */
 @customElement('etools-toast')
 export class EtoolsToast extends LitElement {
-
   public render() {
     // main template
     // language=HTML
@@ -58,12 +61,8 @@ export class EtoolsToast extends LitElement {
           text-align: justify;
         }
       </style>
-      <paper-toast id="toast"
-                   class="toast-general-style"
-                   @iron-overlay-closed="${() => this.toastClosed()}">
-        <paper-button id="confirmBtn"
-                      @tap="${() => this.confirmToast()}"
-                      class="toast-dismiss-btn-general-style">
+      <paper-toast id="toast" class="toast-general-style" @iron-overlay-closed="${() => this.toastClosed()}">
+        <paper-button id="confirmBtn" @tap="${() => this.confirmToast()}" class="toast-dismiss-btn-general-style">
           Ok
         </paper-button>
       </paper-toast>
@@ -74,7 +73,7 @@ export class EtoolsToast extends LitElement {
   public toastLabelEl: HTMLSpanElement | null = null;
   private confirmBtn: PaperButtonElement | null = null;
 
-  public fitInto: object | null = null;
+  public fitInto: AnyObject | null = null;
 
   connectedCallback() {
     super.connectedCallback();
@@ -87,7 +86,7 @@ export class EtoolsToast extends LitElement {
     }, 200);
   }
 
-  public show(details: object) {
+  public show(details: AnyObject) {
     if (!this.toast) {
       return;
     }
@@ -102,21 +101,25 @@ export class EtoolsToast extends LitElement {
   }
 
   public confirmToast() {
-    this.dispatchEvent(new CustomEvent('toast-confirm', {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('toast-confirm', {
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   public toastClosed() {
-    this.dispatchEvent(new CustomEvent('toast-closed', {
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('toast-closed', {
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   protected isMultiLine(message: string) {
-    return !message ? false : (message.toString().length > 80);
+    return !message ? false : message.toString().length > 80;
   }
 
   private applyMultilineStyle() {
@@ -143,7 +146,7 @@ export class EtoolsToast extends LitElement {
     }
   }
 
-  public prepareToastAndGetShowProperties(detail: GenericObject) {
+  public prepareToastAndGetShowProperties(detail: AnyObject) {
     if (this.isMultiLine(detail.text)) {
       this.applyMultilineStyle();
     } else {
@@ -154,7 +157,7 @@ export class EtoolsToast extends LitElement {
     }
 
     // clone detail obj
-    const toastProperties: GenericObject = JSON.parse(JSON.stringify(detail));
+    const toastProperties: AnyObject = JSON.parse(JSON.stringify(detail));
 
     toastProperties.duration = 0;
     if (detail) {
@@ -179,5 +182,4 @@ export class EtoolsToast extends LitElement {
 
     return toastProperties;
   }
-
 }

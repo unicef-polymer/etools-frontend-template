@@ -6,7 +6,7 @@ export const layout = css`
   display: flex;
 `;
 export const layoutHorizontal = css`
-   ${layout}
+  ${layout}
   -ms-flex-direction: row;
   -webkit-flex-direction: row;
   flex-direction: row;

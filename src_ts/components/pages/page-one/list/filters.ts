@@ -1,5 +1,5 @@
 import {EtoolsFilter, EtoolsFilterTypes} from '../../../common/layout/filters/etools-filters';
-import {GenericObject} from '../../../../types/globals';
+import {AnyObject} from '../../../../types/globals';
 import {isJsonStrMatch} from '../../../utils/utils';
 
 export enum FilterKeys {
@@ -22,7 +22,7 @@ export const defaultSelectedFilters: FilterKeysAndTheirSelectedValues = {
   created_date: null
 };
 
-export const selectedValueTypeByFilterKey: GenericObject = {
+export const selectedValueTypeByFilterKey: AnyObject = {
   [FilterKeys.q]: 'string',
   [FilterKeys.status]: 'Array',
   [FilterKeys.unicef_focal_point]: 'Array',
@@ -110,11 +110,13 @@ export const defaultFilters: EtoolsFilter[] = [
     type: EtoolsFilterTypes.Date,
     selectedValue: null,
     selected: true
-  },
+  }
 ];
 
-export const updateFiltersSelectedValues = (selectedFilters: FilterKeysAndTheirSelectedValues,
-  filters: EtoolsFilter[]) => {
+export const updateFiltersSelectedValues = (
+  selectedFilters: FilterKeysAndTheirSelectedValues,
+  filters: EtoolsFilter[]
+) => {
   const availableFilters = [...filters];
 
   for (const fKey in selectedFilters) {
@@ -123,9 +125,7 @@ export const updateFiltersSelectedValues = (selectedFilters: FilterKeysAndTheirS
       if (selectedValue) {
         const filter = availableFilters.find((f: EtoolsFilter) => f.filterKey === fKey);
         if (filter) {
-          filter.selectedValue = selectedValue instanceof Array
-            ? [...selectedValue]
-            : selectedValue;
+          filter.selectedValue = selectedValue instanceof Array ? [...selectedValue] : selectedValue;
 
           filter.selected = true;
         }
@@ -136,7 +136,7 @@ export const updateFiltersSelectedValues = (selectedFilters: FilterKeysAndTheirS
   return availableFilters;
 };
 
-export const updateFilterSelectionOptions = (filters: EtoolsFilter[], fKey: string, options: GenericObject[]) => {
+export const updateFilterSelectionOptions = (filters: EtoolsFilter[], fKey: string, options: AnyObject[]) => {
   const filter = filters.find((f: EtoolsFilter) => f.filterKey === fKey);
   if (filter && options) {
     if (!isJsonStrMatch(filter.selectionOptions, options)) {

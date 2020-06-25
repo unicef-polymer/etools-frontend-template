@@ -15,7 +15,7 @@ import {EtoolsUserModel, dummyUserData} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
 import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUserData} from '../../user/user-actions';
-import {GenericObject} from '../../../types/globals';
+import {AnyObject} from '../../../types/globals';
 import {pageHeaderStyles} from './page-header-styles';
 
 /**
@@ -25,7 +25,6 @@ import {pageHeaderStyles} from './page-header-styles';
  */
 @customElement('page-header')
 export class PageHeader extends connect(store)(LitElement) {
-
   static get styles() {
     return [pageHeaderStyles];
   }
@@ -53,9 +52,9 @@ export class PageHeader extends connect(store)(LitElement) {
             font-size: 10px;
             margin-left: 2px;
           }
-          #refresh{
+          #refresh {
             width: 24px;
-            padding: 0px
+            padding: 0px;
           }
           app-toolbar {
             padding-right: 4px;
@@ -67,36 +66,37 @@ export class PageHeader extends connect(store)(LitElement) {
         <paper-icon-button id="menuButton" icon="menu" @tap="${() => this.menuBtnClicked()}"></paper-icon-button>
         <div class="titlebar content-align">
           <etools-app-selector id="selector"></etools-app-selector>
-          <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools">
-          ${this.isStaging ? html`<div class="envWarning">
-           <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>` : ''}
+          <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools" />
+          ${this.isStaging
+            ? html`<div class="envWarning">
+           <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>`
+            : ''}
         </div>
         <div class="content-align">
-
           <support-btn></support-btn>
 
           <etools-profile-dropdown
-              .sections="${this.profileDrSections}"
-              .offices="${this.profileDrOffices}"
-              .users="${this.profileDrUsers}"
-              .profile="${ this.profile ? {...this.profile} : {}}"
-              @save-profile="${this.handleSaveProfile}"
-              @sign-out="${this._signOut}">
+            .sections="${this.profileDrSections}"
+            .offices="${this.profileDrOffices}"
+            .users="${this.profileDrUsers}"
+            .profile="${this.profile ? {...this.profile} : {}}"
+            @save-profile="${this.handleSaveProfile}"
+            @sign-out="${this._signOut}"
+          >
           </etools-profile-dropdown>
-
         </div>
       </app-toolbar>
     `;
   }
 
   @property({type: Boolean})
-  public isStaging: boolean = false;
+  public isStaging = false;
 
   @property({type: String})
   rootPath: string = ROOT_PATH;
 
   @property({type: String})
-  public headerColor: string = 'var(--header-bg-color)';
+  public headerColor = 'var(--header-bg-color)';
 
   @property({type: Object})
   profile!: EtoolsUserModel;
@@ -126,7 +126,7 @@ export class PageHeader extends connect(store)(LitElement) {
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
 
   @property({type: String})
-  environment: string = 'LOCAL';
+  environment = 'LOCAL';
 
   public connectedCallback() {
     super.connectedCallback();
@@ -149,16 +149,19 @@ export class PageHeader extends connect(store)(LitElement) {
       return;
     }
     this.profileSaveLoadingMsgDisplay();
-    updateCurrentUserData(modifiedFields).then(() => {
-      this.showSaveNotification();
-    }).catch(() => {
-      this.showSaveNotification('Profile data not saved. Save profile error!');
-    }).then(() => {
-      this.profileSaveLoadingMsgDisplay(false);
-    });
+    updateCurrentUserData(modifiedFields)
+      .then(() => {
+        this.showSaveNotification();
+      })
+      .catch(() => {
+        this.showSaveNotification('Profile data not saved. Save profile error!');
+      })
+      .then(() => {
+        this.profileSaveLoadingMsgDisplay(false);
+      });
   }
 
-  protected profileSaveLoadingMsgDisplay(show: boolean = true) {
+  protected profileSaveLoadingMsgDisplay(show = true) {
     fireEvent(this, 'global-loading', {
       active: show,
       loadingSource: 'profile-save'
@@ -173,8 +176,8 @@ export class PageHeader extends connect(store)(LitElement) {
   }
 
   protected _getModifiedFields(originalData: any, newData: any) {
-    const modifiedFields: GenericObject = {};
-    this.editableFields.forEach(function(field: any) {
+    const modifiedFields: AnyObject = {};
+    this.editableFields.forEach(function (field: any) {
       if (originalData[field] !== newData[field]) {
         modifiedFields[field] = newData[field];
       }

@@ -4,10 +4,10 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
 
 import '../../common/layout/page-content-header/page-content-header';
-import {pageContentHeaderSlottedStyles} from
-  '../../common/layout/page-content-header/page-content-header-slotted-styles';
+// eslint-disable-next-line max-len
+import {pageContentHeaderSlottedStyles} from '../../common/layout/page-content-header/page-content-header-slotted-styles';
 
-import {GenericObject} from '../../../types/globals';
+import {AnyObject} from '../../../types/globals';
 import '../../common/layout/filters/etools-filters';
 import {
   defaultFilters,
@@ -22,10 +22,16 @@ import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {buttonsStyles} from '../../styles/button-styles';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
 import '@unicef-polymer/etools-table/etools-table';
-import {EtoolsTableColumn, EtoolsTableColumnSort, EtoolsTableColumnType}
-  from '@unicef-polymer/etools-table/etools-table';
-import {EtoolsPaginator, defaultPaginator, getPaginatorWithBackend}
-  from '@unicef-polymer/etools-table/pagination/etools-pagination';
+import {
+  EtoolsTableColumn,
+  EtoolsTableColumnSort,
+  EtoolsTableColumnType
+} from '@unicef-polymer/etools-table/etools-table';
+import {
+  EtoolsPaginator,
+  defaultPaginator,
+  getPaginatorWithBackend
+} from '@unicef-polymer/etools-table/pagination/etools-pagination';
 import {
   buildUrlQueryString,
   EtoolsTableSortItem,
@@ -51,7 +57,6 @@ let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedF
  */
 @customElement('page-one-list')
 export class PageOneList extends connect(store)(LitElement) {
-
   static get styles() {
     return [elevationStyles, buttonsStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
   }
@@ -75,9 +80,9 @@ export class PageOneList extends connect(store)(LitElement) {
           .action {
             text-align: right;
           }
-          #addBtn{
+          #addBtn {
             padding-right: 16px;
-            margin-right: 32px
+            margin-right: 32px;
           }
           .shortAddText {
             display: block;
@@ -92,13 +97,13 @@ export class PageOneList extends connect(store)(LitElement) {
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action">
-            <export-data  .params="${this.queryParams}" raised ></export-data>
+            <export-data .params="${this.queryParams}" raised></export-data>
           </div>
           <div class="action">
-          <paper-button id="addBtn" class="primary left-icon" raised @tap="${this.goToAddnewPage}">
-            <iron-icon icon="add"></iron-icon><span class='longAddText'>Add new record</span>
-            <span class='shortAddText'>Add</span>
-          </paper-button>
+            <paper-button id="addBtn" class="primary left-icon" raised @tap="${this.goToAddnewPage}">
+              <iron-icon icon="add"></iron-icon><span class="longAddText">Add new record</span>
+              <span class="shortAddText">Add</span>
+            </paper-button>
           </div>
         </div>
       </page-content-header>
@@ -109,12 +114,14 @@ export class PageOneList extends connect(store)(LitElement) {
 
       <section class="elevation page-content no-padding" elevation="1">
         <etools-loading loading-text="Loading..." .active="${this.showLoading}"></etools-loading>
-        <etools-table caption="Page One"
-                      .columns="${this.listColumns}"
-                      .items="${this.listData}"
-                      .paginator="${this.paginator}"
-                      @paginator-change="${this.paginatorChange}"
-                      @sort-change="${this.sortChange}"></etools-table>
+        <etools-table
+          caption="Page One"
+          .columns="${this.listColumns}"
+          .items="${this.listData}"
+          .paginator="${this.paginator}"
+          @paginator-change="${this.paginatorChange}"
+          @sort-change="${this.sortChange}"
+        ></etools-table>
       </section>
     `;
   }
@@ -129,8 +136,10 @@ export class PageOneList extends connect(store)(LitElement) {
   paginator: EtoolsPaginator = {...defaultPaginator};
 
   @property({type: Array})
-  sort: EtoolsTableSortItem[] = [{name: 'assessment_date', sort: EtoolsTableColumnSort.Desc},
-    {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}];
+  sort: EtoolsTableSortItem[] = [
+    {name: 'assessment_date', sort: EtoolsTableColumnSort.Desc},
+    {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}
+  ];
 
   @property({type: Array})
   filters!: EtoolsFilter[];
@@ -139,16 +148,16 @@ export class PageOneList extends connect(store)(LitElement) {
   selectedFilters!: FilterKeysAndTheirSelectedValues;
 
   @property({type: Boolean})
-  canAdd: boolean = false;
+  canAdd = false;
 
   @property({type: Boolean})
-  canExport: boolean = false;
+  canExport = false;
 
   @property({type: String})
-  queryParams: string = '';
+  queryParams = '';
 
   @property({type: Boolean})
-  showLoading: boolean = false;
+  showLoading = false;
 
   @property({type: Array})
   listColumns: EtoolsTableColumn[] = [
@@ -188,7 +197,7 @@ export class PageOneList extends connect(store)(LitElement) {
   ];
 
   @property({type: Array})
-  listData: GenericObject[] = [];
+  listData: AnyObject[] = [];
 
   stateChanged(state: RootState) {
     const routeDetails = get(state, 'app.routeDetails');
@@ -207,7 +216,6 @@ export class PageOneList extends connect(store)(LitElement) {
         this.updateUrlListQueryParams();
 
         return;
-
       } else {
         // init selectedFilters, sort, page, page_size from url params
         this.updateListParamsFromRouteDetails(this.routeDetails.queryParams);
@@ -226,7 +234,6 @@ export class PageOneList extends connect(store)(LitElement) {
 
   initFiltersForDisplay(state: RootState) {
     if (this.dataRequiredByFiltersHasBeenLoaded(state)) {
-
       const availableFilters = [...defaultFilters];
       this.populateDropdownFilterOptionsFromCommonData(state.commonData, availableFilters);
 
@@ -237,8 +244,13 @@ export class PageOneList extends connect(store)(LitElement) {
   }
 
   private dataRequiredByFiltersHasBeenLoaded(state: RootState) {
-    if (state.commonData && (get(state, 'commonData.unicefUsers.length')) && get(state, 'commonData.partners.length') &&
-      this.routeDetails.queryParams && Object.keys(this.routeDetails.queryParams).length > 0) {
+    if (
+      state.commonData &&
+      get(state, 'commonData.unicefUsers.length') &&
+      get(state, 'commonData.partners.length') &&
+      this.routeDetails.queryParams &&
+      Object.keys(this.routeDetails.queryParams).length > 0
+    ) {
       return true;
     }
     return false;
@@ -272,7 +284,7 @@ export class PageOneList extends connect(store)(LitElement) {
     }
 
     // update paginator fields
-    const paginatorParams: GenericObject = {};
+    const paginatorParams: AnyObject = {};
     if (queryParams.page) {
       paginatorParams.page = Number(queryParams.page);
     }
@@ -303,14 +315,16 @@ export class PageOneList extends connect(store)(LitElement) {
   }
 
   getListData() {
-    getListDummydata(this.paginator).then((response: any) => {
-      // update paginator (total_pages, visible_range, count...)
-      this.paginator = getPaginatorWithBackend(this.paginator, response);
-      this.listData = [...response.results];
-    }).catch((err: any) => {
-      // TODO: handle req errors
-      console.error(err);
-    });
+    getListDummydata(this.paginator)
+      .then((response: any) => {
+        // update paginator (total_pages, visible_range, count...)
+        this.paginator = getPaginatorWithBackend(this.paginator, response);
+        this.listData = [...response.results];
+      })
+      .catch((err: any) => {
+        // TODO: handle req errors
+        console.error(err);
+      });
   }
 
   exportRecord() {

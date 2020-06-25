@@ -1,6 +1,11 @@
 import {LitElement, html, property, customElement} from 'lit-element';
-import {layoutVertical, layoutStartJustified, layoutFlex, layoutHorizontal, layoutCenter}
-  from '../../../styles/lit-styles/flex-layout-styles';
+import {
+  layoutVertical,
+  layoutStartJustified,
+  layoutFlex,
+  layoutHorizontal,
+  layoutCenter
+} from '../../../styles/lit-styles/flex-layout-styles';
 
 /**
  * @LitElement
@@ -8,7 +13,6 @@ import {layoutVertical, layoutStartJustified, layoutFlex, layoutHorizontal, layo
  */
 @customElement('page-content-header')
 export class PageContentHeader extends LitElement {
-
   render() {
     // language=HTML
     return html`
@@ -82,7 +86,6 @@ export class PageContentHeader extends LitElement {
             padding: 0 5px 5px 5px;
           }
         }
-
       </style>
 
       <div class="content-header-row title-row">
@@ -92,13 +95,12 @@ export class PageContentHeader extends LitElement {
         <slot name="title-row-actions"></slot>
       </div>
 
-      <div class="content-header-row tabs" hidden$="[[!withTabsVisible]]">
+      <div class="content-header-row tabs" ?hidden="${!this.withTabsVisible}">
         <slot name="tabs"></slot>
       </div>
     `;
   }
 
   @property({type: Boolean, reflect: true})
-  withTabsVisible: boolean = false;
-
+  withTabsVisible = false;
 }
