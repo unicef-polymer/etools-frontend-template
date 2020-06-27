@@ -1,12 +1,11 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {property} from '@polymer/decorators/lib/decorators';
 import {EtoolsUserModel} from './user-model';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../redux/store';
 import {getEndpoint} from '../../endpoints/endpoints';
 import {AnyObject} from '../../types/globals';
 import {updateUserData} from '../../redux/actions/user';
+import {LitElement, property} from 'lit-element';
 
 const PROFILE_ENDPOINT = 'userProfile';
 const CHANGE_COUNTRY_ENDPOINT = 'changeCountry';
@@ -16,8 +15,8 @@ const CHANGE_COUNTRY_ENDPOINT = 'changeCountry';
  * @polymer
  * @appliesMixin EtoolsAjaxRequestMixin
  */
-export class EtoolsUser extends connect(store)(PolymerElement) {
-  @property({type: Object, notify: true})
+export class EtoolsUser extends connect(store)(LitElement) {
+  @property({type: Object})
   userData: EtoolsUserModel | null = null;
 
   private profileEndpoint = getEndpoint(PROFILE_ENDPOINT);

@@ -1,10 +1,10 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element';
+import {LitElement, html} from 'lit-element';
 
 /**
  * @customElement
  * @polymer
  */
-class PageOneDetails extends PolymerElement {
+class PageOneDetails extends LitElement {
   static get template() {
     // language=HTML
     return html`
