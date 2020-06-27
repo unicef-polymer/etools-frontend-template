@@ -5,7 +5,7 @@ import {LitElement, html} from 'lit-element';
  * @polymer
  */
 class PageOneDetails extends LitElement {
-  static get template() {
+  render() {
     // language=HTML
     return html`
       <style>
