@@ -1,6 +1,7 @@
 import {AnyObject} from '../types/globals';
-import {etoolsEndpoints} from './endpoints-list';
+import {EtoolsEndpoint} from './endpoints-list';
 import {EtoolsRequestEndpoint} from '@unicef-polymer/etools-ajax';
+import cloneDeep from 'lodash-es/cloneDeep';
 
 const generateUrlFromTemplate = (tmpl: string, data: AnyObject | undefined) => {
   if (!tmpl) {
@@ -19,17 +20,18 @@ const generateUrlFromTemplate = (tmpl: string, data: AnyObject | undefined) => {
   return tmpl;
 };
 
-export const getEndpoint = (endpointName: string, data?: AnyObject) => {
-  const endpoint = etoolsEndpoints[endpointName];
+export const getEndpoint = (endpoint: EtoolsEndpoint, data?: AnyObject) => {
   const baseSite = window.location.origin;
+  const completedEndpoint = cloneDeep(endpoint);
 
   if (endpoint && endpoint.template) {
-    endpoint.url = baseSite + generateUrlFromTemplate(endpoint.template, data);
+    completedEndpoint.url = baseSite + generateUrlFromTemplate(endpoint.template, data);
+    delete completedEndpoint.template;
   } else {
     if (endpoint.url!.indexOf(baseSite) === -1) {
-      endpoint.url = baseSite + endpoint.url;
+      completedEndpoint.url = baseSite + endpoint.url;
     }
   }
 
-  return endpoint as EtoolsRequestEndpoint;
+  return completedEndpoint as EtoolsRequestEndpoint;
 };

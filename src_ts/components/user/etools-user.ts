@@ -6,9 +6,7 @@ import {getEndpoint} from '../../endpoints/endpoints';
 import {AnyObject} from '../../types/globals';
 import {updateUserData} from '../../redux/actions/user';
 import {LitElement, property} from 'lit-element';
-
-const PROFILE_ENDPOINT = 'userProfile';
-const CHANGE_COUNTRY_ENDPOINT = 'changeCountry';
+import {etoolsEndpoints} from '../../endpoints/endpoints-list';
 
 /**
  * @customElement
@@ -19,8 +17,8 @@ export class EtoolsUser extends connect(store)(LitElement) {
   @property({type: Object})
   userData: EtoolsUserModel | null = null;
 
-  private profileEndpoint = getEndpoint(PROFILE_ENDPOINT);
-  private changeCountryEndpoint = getEndpoint(CHANGE_COUNTRY_ENDPOINT);
+  private profileEndpoint = getEndpoint(etoolsEndpoints.userProfile);
+  private changeCountryEndpoint = getEndpoint(etoolsEndpoints.changeCountry);
 
   public stateChanged(state: RootState) {
     this.userData = state.user!.data;
