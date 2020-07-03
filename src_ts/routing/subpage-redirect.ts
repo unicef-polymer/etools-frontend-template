@@ -2,9 +2,7 @@
 import {ROOT_PATH} from '../config/config';
 import {Router} from './router';
 
-export const redirectToListSubpageList = [
-  'page-one'
-];
+export const redirectToListSubpageList = ['page-one'];
 export const getRedirectToListPath = (path: string): undefined | string => {
   path = path.replace(ROOT_PATH, '');
   const route: string = Router.clearSlashes(path);

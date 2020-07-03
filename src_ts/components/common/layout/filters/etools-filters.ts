@@ -1,6 +1,4 @@
-import {
-  LitElement, html, customElement, property, css
-} from 'lit-element';
+import {LitElement, html, customElement, property, css} from 'lit-element';
 import {etoolsFiltersStyles} from './etools-filters-styles';
 
 import '@polymer/iron-icons/iron-icons';
@@ -41,14 +39,14 @@ export interface EtoolsFilter {
 
 @customElement('etools-filters')
 export class EtoolsFilters extends LitElement {
-
   @property({type: Array})
   filters: EtoolsFilter[] = [];
 
   private lastSelectedValues: any = null;
 
   static get styles() {
-    return [etoolsFiltersStyles,
+    return [
+      etoolsFiltersStyles,
       css`
         /* Set datepicker prefix icon color using mixin (cannot be used in etools-filter-styles) */
         datepicker-lite {
@@ -65,9 +63,8 @@ export class EtoolsFilters extends LitElement {
         }
 
         .date {
-          margin-right:16px;
+          margin-right: 16px;
         }
-
       `
     ];
   }
@@ -75,14 +72,16 @@ export class EtoolsFilters extends LitElement {
   getSearchTmpl(f: EtoolsFilter) {
     // language=HTML
     return html`
-      <paper-input class="filter search"
-          ?hidden="${!f.selected}"
-          type="search"
-          autocomplete="off"
-          .value="${f.selectedValue}"
-          placeholder="${f.filterName}"
-          data-filter-key="${f.filterKey}"
-          @value-changed="${this.textInputChange}">
+      <paper-input
+        class="filter search"
+        ?hidden="${!f.selected}"
+        type="search"
+        autocomplete="off"
+        .value="${f.selectedValue}"
+        placeholder="${f.filterName}"
+        data-filter-key="${f.filterKey}"
+        @value-changed="${this.textInputChange}"
+      >
         <iron-icon icon="search" slot="prefix"></iron-icon>
       </paper-input>
     `;
@@ -92,23 +91,24 @@ export class EtoolsFilters extends LitElement {
     // language=HTML
     return html`
       <etools-dropdown
-          ?hidden="${!f.selected}"
-          class="filter"
-          label="${f.filterName}"
-          placeholder="&#8212;"
-          ?disabled="${f.disabled}"
-          .options="${f.selectionOptions}"
-          .optionValue="${f.optionValue ? f.optionValue : 'value'}"
-          .optionLabel="${f.optionLabel ? f.optionLabel : 'label'}"
-          .selected="${f.selectedValue}"
-          trigger-value-change-event
-          @etools-selected-item-changed="${this.filterSelectionChange}"
-          data-filter-key="${f.filterKey}"
-          ?hide-search="${f.hideSearch}"
-          .minWidth="${f.minWidth}"
-          horizontal-align="left"
-          no-dynamic-align
-          enable-none-option>
+        ?hidden="${!f.selected}"
+        class="filter"
+        label="${f.filterName}"
+        placeholder="&#8212;"
+        ?disabled="${f.disabled}"
+        .options="${f.selectionOptions}"
+        .optionValue="${f.optionValue ? f.optionValue : 'value'}"
+        .optionLabel="${f.optionLabel ? f.optionLabel : 'label'}"
+        .selected="${f.selectedValue}"
+        trigger-value-change-event
+        @etools-selected-item-changed="${this.filterSelectionChange}"
+        data-filter-key="${f.filterKey}"
+        ?hide-search="${f.hideSearch}"
+        .minWidth="${f.minWidth}"
+        horizontal-align="left"
+        no-dynamic-align
+        enable-none-option
+      >
       </etools-dropdown>
     `;
   }
@@ -117,23 +117,24 @@ export class EtoolsFilters extends LitElement {
     // language=HTML
     return html`
       <etools-dropdown-multi
-          id="${f.filterKey}"
-          ?hidden="${!f.selected}"
-          class="filter"
-          label="${f.filterName}"
-          placeholder="Select"
-          ?disabled="${f.disabled}"
-          .options="${f.selectionOptions}"
-          .optionValue="${f.optionValue ? f.optionValue : 'value'}"
-          .optionLabel="${f.optionLabel ? f.optionLabel : 'label'}"
-          .selectedValues="${[...f.selectedValue]}"
-          trigger-value-change-event
-          @etools-selected-items-changed="${this.filterMultiSelectionChange}"
-          data-filter-key="${f.filterKey}"
-          ?hide-search="${f.hideSearch}"
-          .minWidth="${f.minWidth}"
-          horizontal-align="left"
-          no-dynamic-align>
+        id="${f.filterKey}"
+        ?hidden="${!f.selected}"
+        class="filter"
+        label="${f.filterName}"
+        placeholder="Select"
+        ?disabled="${f.disabled}"
+        .options="${f.selectionOptions}"
+        .optionValue="${f.optionValue ? f.optionValue : 'value'}"
+        .optionLabel="${f.optionLabel ? f.optionLabel : 'label'}"
+        .selectedValues="${[...f.selectedValue]}"
+        trigger-value-change-event
+        @etools-selected-items-changed="${this.filterMultiSelectionChange}"
+        data-filter-key="${f.filterKey}"
+        ?hide-search="${f.hideSearch}"
+        .minWidth="${f.minWidth}"
+        horizontal-align="left"
+        no-dynamic-align
+      >
       </etools-dropdown-multi>
     `;
   }
@@ -141,14 +142,16 @@ export class EtoolsFilters extends LitElement {
   getDateTmpl(f: EtoolsFilter) {
     // language=HTML
     return html`
-      <datepicker-lite class="filter date"
-          ?hidden="${!f.selected}"
-          .label="${f.filterName}"
-          .value="${f.selectedValue}"
-          fire-date-has-changed
-          @date-has-changed="${this.filterDateChange}"
-          data-filter-key="${f.filterKey}"
-          selected-date-display-format="D MMM YYYY">
+      <datepicker-lite
+        class="filter date"
+        ?hidden="${!f.selected}"
+        .label="${f.filterName}"
+        .value="${f.selectedValue}"
+        fire-date-has-changed
+        @date-has-changed="${this.filterDateChange}"
+        data-filter-key="${f.filterKey}"
+        selected-date-display-format="D MMM YYYY"
+      >
       </datepicker-lite>
     `;
   }
@@ -158,10 +161,12 @@ export class EtoolsFilters extends LitElement {
     return html`
       <div class="filter toggle" ?hidden="${!f.selected}" style="padding: 8px 0; box-sizing: border-box;">
         ${f.filterName}
-        <paper-toggle-button id="toggleFilter"
-            ?checked="${f.selectedValue}"
-            data-filter-key="${f.filterKey}"
-            @iron-change="${this.filterToggleChange}">
+        <paper-toggle-button
+          id="toggleFilter"
+          ?checked="${f.selectedValue}"
+          data-filter-key="${f.filterKey}"
+          @iron-change="${this.filterToggleChange}"
+        >
         </paper-toggle-button>
       </div>
     `;
@@ -206,10 +211,12 @@ export class EtoolsFilters extends LitElement {
     filters.forEach((f: EtoolsFilter) => {
       // language=HTML
       menuOptions.push(html`
-        <paper-icon-item @tap="${this.selectFilter}"
-            ?disabled="${f.disabled}"
-            ?selected="${f.selected}"
-            data-filter-key="${f.filterKey}">
+        <paper-icon-item
+          @tap="${this.selectFilter}"
+          ?disabled="${f.disabled}"
+          ?selected="${f.selected}"
+          data-filter-key="${f.filterKey}"
+        >
           <iron-icon icon="check" slot="item-icon" ?hidden="${!f.selected}"></iron-icon>
           <paper-item-body>${f.filterName}</paper-item-body>
         </paper-icon-item>
@@ -223,27 +230,26 @@ export class EtoolsFilters extends LitElement {
 
     // language=HTML
     return html`
-        <div id="filters">
-          ${this.selectedFiltersTmpl(this.filters)}
-        </div>
+      <div id="filters">
+        ${this.selectedFiltersTmpl(this.filters)}
+      </div>
 
-        <div id="filters-selector">
-          <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
-            <paper-button class="button" slot="dropdown-trigger">
-              <iron-icon icon="filter-list"></iron-icon>
-              Filters
+      <div id="filters-selector">
+        <paper-menu-button id="filterMenu" ignore-select horizontal-align="right">
+          <paper-button class="button" slot="dropdown-trigger">
+            <iron-icon icon="filter-list"></iron-icon>
+            Filters
+          </paper-button>
+          <div slot="dropdown-content" class="clear-all-filters">
+            <paper-button @tap="${this.clearAllFilterValues}" class="secondary-btn">
+              CLEAR ALL
             </paper-button>
-            <div slot="dropdown-content" class="clear-all-filters">
-              <paper-button @tap="${this.clearAllFilterValues}"
-                            class="secondary-btn">
-                CLEAR ALL
-              </paper-button>
-            </div>
-            <paper-listbox slot="dropdown-content" multi>
-              ${this.filterMenuOptions(this.filters)}
-            </paper-listbox>
-          </paper-menu-button>
-        </div>
+          </div>
+          <paper-listbox slot="dropdown-content" multi>
+            ${this.filterMenuOptions(this.filters)}
+          </paper-listbox>
+        </paper-menu-button>
+      </div>
     `;
   }
 
@@ -299,8 +305,7 @@ export class EtoolsFilters extends LitElement {
       throw new Error('[EtoolsFilters.getFilterOption] No data-filter-key attr found on clicked option');
     }
 
-    const filterOption: EtoolsFilter | undefined = this.filters
-      .find((f: EtoolsFilter) => f.filterKey === filterKey);
+    const filterOption: EtoolsFilter | undefined = this.filters.find((f: EtoolsFilter) => f.filterKey === filterKey);
 
     if (!filterOption) {
       // something went wrong... filter option not found
@@ -332,9 +337,10 @@ export class EtoolsFilters extends LitElement {
   filterMultiSelectionChange(e: CustomEvent) {
     const filterEl = e.currentTarget as HTMLElement;
     const filterOption: EtoolsFilter = this.getFilterOption(filterEl);
-    const currentSelectedVal = e.detail.selectedItems.length > 0
-      ? e.detail.selectedItems.map((optionObj: any) => optionObj[(filterEl as any).optionValue])
-      : [];
+    const currentSelectedVal =
+      e.detail.selectedItems.length > 0
+        ? e.detail.selectedItems.map((optionObj: any) => optionObj[(filterEl as any).optionValue])
+        : [];
     if (JSON.stringify(currentSelectedVal) === JSON.stringify(filterOption.selectedValue)) {
       return;
     }
@@ -391,34 +397,33 @@ export class EtoolsFilters extends LitElement {
     }
     this.lastSelectedValues = {...selectedValues};
 
-    this.dispatchEvent(new CustomEvent('filter-change', {
-      detail: this.getSelectedFiltersAndTheirValues(),
-      bubbles: true,
-      composed: true
-    }));
+    this.dispatchEvent(
+      new CustomEvent('filter-change', {
+        detail: this.getSelectedFiltersAndTheirValues(),
+        bubbles: true,
+        composed: true
+      })
+    );
   }
 
   // build and return and object based on filterKey and selectedValue
   getAllFiltersAndTheirValues() {
     const allFilters: any = {};
     if (this.filters) {
-      this.filters
-        .forEach((f: EtoolsFilter) => {
-          allFilters[f.filterKey] = f.selectedValue;
-        });
+      this.filters.forEach((f: EtoolsFilter) => {
+        allFilters[f.filterKey] = f.selectedValue;
+      });
     }
     return allFilters;
   }
 
   getSelectedFiltersAndTheirValues() {
     const selectedFilters: any = {};
-    this.filters
-      .forEach((f: EtoolsFilter) => {
-        if (f.selected) {
-          selectedFilters[f.filterKey] = f.selectedValue;
-        }
-      });
+    this.filters.forEach((f: EtoolsFilter) => {
+      if (f.selected) {
+        selectedFilters[f.filterKey] = f.selectedValue;
+      }
+    });
     return selectedFilters;
   }
-
 }

@@ -25,7 +25,7 @@ const updatePaginatorTotalResults = (data: any) => {
 };
 
 const computeTotalPages = (pageSize: number, totalResults: number) => {
-  return (pageSize < totalResults) ? Math.ceil(totalResults / pageSize) : 1;
+  return pageSize < totalResults ? Math.ceil(totalResults / pageSize) : 1;
 };
 
 const computeVisibleRange = (paginator: EtoolsPaginator) => {

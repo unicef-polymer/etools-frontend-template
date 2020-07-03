@@ -20,7 +20,6 @@ export interface EtoolsStatusModel extends EtoolsStatusItem {
 
 @customElement('etools-status')
 export class EtoolsStatus extends LitElement {
-
   public render() {
     // language=HTML
     return html`
@@ -72,15 +71,15 @@ export class EtoolsStatus extends LitElement {
           fill: #ffffff;
         }
       </style>
-       ${this.filteredStatuses.map((item: any, index: number) => this.getStatusHtml(item, index))}
+      ${this.filteredStatuses.map((item: any, index: number) => this.getStatusHtml(item, index))}
     `;
   }
 
   @property({type: String})
-  activeStatus: string = 'submitted-accepted';
+  activeStatus = 'submitted-accepted';
 
   @property({type: Number})
-  activeStatusIndex: number = 0;
+  activeStatusIndex = 0;
 
   // init with a default list of statuses (for testing)
   @property({type: Array})
@@ -94,7 +93,8 @@ export class EtoolsStatus extends LitElement {
       label: 'Submitted/Accepted'
     },
     {
-      statusOptions: [ // some statuses may share the same position
+      statusOptions: [
+        // some statuses may share the same position
         {
           status: 'report-submitted',
           label: 'Report submitted'
@@ -118,12 +118,12 @@ export class EtoolsStatus extends LitElement {
   getStatusHtml(item: any, index: number) {
     const completed = this.isCompleted(index, this.activeStatusIndex);
     return html`
-    <div class="status ${this.getStatusClasses(index, this.activeStatusIndex)}">
-      <span class="icon">
+      <div class="status ${this.getStatusClasses(index, this.activeStatusIndex)}">
+        <span class="icon">
           ${completed ? html`${completedStatusIcon}` : html`${this.getBaseOneIndex(index)}`}
-      </span>
-      <span class="label">${item.label}</span>
-    </div>
+        </span>
+        <span class="label">${item.label}</span>
+      </div>
     `;
   }
 
@@ -137,8 +137,9 @@ export class EtoolsStatus extends LitElement {
     if (statuses.length > 0) {
       displayStatuses = statuses.map((s: EtoolsStatusModel, index: number) => {
         if (s.statusOptions && s.statusOptions.length > 0) {
-          const aStatus: EtoolsStatusModel | undefined = s.statusOptions
-            .find((st: EtoolsStatusModel) => st.status === activeStatus);
+          const aStatus: EtoolsStatusModel | undefined = s.statusOptions.find(
+            (st: EtoolsStatusModel) => st.status === activeStatus
+          );
           // return the active status from a list of statuses that can share the same position
           // if active status is not in this list, return first IEtoolsStatusItem
           if (aStatus) {
@@ -162,7 +163,7 @@ export class EtoolsStatus extends LitElement {
    * @param index
    */
   getBaseOneIndex(index: number): number | string {
-    return (index + 1);
+    return index + 1;
   }
 
   isCompleted(index: number, activeStatusIndex: number): boolean {
@@ -179,5 +180,4 @@ export class EtoolsStatus extends LitElement {
     }
     return classes.join(' ');
   }
-
 }

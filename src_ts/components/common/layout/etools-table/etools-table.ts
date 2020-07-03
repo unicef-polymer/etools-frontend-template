@@ -4,7 +4,7 @@ import '@polymer/paper-checkbox/paper-checkbox';
 import {customElement, LitElement, html, property} from 'lit-element';
 
 import {etoolsTableStyles} from './etools-table-styles';
-import {GenericObject} from '../../../../types/globals';
+import {AnyObject} from '../../../../types/globals';
 import {fireEvent} from '../../../utils/fire-custom-event';
 import {prettyDate} from '../../../utils/date-utility';
 import {EtoolsPaginator} from './pagination/paginator';
@@ -40,6 +40,7 @@ export interface EtoolsTableColumn {
   isExternalLink?: boolean;
   capitalize?: boolean;
   placeholder?: string;
+  // eslint-disable-next-line @typescript-eslint/ban-types
   customMethod?: Function;
 }
 
@@ -62,7 +63,9 @@ export class EtoolsTable extends LitElement {
     // language=HTML
     return html`
       <table>
-        <caption ?hidden="${this.showCaption(this.caption)}">${this.caption}</caption>
+        <caption ?hidden="${this.showCaption(this.caption)}">
+          ${this.caption}
+        </caption>
         <thead>
           <tr>
             ${this.columns.map((column: EtoolsTableColumn) => this.getColumnHtml(column))}
@@ -78,7 +81,7 @@ export class EtoolsTable extends LitElement {
   }
 
   @property({type: String})
-  dateFormat: string = 'D MMM YYYY';
+  dateFormat = 'D MMM YYYY';
 
   @property({type: Boolean, reflect: true})
   showEdit!: boolean;
@@ -90,27 +93,25 @@ export class EtoolsTable extends LitElement {
   showCopy!: boolean;
 
   @property({type: String})
-  caption: string = '';
+  caption = '';
 
   @property({type: String})
-  actionsLabel: string = 'Actions';
+  actionsLabel = 'Actions';
 
   @property({type: Array})
   columns: EtoolsTableColumn[] = [];
 
   @property({type: Array})
-  items: GenericObject[] = [];
+  items: AnyObject[] = [];
 
   @property({type: Object})
   paginator!: EtoolsPaginator;
 
-  private defaultPlaceholder: string = '—';
+  private defaultPlaceholder = '—';
 
   getColumnHtml(column: EtoolsTableColumn) {
     if (!this.columnHasSort(column.sort)) {
-      return html`
-        <th class="${this.getColumnClassList(column)}">${column.label}</th>
-      `;
+      return html` <th class="${this.getColumnClassList(column)}">${column.label}</th> `;
     } else {
       return this.getColumnHtmlWithSort(column);
     }
@@ -120,9 +121,9 @@ export class EtoolsTable extends LitElement {
     return html`
       <th class="${this.getColumnClassList(column)}" @tap="${() => this.toggleAndSortBy(column)}">
         ${column.label}
-        ${this.columnHasSort(column.sort) ? html`<iron-icon
-            .icon="${this.getSortIcon(column.sort as EtoolsTableColumnSort)}">
-          </iron-icon>` : ''}
+        ${this.columnHasSort(column.sort)
+          ? html`<iron-icon .icon="${this.getSortIcon(column.sort as EtoolsTableColumnSort)}"> </iron-icon>`
+          : ''}
       </th>
     `;
   }
@@ -140,7 +141,7 @@ export class EtoolsTable extends LitElement {
     });
     const aHref = path.join('/');
     return isExternalLink
-      ? html`<a class="" @click="${() => window.location.href = aHref}" href="#">${item[key]}</a>`
+      ? html`<a class="" @click="${() => (window.location.href = aHref)}" href="#">${item[key]}</a>`
       : html`<a class="" href="${aHref}">${item[key]}</a>`;
   }
 
@@ -148,10 +149,17 @@ export class EtoolsTable extends LitElement {
     const columnsKeys = this.getColumnsKeys();
     return html`
       <tr>
-        ${columnsKeys.map((k: string) => html`<td data-label="${this.getColumnDetails(k).label}" class="${this.getRowDataColumnClassList(k)}">
-          ${this.getItemValue(item, k, showEdit)}</td>`)}
-
-        ${this.showRowActions() ? html`<td data-label="${this.actionsLabel}" class="row-actions">&nbsp;${this.getRowActionsTmpl(item)}` : ''}
+        ${columnsKeys.map(
+          (k: string) => html`<td
+            data-label="${this.getColumnDetails(k).label}"
+            class="${this.getRowDataColumnClassList(k)}"
+          >
+            ${this.getItemValue(item, k, showEdit)}
+          </td>`
+        )}
+        ${this.showRowActions()
+          ? html`<td data-label="${this.actionsLabel}" class="row-actions">&nbsp;${this.getRowActionsTmpl(item)}</td>`
+          : ''}
       </tr>
     `;
   }
@@ -159,19 +167,27 @@ export class EtoolsTable extends LitElement {
   getRowActionsTmpl(item: any) {
     return html`
       <div class="actions">
-        <paper-icon-button ?hidden="${!this.showEdit}"
-          icon="create" @tap="${() => this.triggerAction(EtoolsTableActionType.Edit, item)}"></paper-icon-button>
-        <paper-icon-button ?hidden="${!this.showDelete}"
-          icon="delete" @tap="${() => this.triggerAction(EtoolsTableActionType.Delete, item)}"></paper-icon-button>
-        <paper-icon-button ?hidden="${!this.showCopy}"
-          icon="content-copy" @tap="${() => this.triggerAction(EtoolsTableActionType.Copy, item)}"></paper-icon-button>
+        <paper-icon-button
+          ?hidden="${!this.showEdit}"
+          icon="create"
+          @tap="${() => this.triggerAction(EtoolsTableActionType.Edit, item)}"
+        ></paper-icon-button>
+        <paper-icon-button
+          ?hidden="${!this.showDelete}"
+          icon="delete"
+          @tap="${() => this.triggerAction(EtoolsTableActionType.Delete, item)}"
+        ></paper-icon-button>
+        <paper-icon-button
+          ?hidden="${!this.showCopy}"
+          icon="content-copy"
+          @tap="${() => this.triggerAction(EtoolsTableActionType.Copy, item)}"
+        ></paper-icon-button>
       </div>
     `;
   }
 
   get paginationHtml() {
-    return html`
-    <tr>
+    return html` <tr>
       <td class="pagination" colspan="${this.columns.length + (this.showRowActions() ? 1 : 0)}">
         <etools-pagination .paginator="${this.paginator}"></etools-pagination>
       </td>
@@ -236,7 +252,9 @@ export class EtoolsTable extends LitElement {
       case EtoolsTableColumnType.Date:
         return item[key]
           ? prettyDate(item[key], this.dateFormat)
-          : (column.placeholder ? column.placeholder : this.defaultPlaceholder);
+          : column.placeholder
+          ? column.placeholder
+          : this.defaultPlaceholder;
       case EtoolsTableColumnType.Link:
         return this.getLinkTmpl(column.link_tmpl, item, key, column.isExternalLink);
       case EtoolsTableColumnType.Number:
@@ -252,15 +270,15 @@ export class EtoolsTable extends LitElement {
   }
 
   _getCheckbox(item: any, key: string, showEdit: boolean) {
-    return html`
-      <paper-checkbox ?checked="${this._getValueByKey(item, key, '', true)}"
-        ?readonly="${!showEdit}"
-        @change="${(e: CustomEvent) => this.triggerItemChanged(item, key, (e.currentTarget as any).checked)}">
-      </paper-checkbox>`;
-
+    return html` <paper-checkbox
+      ?checked="${this._getValueByKey(item, key, '', true)}"
+      ?readonly="${!showEdit}"
+      @change="${(e: CustomEvent) => this.triggerItemChanged(item, key, (e.currentTarget as any).checked)}"
+    >
+    </paper-checkbox>`;
   }
 
-  _getValueByKey(item: any, key: string, placeholder?: string, ignorePlaceholder: boolean = false) {
+  _getValueByKey(item: any, key: string, placeholder?: string, ignorePlaceholder = false) {
     const value = get(item, key, '');
 
     if (!ignorePlaceholder && (!value || value === '')) {
@@ -308,5 +326,4 @@ export class EtoolsTable extends LitElement {
     changedItem[field] = filedValue;
     fireEvent(this, 'item-changed', changedItem);
   }
-
 }

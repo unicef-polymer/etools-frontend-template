@@ -2,21 +2,21 @@ import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
 declare const moment: any;
 
 export function isValidDate(date: any) {
-  return (date instanceof Date === false) ? false : (date.toString() !== 'Invalid Date');
+  return date instanceof Date === false ? false : date.toString() !== 'Invalid Date';
 }
 
-export function prettyDate(dateString: string, format?: string, placeholder: string = '-') {
+export function prettyDate(dateString: string, format?: string, placeholder = '-') {
   const date = convertDate(dateString);
-  return (!date) ? (placeholder ? placeholder : '') : _utcDate(date, format);
+  return !date ? (placeholder ? placeholder : '') : _utcDate(date, format);
 }
 
 function _utcDate(date: any, format?: string) {
-  return (!date) ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
+  return !date ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
 }
 
 export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
   if (dateString !== '') {
-    dateString = (dateString.indexOf('T') === -1) ? (dateString + 'T00:00:00') : dateString;
+    dateString = dateString.indexOf('T') === -1 ? dateString + 'T00:00:00' : dateString;
     /**
      * `Z` (zero time offset) will ensure `new Date` will create the date in UTC and then it will apply local timezone
      * and will have the same result in all timezones (for the UTC date).
@@ -26,7 +26,7 @@ export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
      *  d.toGMTString() == "Wed, 25 Apr 2018 00:00:00 GMT"
      * @type {string}
      */
-    dateString += (noZTimezoneOffset || dateString.indexOf('Z') >= 0) ? '' : 'Z';
+    dateString += noZTimezoneOffset || dateString.indexOf('Z') >= 0 ? '' : 'Z';
     const date = new Date(dateString);
     const isValid = isValidDate(date);
     if (!isValid) {

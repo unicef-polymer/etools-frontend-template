@@ -1,8 +1,10 @@
+import {AnyObject} from '../../types/globals';
+
 // TODO: improve this user model
 export interface EtoolsUserModel {
-  countries_available: object[];
-  groups: object[];
-  country: object;
+  countries_available: AnyObject[];
+  groups: AnyObject[];
+  country: AnyObject;
   country_override: number;
   email: string;
   first_name: string;
@@ -26,40 +28,40 @@ export interface EtoolsUserModel {
 export const dummyUserData = {
   countries_available: [
     {
-      'business_area_code': '4590',
-      'id': 46,
-      'name': 'Burkina Faso'
+      business_area_code: '4590',
+      id: 46,
+      name: 'Burkina Faso'
     },
     {
-      'business_area_code': '0060',
-      'id': 24,
-      'name': 'Afghanistan'
+      business_area_code: '0060',
+      id: 24,
+      name: 'Afghanistan'
     },
     {
-      'business_area_code': '2130',
-      'id': 13,
-      'name': 'Iraq'
+      business_area_code: '2130',
+      id: 13,
+      name: 'Iraq'
     },
     {
-      'business_area_code': '2490',
-      'id': 9,
-      'name': 'Lebanon'
+      business_area_code: '2490',
+      id: 9,
+      name: 'Lebanon'
     }
   ],
   groups: [
     {
-      'id': 6,
-      'name': 'UNICEF User',
-      'permissions': [60, 324, 287, 288, 289]
+      id: 6,
+      name: 'UNICEF User',
+      permissions: [60, 324, 287, 288, 289]
     }
   ],
   country: {
-    'id': 9,
-    'initial_zoom': 8,
-    'latitude': '33.85000',
-    'local_currency': 'US Dollar',
-    'longitude': '35.86000',
-    'name': 'Lebanon'
+    id: 9,
+    initial_zoom: 8,
+    latitude: '33.85000',
+    local_currency: 'US Dollar',
+    longitude: '35.86000',
+    name: 'Lebanon'
   },
   country_override: 9,
   email: 'jane@demo.com',

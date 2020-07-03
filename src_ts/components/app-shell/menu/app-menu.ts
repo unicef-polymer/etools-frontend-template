@@ -16,7 +16,6 @@ import {customElement, html, LitElement, property} from 'lit-element';
  */
 @customElement('app-menu')
 export class AppMenu extends LitElement {
-
   static get styles() {
     return [navMenuStyles];
   }
@@ -26,36 +25,37 @@ export class AppMenu extends LitElement {
     // language=HTML
     return html`
       <div class="menu-header">
-      <span id="app-name">
-        Frontend <br>
-        Template
-      </span>
+        <span id="app-name">
+          Frontend <br />
+          Template
+        </span>
 
         <span class="ripple-wrapper main">
-        <iron-icon id="menu-header-top-icon"
-                   icon="assignment-ind"
-                    @tap="${() => this._toggleSmallMenu()}"></iron-icon>
-        <paper-ripple class="circle" center></paper-ripple>
-      </span>
+          <iron-icon
+            id="menu-header-top-icon"
+            icon="assignment-ind"
+            @tap="${() => this._toggleSmallMenu()}"
+          ></iron-icon>
+          <paper-ripple class="circle" center></paper-ripple>
+        </span>
 
         <paper-tooltip for="menu-header-top-icon" position="right">
           Frontend Template
         </paper-tooltip>
 
         <span class="ripple-wrapper">
-        <iron-icon id="minimize-menu"
-                   icon="chevron-left"
-                    @tap="${() => this._toggleSmallMenu()}"></iron-icon>
-        <paper-ripple class="circle" center></paper-ripple>
-      </span>
+          <iron-icon id="minimize-menu" icon="chevron-left" @tap="${() => this._toggleSmallMenu()}"></iron-icon>
+          <paper-ripple class="circle" center></paper-ripple>
+        </span>
       </div>
 
       <div class="nav-menu">
-        <iron-selector .selected="${this.selectedOption}"
-                       attr-for-selected="menu-name"
-                       selectable="a"
-                       role="navigation">
-
+        <iron-selector
+          .selected="${this.selectedOption}"
+          attr-for-selected="menu-name"
+          selectable="a"
+          role="navigation"
+        >
           <a class="nav-menu-item" menu-name="page-one" href="${this.rootPath + 'page-one'}">
             <iron-icon id="page1-icon" icon="accessibility"></iron-icon>
             <paper-tooltip for="page1-icon" position="right">
@@ -71,7 +71,6 @@ export class AppMenu extends LitElement {
             </paper-tooltip>
             <div class="name">Page Two</div>
           </a>
-
         </iron-selector>
 
         <div class="nav-menu-item section-title">
@@ -86,9 +85,11 @@ export class AppMenu extends LitElement {
           <div class="name">Knowledge base</div>
         </a>
 
-        <a class="nav-menu-item lighter-item"
-           href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
-           target="_blank">
+        <a
+          class="nav-menu-item lighter-item"
+          href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
+          target="_blank"
+        >
           <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
           <paper-tooltip for="discussion-icon" position="right">
             Discussion
@@ -103,19 +104,18 @@ export class AppMenu extends LitElement {
           </paper-tooltip>
           <div class="name">Information</div>
         </a>
-
       </div>
     `;
   }
 
   @property({type: String, attribute: 'selected-option'})
-  public selectedOption: string = '';
+  public selectedOption = '';
 
   @property({type: String})
   rootPath: string = ROOT_PATH;
 
   @property({type: Boolean, attribute: 'small-menu'})
-  public smallMenu: boolean = false;
+  public smallMenu = false;
 
   public _toggleSmallMenu(): void {
     this.smallMenu = !this.smallMenu;
@@ -123,5 +123,4 @@ export class AppMenu extends LitElement {
     localStorage.setItem(SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY, String(localStorageVal));
     fireEvent(this, 'toggle-small-menu', {value: this.smallMenu});
   }
-
 }

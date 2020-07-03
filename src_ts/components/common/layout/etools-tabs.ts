@@ -1,9 +1,8 @@
 import {LitElement, html, property, customElement} from 'lit-element';
 import '@polymer/paper-tabs/paper-tabs';
 import '@polymer/paper-tabs/paper-tab';
-import {GenericObject} from '../../../types/globals';
+import {AnyObject} from '../../../types/globals';
 import {layoutHorizontal, layoutStartJustified} from '../../styles/lit-styles/flex-layout-styles';
-
 
 /**
  * @LitElement
@@ -12,7 +11,6 @@ import {layoutHorizontal, layoutStartJustified} from '../../styles/lit-styles/fl
 
 @customElement('etools-tabs')
 export class EtoolsTabs extends LitElement {
-
   public render() {
     // main template
     // language=HTML
@@ -66,29 +64,25 @@ export class EtoolsTabs extends LitElement {
         }
       </style>
 
-      <paper-tabs id="tabs"
-                  selected="${this.activeTab}"
-                  attr-for-selected="name"
-                  noink>
-      ${this.tabs.map(item => this.getTabHtml(item))}
+      <paper-tabs id="tabs" selected="${this.activeTab}" attr-for-selected="name" noink>
+        ${this.tabs.map((item) => this.getTabHtml(item))}
       </paper-tabs>
     `;
   }
 
   @property({type: String})
-  activeTab: string = '';
+  activeTab = '';
 
   @property({type: Array})
-  tabs!: GenericObject[];
+  tabs!: AnyObject[];
 
   getTabHtml(item: any) {
     return html`
-    <paper-tab name="${item.tab}" link ?hidden="${item.hidden}" ?disabled="${item.disabled}">
-    <span class="tab-content">
-        ${item.tabLabel} ${item.showTabCounter ? html`(item.counter)` : ''}
-    </span>
-    </paper-tab>
+      <paper-tab name="${item.tab}" link ?hidden="${item.hidden}" ?disabled="${item.disabled}">
+        <span class="tab-content">
+          ${item.tabLabel} ${item.showTabCounter ? html`(item.counter)` : ''}
+        </span>
+      </paper-tab>
     `;
   }
-
 }

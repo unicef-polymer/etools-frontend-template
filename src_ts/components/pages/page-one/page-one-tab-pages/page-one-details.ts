@@ -1,12 +1,11 @@
-import {PolymerElement, html} from '@polymer/polymer/polymer-element';
+import {LitElement, html} from 'lit-element';
 
 /**
  * @customElement
  * @polymer
  */
-class PageOneDetails extends PolymerElement {
-
-  static get template() {
+class PageOneDetails extends LitElement {
+  render() {
     // language=HTML
     return html`
       <style>
@@ -16,7 +15,6 @@ class PageOneDetails extends PolymerElement {
       Page One Details tab content
     `;
   }
-
 }
 
 window.customElements.define('page-one-details', PageOneDetails);

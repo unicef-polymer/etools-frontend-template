@@ -2,12 +2,7 @@ import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../store';
 import {ROOT_PATH} from '../../config/config';
-import {
-  DEFAULT_ROUTE,
-  EtoolsRouter,
-  ROUTE_404,
-  updateAppLocation
-} from '../../routing/routes';
+import {DEFAULT_ROUTE, EtoolsRouter, ROUTE_404, updateAppLocation} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
 import {getFilePathsToImport} from '../../routing/component-lazy-load-config';
 import {getRedirectToListPath} from '../../routing/subpage-redirect';
@@ -15,9 +10,12 @@ import {getRedirectToListPath} from '../../routing/subpage-redirect';
 export const UPDATE_ROUTE_DETAILS = 'UPDATE_ROUTE_DETAILS';
 export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
 
-export interface AppActionUpdateRouteDetails
-  extends Action<'UPDATE_ROUTE_DETAILS'> {routeDetails: any}
-export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {opened: boolean}
+export interface AppActionUpdateRouteDetails extends Action<'UPDATE_ROUTE_DETAILS'> {
+  routeDetails: any;
+}
+export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
+  opened: boolean;
+}
 
 export type AppAction = AppActionUpdateRouteDetails | AppActionUpdateDrawerState;
 
@@ -42,11 +40,13 @@ const loadPageComponents: ActionCreator<ThunkResult> = (routeDetails: RouteDetai
   // start importing components (lazy loading)
   const filesToImport: string[] = getFilePathsToImport(routeDetails);
   filesToImport.forEach((filePath: string) => {
-    import(importBase + filePath).then(() => {
-      console.log(`component: ${filePath} has been loaded... yey!`);
-    }).catch((importError: any) => {
-      console.log('component import failed...', importError);
-    });
+    import(importBase + filePath)
+      .then(() => {
+        console.log(`component: ${filePath} has been loaded... yey!`);
+      })
+      .catch((importError: any) => {
+        console.log('component import failed...', importError);
+      });
   });
 
   // add page details to redux store, to be used in other components
