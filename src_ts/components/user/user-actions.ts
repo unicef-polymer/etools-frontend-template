@@ -1,21 +1,46 @@
-import './etools-user';
-import {EtoolsUser} from './etools-user';
+import {AnyObject} from '../../types/globals';
+import {updateUserData} from '../../redux/actions/user';
+import {getEndpoint} from '../../endpoints/endpoints';
+import {store} from '../../redux/store';
+import {etoolsEndpoints} from '../../endpoints/endpoints-list';
+import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
 
-const userEl = document.createElement('etools-user') as EtoolsUser;
+export function getCurrentUser() {
+  return sendRequest({
+    endpoint: {url: getEndpoint(etoolsEndpoints.userProfile).url}
+  })
+    .then((response: AnyObject) => {
+      store.dispatch(updateUserData(response));
+      return response;
+    })
+    .catch((error: AnyObject) => {
+      console.error('[EtoolsUser]: getUserData req error...', error);
+      throw error;
+    });
+}
 
-export const getCurrentUserData = () => {
-  // TODO: find a better way of getting user data or continue with this
-  userEl.getUserData(); // should req data and polpuate redux state...
-};
+export function updateCurrentUser(profile: AnyObject) {
+  return sendRequest({
+    method: 'PATCH',
+    endpoint: {url: getEndpoint(etoolsEndpoints.userProfile).url},
+    body: profile
+  })
+    .then((response: AnyObject) => {
+      store.dispatch(updateUserData(response));
+    })
+    .catch((error: AnyObject) => {
+      console.error('[EtoolsUser]: updateUserData req error ', error);
+      throw error;
+    });
+}
 
-export const updateCurrentUserData = (profile: any) => {
-  return userEl.updateUserData(profile);
-};
-
-export const changeCurrentUserCountry = (countryId: number) => {
-  return userEl.changeCountry(countryId);
-  // .then(() => {
-  //   // refresh user data (no other way, country change req returns 204)
-  //   getCurrentUserData();
-  // });
-};
+export function changeCurrentUserCountry(countryId: number) {
+  return sendRequest({
+    method: 'POST',
+    endpoint: {url: getEndpoint(etoolsEndpoints.changeCountry).url},
+    body: {country: countryId}
+  }).catch((error: AnyObject) => {
+    console.error('[EtoolsUser]: changeCountry req error ', error);
+    throw error;
+  });
+}
