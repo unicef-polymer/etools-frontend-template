@@ -1,6 +1,12 @@
 import {css} from 'lit-element';
-import {layoutVertical, layoutHorizontal, layoutCenter, layoutJustified, layoutCenterJustified, layoutFlex}
-  from '../../../styles/lit-styles/flex-layout-styles';
+import {
+  layoutVertical,
+  layoutHorizontal,
+  layoutCenter,
+  layoutJustified,
+  layoutCenterJustified,
+  layoutFlex
+} from '../../../styles/lit-styles/flex-layout-styles';
 
 // language=CSS
 export const navMenuStyles = css`
@@ -103,7 +109,8 @@ export const navMenuStyles = css`
     min-height: 550px;
     padding: 8px 0 0;
   }
-  .nav-menu, .nav-menu iron-selector[role="navigation"] {
+  .nav-menu,
+  .nav-menu iron-selector[role='navigation'] {
     ${layoutFlex}
   }
 

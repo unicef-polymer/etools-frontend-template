@@ -14,7 +14,6 @@ import {fireEvent} from '../../../../utils/fire-custom-event';
  */
 @customElement('etools-pagination')
 export class EtoolsPagination extends LitElement {
-
   public render() {
     return html`
       <style>
@@ -22,11 +21,17 @@ export class EtoolsPagination extends LitElement {
       </style>
       <span class="pagination-item">
         <span id="rows">Rows per page:</span>
-        <paper-dropdown-menu vertical-align="bottom" horizontal-align="left" noink no-label-float
-          @value-changed="${this.onPageSizeChanged}">
+        <paper-dropdown-menu
+          vertical-align="bottom"
+          horizontal-align="left"
+          noink
+          no-label-float
+          @value-changed="${this.onPageSizeChanged}"
+        >
           <paper-listbox slot="dropdown-content" attr-for-selected="name" .selected="${this.paginator.page_size}">
-            ${this.pageSizeOptions.map((sizeOption: number) => html`<paper-item name="${sizeOption}">
-              ${sizeOption}</paper-item>`)}
+            ${this.pageSizeOptions.map(
+              (sizeOption: number) => html`<paper-item name="${sizeOption}"> ${sizeOption}</paper-item>`
+            )}
           </paper-listbox>
         </paper-dropdown-menu>
         <span id="range">
@@ -34,14 +39,26 @@ export class EtoolsPagination extends LitElement {
         </span>
       </span>
       <span class="pagination-item pagination-btns">
-        <paper-icon-button icon="first-page" @tap="${this.goToFirstPage}"
-                           ?disabled="${this.paginator.page === 1}"></paper-icon-button>
-        <paper-icon-button icon="chevron-left" @tap="${this.pageLeft}"
-                           ?disabled="${this.paginator.page === 1}"></paper-icon-button>
-        <paper-icon-button icon="chevron-right" @tap="${this.pageRight}"
-                           ?disabled="${this.paginator.page === this.paginator.total_pages}"></paper-icon-button>
-        <paper-icon-button icon="last-page" @tap="${this.goToLastPage}"
-                           ?disabled="${this.paginator.page === this.paginator.total_pages}"></paper-icon-button>
+        <paper-icon-button
+          icon="first-page"
+          @tap="${this.goToFirstPage}"
+          ?disabled="${this.paginator.page === 1}"
+        ></paper-icon-button>
+        <paper-icon-button
+          icon="chevron-left"
+          @tap="${this.pageLeft}"
+          ?disabled="${this.paginator.page === 1}"
+        ></paper-icon-button>
+        <paper-icon-button
+          icon="chevron-right"
+          @tap="${this.pageRight}"
+          ?disabled="${this.paginator.page === this.paginator.total_pages}"
+        ></paper-icon-button>
+        <paper-icon-button
+          icon="last-page"
+          @tap="${this.goToLastPage}"
+          ?disabled="${this.paginator.page === this.paginator.total_pages}"
+        ></paper-icon-button>
       </span>
     `;
   }
@@ -89,5 +106,4 @@ export class EtoolsPagination extends LitElement {
   firePaginatorChangeEvent(paginatorData: any) {
     fireEvent(this, 'paginator-change', {...this.paginator, ...paginatorData});
   }
-
 }

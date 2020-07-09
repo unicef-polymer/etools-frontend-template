@@ -9,7 +9,6 @@ import {SharedStylesLit} from '../styles/shared-styles-lit';
  */
 @customElement('page-two')
 export class PageTwo extends LitElement {
-
   static get styles() {
     return [elevationStyles, pageLayoutStyles];
   }
@@ -39,5 +38,4 @@ export class PageTwo extends LitElement {
       </section>
     `;
   }
-
 }

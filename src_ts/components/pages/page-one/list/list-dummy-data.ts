@@ -50,17 +50,17 @@ export const getListDummydata = (paginator: EtoolsPaginator) => {
 };
 
 export const getPartnersDummyData = () => {
-  const partners: {id: number, name: string}[] = [];
+  const partners: {id: number; name: string}[] = [];
   for (i = 0; i < 20; i++) {
     partners.push({id: i, name: 'Partner ' + i});
   }
   return partners;
-}
+};
 
 export const geUnicefUsersDummyData = () => {
-  const users: {id: number, name: string}[] = [];
+  const users: {id: number; name: string}[] = [];
   for (i = 0; i < 20; i++) {
     users.push({id: i, name: 'Unicef user ' + i});
   }
   return users;
-}
+};

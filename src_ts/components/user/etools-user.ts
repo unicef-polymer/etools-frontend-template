@@ -1,28 +1,24 @@
-import {PolymerElement} from '@polymer/polymer/polymer-element.js';
 import {sendRequest} from '@unicef-polymer/etools-ajax/etools-ajax-request';
-import {property} from '@polymer/decorators/lib/decorators';
 import {EtoolsUserModel} from './user-model';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../redux/store';
 import {getEndpoint} from '../../endpoints/endpoints';
-import {GenericObject} from '../../types/globals';
+import {AnyObject} from '../../types/globals';
 import {updateUserData} from '../../redux/actions/user';
-
-const PROFILE_ENDPOINT = 'userProfile';
-const CHANGE_COUNTRY_ENDPOINT = 'changeCountry';
+import {LitElement, property} from 'lit-element';
+import {etoolsEndpoints} from '../../endpoints/endpoints-list';
 
 /**
  * @customElement
  * @polymer
  * @appliesMixin EtoolsAjaxRequestMixin
  */
-export class EtoolsUser extends connect(store)(PolymerElement) {
-
-  @property({type: Object, notify: true})
+export class EtoolsUser extends connect(store)(LitElement) {
+  @property({type: Object})
   userData: EtoolsUserModel | null = null;
 
-  private profileEndpoint = getEndpoint(PROFILE_ENDPOINT);
-  private changeCountryEndpoint = getEndpoint(CHANGE_COUNTRY_ENDPOINT);
+  private profileEndpoint = getEndpoint(etoolsEndpoints.userProfile);
+  private changeCountryEndpoint = getEndpoint(etoolsEndpoints.changeCountry);
 
   public stateChanged(state: RootState) {
     this.userData = state.user!.data;
@@ -32,26 +28,30 @@ export class EtoolsUser extends connect(store)(PolymerElement) {
   public getUserData() {
     return sendRequest({
       endpoint: {url: this.profileEndpoint.url}
-    }).then((response: GenericObject) => {
-      // console.log('response', response);
-      store.dispatch(updateUserData(response));
-    }).catch((error: GenericObject) => {
-      console.error('[EtoolsUser]: getUserData req error...', error);
-      throw error;
-    });
+    })
+      .then((response: AnyObject) => {
+        // console.log('response', response);
+        store.dispatch(updateUserData(response));
+      })
+      .catch((error: AnyObject) => {
+        console.error('[EtoolsUser]: getUserData req error...', error);
+        throw error;
+      });
   }
 
-  public updateUserData(profile: GenericObject) {
+  public updateUserData(profile: AnyObject) {
     return sendRequest({
       method: 'PATCH',
       endpoint: {url: this.profileEndpoint.url},
       body: profile
-    }).then((response: GenericObject) => {
-      store.dispatch(updateUserData(response));
-    }).catch((error: GenericObject) => {
-      console.error('[EtoolsUser]: updateUserData req error ', error);
-      throw error;
-    });
+    })
+      .then((response: AnyObject) => {
+        store.dispatch(updateUserData(response));
+      })
+      .catch((error: AnyObject) => {
+        console.error('[EtoolsUser]: updateUserData req error ', error);
+        throw error;
+      });
   }
 
   public changeCountry(countryId: number) {
@@ -59,12 +59,11 @@ export class EtoolsUser extends connect(store)(PolymerElement) {
       method: 'POST',
       endpoint: {url: this.changeCountryEndpoint.url},
       body: {country: countryId}
-    }).catch((error: GenericObject) => {
+    }).catch((error: AnyObject) => {
       console.error('[EtoolsUser]: changeCountry req error ', error);
       throw error;
     });
   }
-
 }
 
 window.customElements.define('etools-user', EtoolsUser);

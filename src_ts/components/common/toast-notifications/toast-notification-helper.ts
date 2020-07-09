@@ -1,17 +1,16 @@
 import {EtoolsToast} from './etools-toast';
 import './etools-toast'; // element loaded (if not, etools-toast will not render)
-import {GenericObject} from '../../../types/globals';
+import {AnyObject} from '../../../types/globals';
 import {LitElement} from 'lit-element';
 
 /**
  * Toasts notification messages queue utility class
  */
 export class ToastNotificationHelper {
-
   private appShellEl: LitElement;
   private readonly _toast: EtoolsToast;
-  private _toastQueue: GenericObject[] = [];
-  private TOAST_EL_ID: string = 'toastNotificationQueueEl';
+  private _toastQueue: AnyObject[] = [];
+  private TOAST_EL_ID = 'toastNotificationQueueEl';
 
   constructor(appShellEl: LitElement) {
     this.appShellEl = appShellEl;
@@ -32,16 +31,16 @@ export class ToastNotificationHelper {
     }
   }
 
-  public queueToast(event: GenericObject) {
+  public queueToast(event: AnyObject) {
     event.stopPropagation();
     const detail = event.detail;
 
     if (!this._toastQueue.length) {
       this._toastQueue.push(detail);
-      const toastProperties: GenericObject = this._toast.prepareToastAndGetShowProperties(detail);
+      const toastProperties: AnyObject = this._toast.prepareToastAndGetShowProperties(detail);
       this._showToast(toastProperties);
     } else {
-      const alreadyInQueue = this._toastQueue.filter((toastDetail: GenericObject) => {
+      const alreadyInQueue = this._toastQueue.filter((toastDetail: AnyObject) => {
         return JSON.stringify(toastDetail) === JSON.stringify(detail);
       });
       if (alreadyInQueue.length === 0) {
@@ -77,7 +76,7 @@ export class ToastNotificationHelper {
   public dequeueToast() {
     this._toastQueue.shift();
     if (this._toastQueue.length) {
-      const toastProperties: GenericObject = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
+      const toastProperties: AnyObject = this._toast.prepareToastAndGetShowProperties(this._toastQueue[0]);
       this._showToast(toastProperties);
     }
   }
@@ -88,7 +87,7 @@ export class ToastNotificationHelper {
     }
   }
 
-  protected _showToast(toastProperties: GenericObject) {
+  protected _showToast(toastProperties: AnyObject) {
     // TODO: currentToastMessage is used by piwik elem; use it or remove it :)
     // this.appShellEl.set('currentToastMessage', toastProperties.text);
     this._toast.show(toastProperties);

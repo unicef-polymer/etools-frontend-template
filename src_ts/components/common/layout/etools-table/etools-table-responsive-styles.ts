@@ -7,8 +7,7 @@ export const etoolsTableResponsiveStyles = css`
     This query will take effect for any screen smaller than 760px
     and also iPads specifically.
   */
-    @media only screen and (max-width: 760px),
-    (min-device-width: 768px) and (max-device-width: 1024px) {
+  @media only screen and (max-width: 760px), (min-device-width: 768px) and (max-device-width: 1024px) {
     table {
       border: 0;
     }
@@ -33,21 +32,22 @@ export const etoolsTableResponsiveStyles = css`
       display: block;
     }
 
-    table tr td:first-child, table tr td:last-child {
-      padding: .75rem;
+    table tr td:first-child,
+    table tr td:last-child {
+      padding: 0.75rem;
     }
 
     table td {
       border-top: 1px solid var(--etools-table-rows-border-color, #dee2e6);
       display: block;
-      font-size: .8em;
+      font-size: 0.8em;
       text-align: right;
     }
 
     table td::before {
       content: attr(data-label);
       float: left;
-      color: var(--etools-table-secondary-text-color, rgba(0, 0, 0, .54));
+      color: var(--etools-table-secondary-text-color, rgba(0, 0, 0, 0.54));
     }
 
     table td:first-child {

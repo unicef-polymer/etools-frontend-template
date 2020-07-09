@@ -2,11 +2,11 @@ import {Reducer} from 'redux';
 import {UPDATE_USER_DATA, UPDATE_USER_PERMISSIONS} from '../actions/user';
 import {EtoolsUserModel} from '../../components/user/user-model';
 import {RootAction} from '../store';
-import {GenericObject} from '../../types/globals';
+import {AnyObject} from '../../types/globals';
 
 export interface UserState {
   data: EtoolsUserModel | null;
-  permissions: GenericObject | null;
+  permissions: AnyObject | null;
 }
 
 const INITIAL_USER_DATA: UserState = {
@@ -32,4 +32,3 @@ const userData: Reducer<UserState, RootAction> = (state = INITIAL_USER_DATA, act
 };
 
 export default userData;
-

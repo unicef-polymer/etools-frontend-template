@@ -55,14 +55,14 @@ export const etoolsFiltersStyles = css`
     min-width: 280px;
   }
 
-  iron-icon[icon="search"] {
+  iron-icon[icon='search'] {
     color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
   }
 
   #filters .filter.date {
     --paper-input-container: {
       width: 182px;
-    };
+    }
     min-width: 180px;
   }
 
@@ -198,11 +198,12 @@ export const etoolsFiltersStyles = css`
       -webkit-flex-direction: column;
       flex-direction: column;
     }
-    #filters .filter, #filters .search {
+    #filters .filter,
+    #filters .search {
       width: 100%;
     }
     #filters .filter.date {
-      --paper-input-container_-_width: 100%
+      --paper-input-container_-_width: 100%;
     }
     #filters-selector {
       border-left: none;

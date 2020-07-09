@@ -17,7 +17,7 @@ export const labelAndvalueStylesLit = css`
   }
 
   .input-label[empty]::after {
-    content: "—";
+    content: '—';
     color: var(--secondary-text-color);
   }
 `;

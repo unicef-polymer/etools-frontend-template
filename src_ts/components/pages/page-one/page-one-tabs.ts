@@ -3,11 +3,11 @@ import '@polymer/paper-button/paper-button';
 import {SharedStylesLit} from '../../styles/shared-styles-lit';
 import '../../common/layout/page-content-header/page-content-header';
 import '../../common/layout/etools-tabs';
-import {pageContentHeaderSlottedStyles}
-  from '../../common/layout/page-content-header/page-content-header-slotted-styles';
+// eslint-disable-next-line max-len
+import {pageContentHeaderSlottedStyles} from '../../common/layout/page-content-header/page-content-header-slotted-styles';
 import '../../common/layout/status/etools-status';
 
-import {GenericObject} from '../../../types/globals';
+import {AnyObject} from '../../../types/globals';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
 import {updateAppLocation} from '../../../routing/routes';
@@ -22,7 +22,6 @@ import {RouteDetails} from '../../../routing/router';
  */
 @customElement('page-one-tabs')
 export class PageOneTabs extends connect(store)(LitElement) {
-
   static get styles() {
     return [elevationStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
   }
@@ -40,7 +39,6 @@ export class PageOneTabs extends connect(store)(LitElement) {
       <etools-status></etools-status>
 
       <page-content-header with-tabs-visible>
-
         <h1 slot="page-title">Title here</h1>
 
         <div slot="title-row-actions" class="content-header-actions">
@@ -48,16 +46,19 @@ export class PageOneTabs extends connect(store)(LitElement) {
           <paper-button raised>Action 2</paper-button>
         </div>
 
-        <etools-tabs slot="tabs"
-                     .tabs="${this.pageTabs}"
-                     .activeTab="${this.activeTab}"
-                     @iron-select="${this.handleTabChange}"></etools-tabs>
+        <etools-tabs
+          slot="tabs"
+          .tabs="${this.pageTabs}"
+          .activeTab="${this.activeTab}"
+          @iron-select="${this.handleTabChange}"
+        ></etools-tabs>
       </page-content-header>
 
       <section class="elevation page-content" elevation="1">
         ${this.isActiveTab(this.activeTab, 'details') ? html`<page-one-details></page-one-details>` : ''}
-        ${this.isActiveTab(this.activeTab, 'questionnaires') ? html`<page-one-questionnaires>
-          </page-one-questionnaires>` : ''}
+        ${this.isActiveTab(this.activeTab, 'questionnaires')
+          ? html`<page-one-questionnaires> </page-one-questionnaires>`
+          : ''}
       </section>
     `;
   }
@@ -80,10 +81,10 @@ export class PageOneTabs extends connect(store)(LitElement) {
   ];
 
   @property({type: String})
-  activeTab: string = 'details';
+  activeTab = 'details';
 
   @property({type: Object})
-  record: GenericObject = {
+  record: AnyObject = {
     id: 23,
     title: 'Page One title'
   };
@@ -94,8 +95,7 @@ export class PageOneTabs extends connect(store)(LitElement) {
 
   public stateChanged(state: RootState) {
     // update page route data
-    if (state.app!.routeDetails.routeName === 'page-one' &&
-      state.app!.routeDetails.subRouteName !== 'list') {
+    if (state.app!.routeDetails.routeName === 'page-one' && state.app!.routeDetails.subRouteName !== 'list') {
       this.routeDetails = state.app!.routeDetails;
       const stateActiveTab = state.app!.routeDetails.subRouteName as string;
       if (stateActiveTab !== this.activeTab) {
@@ -132,5 +132,4 @@ export class PageOneTabs extends connect(store)(LitElement) {
       updateAppLocation(newPath, true);
     }
   }
-
 }

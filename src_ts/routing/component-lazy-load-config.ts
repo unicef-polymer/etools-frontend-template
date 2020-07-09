@@ -5,10 +5,7 @@ export interface RoutesLazyLoadComponentsPath {
 }
 // each key from this object is computed from routeName_routeSubPage (if subRoute exists)
 export const componentsLazyLoadConfig: RoutesLazyLoadComponentsPath = {
-
-  'page-one_list': [
-    'components/pages/page-one/page-one-list.js'
-  ],
+  'page-one_list': ['components/pages/page-one/page-one-list.js'],
   'page-one_details': [
     'components/pages/page-one/page-one-tabs.js',
     'components/pages/page-one/page-one-tab-pages/page-one-details.js'
@@ -17,13 +14,8 @@ export const componentsLazyLoadConfig: RoutesLazyLoadComponentsPath = {
     'components/pages/page-one/page-one-tabs.js',
     'components/pages/page-one/page-one-tab-pages/page-one-questionnaires.js'
   ],
-  'page-not-found': [
-    'components/pages/page-not-found.js'
-  ],
-  'page-two': [
-    'components/pages/page-two.js'
-  ]
-
+  'page-not-found': ['components/pages/page-not-found.js'],
+  'page-two': ['components/pages/page-two.js']
 };
 
 export const getFilePathsToImport = (routeDetails: RouteDetails): string[] => {
