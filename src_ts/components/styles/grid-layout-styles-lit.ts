@@ -1,8 +1,8 @@
-import {html} from 'lit-element';
+import {css} from 'lit-element';
 import {layoutHorizontal, layoutVertical, layoutWrap, layoutFlex} from './lit-styles/flex-layout-styles';
 
-// language=HTML
-export const gridLayoutStylesLit = html` <style>
+// language=CSS
+export const gridLayoutStylesLit = css`
   .w100 {
     width: 100%;
   }
@@ -22,7 +22,7 @@ export const gridLayoutStylesLit = html` <style>
   }
 
   .layout-wrap {
-    ${layoutWrap}
+    ${layoutWrap};
   }
 
   .row-padding {
@@ -52,13 +52,14 @@ export const gridLayoutStylesLit = html` <style>
   }
 
   .row-v {
-    ${layoutVertical}
+    ${layoutVertical};
   }
 
   .flex-c {
     /* flex container */
     ${layoutFlex}
   }
+
 
   .row-h, .row-v {
     padding: 16px 24px;
@@ -78,7 +79,8 @@ export const gridLayoutStylesLit = html` <style>
     font-weight: 600;
   }
 
-  .row-v.header-row > .col, .row-h.header-row > .col {
+  .row-v.header-row > .col,
+  .row-h.header-row > .col {
     line-height: 24px;
   }
 
@@ -179,6 +181,4 @@ export const gridLayoutStylesLit = html` <style>
     flex: 0 0 100%;
     max-width: 100%;
   }
-
-  /* TODO: more classes will e added if needed */
-</style>`;
+`;
