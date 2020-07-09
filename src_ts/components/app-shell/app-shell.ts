@@ -41,7 +41,7 @@ import {ToastNotificationHelper} from '../common/toast-notifications/toast-notif
 import user from '../../redux/reducers/user';
 import commonData from '../../redux/reducers/common-data';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../config/config';
-import {getCurrentUserData} from '../user/user-actions';
+import {getCurrentUser} from '../user/user-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
 import {loadPartners, loadUnicefUsers} from '../../redux/actions/common-data';
@@ -170,7 +170,7 @@ export class AppShell extends connect(store)(LitElement) {
     installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname + location.search))));
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
-    getCurrentUserData();
+    getCurrentUser();
   }
 
   public disconnectedCallback() {

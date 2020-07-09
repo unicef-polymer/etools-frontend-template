@@ -14,7 +14,7 @@ import {updateDrawerState} from '../../../redux/actions/app';
 import {EtoolsUserModel, dummyUserData} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
 import isEmpty from 'lodash-es/isEmpty';
-import {updateCurrentUserData} from '../../user/user-actions';
+import {updateCurrentUser} from '../../user/user-actions';
 import {AnyObject} from '../../../types/globals';
 import {pageHeaderStyles} from './page-header-styles';
 
@@ -68,9 +68,9 @@ export class PageHeader extends connect(store)(LitElement) {
           <etools-app-selector id="selector"></etools-app-selector>
           <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools" />
           ${this.isStaging
-            ? html`<div class="envWarning">
+        ? html`<div class="envWarning">
            <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>`
-            : ''}
+        : ''}
         </div>
         <div class="content-align">
           <support-btn></support-btn>
@@ -149,7 +149,7 @@ export class PageHeader extends connect(store)(LitElement) {
       return;
     }
     this.profileSaveLoadingMsgDisplay();
-    updateCurrentUserData(modifiedFields)
+    updateCurrentUser(modifiedFields)
       .then(() => {
         this.showSaveNotification();
       })
