@@ -39,7 +39,7 @@ import {
   getSortFields,
   getSortFieldsFromUrlSortParams,
   getUrlQueryStringSort
-} from '../../common/layout/etools-table/etools-table-utility';
+} from '../../common/layout/etools-table-utility';
 import {RouteDetails, RouteQueryParams} from '../../../routing/router';
 import {updateAppLocation, replaceAppLocation} from '../../../routing/routes';
 import {SharedStylesLit} from '../../styles/shared-styles-lit';
