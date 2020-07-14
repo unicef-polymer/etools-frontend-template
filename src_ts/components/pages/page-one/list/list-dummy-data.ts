@@ -1,7 +1,7 @@
 /**
  * TODO: this file provide mock-up data for list page
  */
-import {EtoolsPaginator} from '../../../common/layout/etools-table/pagination/paginator';
+import {EtoolsPaginator} from '@unicef-polymer/etools-table/pagination/etools-pagination';
 
 const ratings: string[] = ['Low', 'High', 'Medium'];
 const statuses: string[] = ['Assigned', 'Submitted', 'Rejected'];
