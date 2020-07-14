@@ -60,7 +60,7 @@
     "@unicef-polymer/etools-profile-dropdown": "^4.0.5",
     "@unicef-polymer/etools-upload": "^3.1.10",
     "@unicef-polymer/etools-data-table": "^3.0.2",
-    "@unicef-polymer/etools-table": "^1.0.2",
+    "@unicef-polymer/etools-table": "^1.0.3",
     "@webcomponents/webcomponentsjs": "^2.0.0",
     "lit-element": "^2.3.1",
     "lodash-es": "^4.17.15",

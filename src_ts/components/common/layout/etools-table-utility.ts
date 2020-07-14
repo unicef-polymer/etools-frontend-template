@@ -2,9 +2,9 @@
  * Utility functions used in etools data lists
  */
 
-import {EtoolsTableColumn, EtoolsTableColumnSort} from './etools-table';
-import {AnyObject} from '../../../../types/globals';
-import {selectedValueTypeByFilterKey, FilterKeysAndTheirSelectedValues} from '../../../pages/page-one/list/filters';
+import {EtoolsTableColumn, EtoolsTableColumnSort} from '@unicef-polymer/etools-table/etools-table';
+import {AnyObject} from '../../../types/globals';
+import {selectedValueTypeByFilterKey, FilterKeysAndTheirSelectedValues} from '../../pages/page-one/list/filters';
 
 export interface EtoolsTableSortItem {
   name: string;
