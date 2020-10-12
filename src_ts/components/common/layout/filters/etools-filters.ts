@@ -51,7 +51,7 @@ export class EtoolsFilters extends LitElement {
         /* Set datepicker prefix icon color using mixin (cannot be used in etools-filter-styles) */
         datepicker-lite {
           --paper-input-prefix: {
-            color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+            color: var(--secondary-text-color, #757575);
           }
         }
         *[hidden] {

@@ -56,7 +56,7 @@ export const etoolsFiltersStyles = css`
   }
 
   iron-icon[icon='search'] {
-    color: var(--secondary-text-color, rgba(0, 0, 0, 0.54));
+    color: var(--secondary-text-color, #757575);
   }
 
   #filters .filter.date {
@@ -111,7 +111,7 @@ export const etoolsFiltersStyles = css`
 
     padding: 0 0 0 8px;
     margin: 8px 0 8px 24px;
-    border-left: 2px solid var(--light-divider-color, rgba(0, 0, 0, 0.12));
+    border-left: 2px solid var(--light-divider-color, #e0e0e0);
   }
 
   #filterMenu {
@@ -124,7 +124,7 @@ export const etoolsFiltersStyles = css`
   }
 
   #filterMenu .button {
-    color: var(--primary-color, rgba(0, 0, 0, 0.87));
+    color: var(--primary-color, #0099ff);
     font-weight: 500;
     margin: 0;
   }
@@ -187,9 +187,9 @@ export const etoolsFiltersStyles = css`
     -ms-flex-align: center;
     -webkit-align-items: center;
     align-items: center;
-    color: var(--primary-color, rgba(0, 0, 0, 0.87));
+    color: var(--primary-color, #0099ff);
     padding-right: 16px;
-    border-bottom: 1px solid var(--light-divider-color, rgba(0, 0, 0, 0.12));
+    border-bottom: 1px solid var(--light-divider-color, #e0e0e0);
   }
 
   @media (max-width: 576px) {
