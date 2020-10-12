@@ -11,23 +11,17 @@ documentContainer.innerHTML = `
         --secondary-background-color: #eeeeee;
 
         --primary-text-color: #212121;
-        /*--primary-text-color: rgba(0, 0, 0, 0.87);*/
-        /*--secondary-text-color: rgba(0, 0, 0, 0.54);*/
         --secondary-text-color: #757575;
 
         --header-color: #ffffff;
         --header-bg-color: #233944;
-        /*--header-icon-color: rgba(250, 250, 250, 0.70);*/
         --header-icon-color: #e1c3c5;
         --nonprod-header-color: #a94442;
         --nonprod-text-warn-color: #e6e600;
 
-        /*--light-divider-color: rgba(0, 0, 0, 0.12);*/
         --light-divider-color: #e0e0e0;
         --dark-divider-color: #999999;
-        /*--dark-divider-color: rgba(0, 0, 0, 0.40);*/
 
-        /*--dark-icon-color: rgba(0, 0, 0, 0.65);*/
         --dark-icon-color: #595959;
         --light-icon-color: rgba(255, 255, 255, 1);
 
