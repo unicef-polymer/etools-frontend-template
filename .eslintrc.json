@@ -89,6 +89,6 @@
     ]
   },
   "globals": {
-    "moment": true
+    "dayjs": true
   }
 }
