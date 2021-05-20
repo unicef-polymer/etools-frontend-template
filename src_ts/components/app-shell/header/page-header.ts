@@ -3,25 +3,25 @@ import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
 import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import { customElement, LitElement, html, property } from 'lit-element';
+import {customElement, LitElement, html, property} from 'lit-element';
 
 import '../../common/layout/support-btn';
 import './countries-dropdown';
 
-import { connect } from 'pwa-helpers/connect-mixin.js';
-import { RootState, store } from '../../../redux/store';
-import { isProductionServer, ROOT_PATH } from '../../../config/config';
-import { updateDrawerState } from '../../../redux/actions/app';
-import { EtoolsUserModel, dummyUserData } from '../../user/user-model';
-import { fireEvent } from '../../utils/fire-custom-event';
+import {connect} from 'pwa-helpers/connect-mixin.js';
+import {RootState, store} from '../../../redux/store';
+import {isProductionServer, ROOT_PATH} from '../../../config/config';
+import {updateDrawerState} from '../../../redux/actions/app';
+import {EtoolsUserModel, dummyUserData} from '../../user/user-model';
+import {fireEvent} from '../../utils/fire-custom-event';
 import isEmpty from 'lodash-es/isEmpty';
-import { updateCurrentUser } from '../../user/user-actions';
-import { pageHeaderStyles } from './page-header-styles';
-import { use } from 'lit-translate';
-import { setLanguage } from '../../../redux/actions/active-language';
-import { activeLanguage } from '../../../redux/reducers/active-language';
-import { countriesDropdownStyles } from './countries-dropdown-styles';
-import { AnyObject, EtoolsUser, GenericObject } from '@unicef-polymer/etools-types';
+import {updateCurrentUser} from '../../user/user-actions';
+import {pageHeaderStyles} from './page-header-styles';
+import {use} from 'lit-translate';
+import {setLanguage} from '../../../redux/actions/active-language';
+import {activeLanguage} from '../../../redux/reducers/active-language';
+import {countriesDropdownStyles} from './countries-dropdown-styles';
+import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
 
 store.addReducers({
   activeLanguage
@@ -42,7 +42,7 @@ export class PageHeader extends connect(store)(LitElement) {
     // main template
     // language=HTML
     return html`
-        ${countriesDropdownStyles}
+      ${countriesDropdownStyles}
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
@@ -86,7 +86,6 @@ export class PageHeader extends connect(store)(LitElement) {
             margin-left: 2px;
           }
         }
-     
       </style>
 
       <app-toolbar sticky class="content-align">
@@ -95,9 +94,9 @@ export class PageHeader extends connect(store)(LitElement) {
           <etools-app-selector id="selector"></etools-app-selector>
           <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools" />
           ${this.isStaging
-        ? html`<div class="envWarning">
+            ? html`<div class="envWarning">
            <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>`
-        : ''}
+            : ''}
         </div>
         <div class="header__item header__right-group">
           <div class="dropdowns">
@@ -106,7 +105,7 @@ export class PageHeader extends connect(store)(LitElement) {
               .options="${this.languages}"
               option-label="display_name"
               option-value="value"
-              @etools-selected-item-changed="${({ detail }: CustomEvent) => this.languageChanged(detail.selectedItem)}"
+              @etools-selected-item-changed="${({detail}: CustomEvent) => this.languageChanged(detail.selectedItem)}"
               trigger-value-change-event
               hide-search
               allow-outside-scroll
@@ -123,7 +122,7 @@ export class PageHeader extends connect(store)(LitElement) {
             .sections="${this.profileDrSections}"
             .offices="${this.profileDrOffices}"
             .users="${this.profileDrUsers}"
-            .profile="${this.profile ? { ...this.profile } : {}}"
+            .profile="${this.profile ? {...this.profile} : {}}"
             @save-profile="${this.handleSaveProfile}"
             @sign-out="${this._signOut}"
           >
@@ -133,52 +132,51 @@ export class PageHeader extends connect(store)(LitElement) {
     `;
   }
 
-  @property({ type: Boolean })
+  @property({type: Boolean})
   public isStaging = false;
 
-  @property({ type: String })
+  @property({type: String})
   rootPath: string = ROOT_PATH;
 
-  @property({ type: String })
+  @property({type: String})
   public headerColor = 'var(--header-bg-color)';
 
-  @property({ type: Object })
+  @property({type: Object})
   profile!: EtoolsUserModel;
 
-  @property({ type: Object })
+  @property({type: Object})
   profileDropdownData: any | null = null;
 
-  @property({ type: Array })
+  @property({type: Array})
   offices: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   sections: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   users: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   profileDrOffices: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   profileDrSections: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   profileDrUsers: any[] = [];
 
-  @property({ type: Array })
+  @property({type: Array})
   editableFields: string[] = ['office', 'section', 'job_title', 'phone_number', 'oic', 'supervisor'];
 
-  @property({ type: String })
+  @property({type: String})
   environment = 'LOCAL';
 
   @property() selectedLanguage!: string;
 
   languages: GenericObject<string>[] = [
-    { value: 'en', display_name: 'English' },
-    { value: 'ar', display_name: 'Arabic' }
+    {value: 'en', display_name: 'English'},
+    {value: 'ar', display_name: 'Arabic'}
   ];
-
 
   public connectedCallback() {
     super.connectedCallback();
