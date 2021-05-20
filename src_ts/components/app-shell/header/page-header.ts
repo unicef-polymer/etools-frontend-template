@@ -2,6 +2,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {customElement, LitElement, html, property} from 'lit-element';
 
 import '../../common/layout/support-btn';
@@ -17,6 +18,15 @@ import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUser} from '../../user/user-actions';
 import {AnyObject} from '../../../types/globals';
 import {pageHeaderStyles} from './page-header-styles';
+import {use} from 'lit-translate';
+import {setLanguage} from '../../../redux/actions/active-language';
+import {activeLanguage} from '../../../redux/reducers/active-language';
+import {countriesDropdownStyles} from './countries-dropdown-styles';
+import {AnyObject, EtoolsUser, GenericObject} from '@unicef-polymer/etools-types';
+
+store.addReducers({
+  activeLanguage
+});
 
 /**
  * page header element
@@ -68,9 +78,9 @@ export class PageHeader extends connect(store)(LitElement) {
           <etools-app-selector id="selector"></etools-app-selector>
           <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools" />
           ${this.isStaging
-        ? html`<div class="envWarning">
+            ? html`<div class="envWarning">
            <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>`
-        : ''}
+            : ''}
         </div>
         <div class="content-align">
           <support-btn></support-btn>

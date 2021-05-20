@@ -45,6 +45,7 @@ import {getCurrentUser} from '../user/user-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
 import {loadPartners, loadUnicefUsers} from '../../redux/actions/common-data';
+import {registerTranslateConfig, use} from 'lit-translate';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 
@@ -54,6 +55,8 @@ store.addReducers({
   user,
   commonData
 });
+
+registerTranslateConfig({loader: (lang: string) => fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())});
 
 /**
  * @customElement
@@ -142,6 +145,9 @@ export class AppShell extends connect(store)(LitElement) {
   @property({type: Boolean})
   public smallMenu = false;
 
+  @property({type: String})
+  selectedLanguage!: string;
+
   @query('#layout') private drawerLayout!: AppDrawerLayoutElement;
   @query('#drawer') private drawer!: AppDrawerElement;
   @query('#appHeadLayout') private appHeaderLayout!: AppHeaderLayoutElement;
@@ -188,6 +194,15 @@ export class AppShell extends connect(store)(LitElement) {
     this.mainPage = state.app!.routeDetails!.routeName;
     this.subPage = state.app!.routeDetails!.subRouteName;
     this.drawerOpened = state.app!.drawerOpened;
+
+    if (state.activeLanguage && state.activeLanguage.activeLanguage !== this.selectedLanguage) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      this.loadLocalization();
+    }
+  }
+
+  async loadLocalization() {
+    await use(this.selectedLanguage);
   }
 
   // TODO: just for testing...

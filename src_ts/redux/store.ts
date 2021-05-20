@@ -16,12 +16,14 @@ import {UserAction} from './actions/user.js';
 import {UserState} from './reducers/user.js';
 import {CommonDataAction} from './actions/common-data';
 import {CommonDataState} from './reducers/common-data';
+import {ActiveLanguageState} from './reducers/active-language.js';
 
 // Overall state extends static states and partials lazy states.
 export interface RootState {
   app?: AppState;
   user?: UserState;
   commonData?: CommonDataState;
+  activeLanguage?: ActiveLanguageState;
 }
 
 // could be more than one action AppAction | OtherAppAction ...
