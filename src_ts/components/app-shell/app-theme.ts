@@ -45,17 +45,8 @@ documentContainer.innerHTML = `
         --error-box-border-color: #ebccd1;
         --error-box-text-color: var(--error-color);
 
-        --ecp-header: {
-          background-color: var( --primary-background-color);
-          border-bottom: 1px groove var(--dark-divider-color);
-        }
         --ecp-header-color: var(--primary-text-color);
-        --ecp-header-title: {
-          padding: 0 24px 0 0;
-          text-align: left;
-          font-size: 18px;
-          font-weight: 500;
-        }
+      
         --paper-input-container-label: {
           color: var(--secondary-text-color, #737373);
         }
@@ -76,6 +67,17 @@ documentContainer.innerHTML = `
         --paper-radio-button-unchecked-color: var(--secondary-text-color);
 
       }
+
+      html[dir="rtl"] {
+        --list-row-wrapper-padding: 0;
+
+        --required-star-style: {
+          background: url('./images/required.svg') no-repeat 99% 20%/8px;
+          right: auto;
+          padding-right: 15px;
+        }
+      }
+
     </style>
   </custom-style>`;
 

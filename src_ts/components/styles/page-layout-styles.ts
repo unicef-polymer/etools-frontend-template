@@ -5,8 +5,9 @@ export const pageLayoutStyles = css`
     margin: 24px;
   }
 
-  section.page-content:not(.filters) {
+  section.page-content {
     padding: 18px 24px;
+    background-color: var(--primary-background-color);
   }
 
   section.page-content.filters {
