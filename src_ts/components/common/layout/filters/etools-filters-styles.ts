@@ -93,25 +93,15 @@ export const etoolsFiltersStyles = css`
   }
 
   #filters-selector {
-    display: -ms-flexbox;
-    display: -webkit-flex;
     display: flex;
-
-    -ms-flex-direction: column;
-    -webkit-flex-direction: column;
     flex-direction: column;
-
-    -ms-flex-pack: center;
-    -webkit-justify-content: center;
     justify-content: center;
-
-    -ms-align-self: stretch;
-    -webkit-align-self: stretch;
     align-self: stretch;
-
-    padding: 0 0 0 8px;
-    margin: 8px 0 8px 24px;
-    border-left: 2px solid var(--light-divider-color, rgba(0, 0, 0, 0.12));
+    padding-inline-end: 8px;
+    margin-top: 8px;
+    margin-bottom: 8px;
+    margin-inline-start: 24px;
+    border-inline-start: 2px solid var(--light-divider-color, rgba(0, 0, 0, 0.12));
   }
 
   #filterMenu {
@@ -206,7 +196,11 @@ export const etoolsFiltersStyles = css`
       --paper-input-container_-_width: 100%;
     }
     #filters-selector {
-      border-left: none;
+      border-inline-start: none;
+      padding-inline-end: 8px;
+      margin-top: 0;
+      margin-bottom: 0;
+      margin-inline-start: 0;
       margin: 0 auto;
       padding: 0px;
     }
