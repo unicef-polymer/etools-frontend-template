@@ -45,6 +45,10 @@ import {getCurrentUser} from '../user/user-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
 import {loadPartners, loadUnicefUsers} from '../../redux/actions/common-data';
+declare const dayjs: any;
+declare const dayjs_plugin_utc: any;
+
+dayjs.extend(dayjs_plugin_utc);
 
 store.addReducers({
   user,

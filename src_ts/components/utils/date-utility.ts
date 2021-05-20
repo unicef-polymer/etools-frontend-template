@@ -1,5 +1,5 @@
 import {logWarn} from '@unicef-polymer/etools-behaviors/etools-logging.js';
-declare const moment: any;
+declare const dayjs: any;
 
 export function isValidDate(date: any) {
   return date instanceof Date === false ? false : date.toString() !== 'Invalid Date';
@@ -11,7 +11,7 @@ export function prettyDate(dateString: string, format?: string, placeholder = '-
 }
 
 function _utcDate(date: any, format?: string) {
-  return !date ? '' : moment.utc(date).format(format ? format : 'D MMM YYYY');
+  return !date ? '' : dayjs.utc(date).format(format ? format : 'D MMM YYYY');
 }
 
 export function convertDate(dateString: string, noZTimezoneOffset?: boolean) {
@@ -41,5 +41,5 @@ export function formatDate(date: Date, format: string) {
   if (!date) {
     return null;
   }
-  return moment(date).format(format);
+  return dayjs(date).format(format);
 }
