@@ -29,6 +29,7 @@ import {AppDrawerLayoutElement} from '@polymer/app-layout/app-drawer-layout/app-
 import {AppHeaderLayoutElement} from '@polymer/app-layout/app-header-layout/app-header-layout';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer';
 import {customElement, html, LitElement, property, query} from 'lit-element';
+import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin';
 
 import {AppShellStyles} from './app-shell-styles';
 
@@ -63,7 +64,7 @@ registerTranslateConfig({loader: (lang: string) => fetch(`assets/i18n/${lang}.js
  * @LitElement
  */
 @customElement('app-shell')
-export class AppShell extends connect(store)(LitElement) {
+export class AppShell extends connect(store)(LoadingMixin(LitElement)) {
   static get styles() {
     return [AppShellStyles];
   }
@@ -181,6 +182,17 @@ export class AppShell extends connect(store)(LitElement) {
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
     getCurrentUser();
+
+    setTimeout(() => {
+      window.EtoolsEsmmFitIntoEl = this.appHeaderLayout!.shadowRoot!.querySelector('#contentContainer');
+      this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
+    }, 100);
+
+    this.addEventListener('scroll-up', () => {
+      if (this.appHeaderLayout) {
+        this.appHeaderLayout.$.contentContainer.scrollTop = 0;
+      }
+    });
   }
 
   public disconnectedCallback() {

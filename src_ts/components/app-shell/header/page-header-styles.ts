@@ -38,7 +38,7 @@ export const pageHeaderStyles = css`
   }
 
   .content-align {
-    ${layoutHorizontal}
+    display: flex;
     ${layoutCenter}
   }
 
