@@ -1,11 +1,4 @@
 import {LitElement, html, property, customElement} from 'lit-element';
-import {
-  layoutVertical,
-  layoutStartJustified,
-  layoutFlex,
-  layoutHorizontal,
-  layoutCenter
-} from '../../../styles/lit-styles/flex-layout-styles';
 
 /**
  * @LitElement
@@ -22,9 +15,10 @@ export class PageContentHeader extends LitElement {
         }
 
         :host {
-          ${layoutVertical}
-          ${layoutStartJustified}
-          ${layoutFlex}
+          display: flex;
+          flex-direction: column;
+          justify-content: flex-start;
+          flex: 1;
 
           background-color: var(--primary-background-color);
           padding: 0 24px;
@@ -46,18 +40,19 @@ export class PageContentHeader extends LitElement {
         }
 
         .content-header-row {
-          ${layoutHorizontal}
-          ${layoutStartJustified}
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
         }
 
         .title-row {
-          ${layoutCenter}
+          align-items: center;
           margin: 30px 0 0;
           padding: 0 24px;
         }
 
         .title-row h1 {
-          ${layoutFlex}
+          flex: 1;
           @apply --page-title;
         }
 

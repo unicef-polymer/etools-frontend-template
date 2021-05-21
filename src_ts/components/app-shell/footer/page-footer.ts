@@ -1,12 +1,6 @@
 import {LitElement, html, customElement, property} from 'lit-element';
 import {ROOT_PATH} from '../../../config/config';
-import {
-  layoutFlex,
-  layoutVertical,
-  layoutEndJustified,
-  layoutHorizontal,
-  layoutInline
-} from '../../styles/lit-styles/flex-layout-styles';
+
 /**
  * page footer element
  * @LitElement
@@ -20,9 +14,10 @@ export class PageFooter extends LitElement {
     return html`
       <style>
         :host {
-          ${layoutVertical}
-          ${layoutFlex}
-          ${layoutEndJustified}
+          display: flex;
+          flex-direction: column;
+          flex: 1;
+          justify-content: flex-end;
           padding: 18px 24px;
           width: 100%;
           min-height: 90px;
@@ -30,12 +25,14 @@ export class PageFooter extends LitElement {
         }
 
         #footer-content {
-          ${layoutHorizontal}
+          display: flex;
+          flex-direction: row;
         }
 
         #unicef-logo {
-          ${layoutHorizontal}
-          ${layoutInline}
+          display: flex;
+          flex-direction: row;
+          display: inline-flex;
           padding-right: 30px;
         }
 
