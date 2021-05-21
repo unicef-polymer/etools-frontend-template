@@ -227,7 +227,7 @@ export const SharedStylesLit = html`
       position: relative;
     }
 
-    section > * {
+    section > *::not(etools-loading) {
       background-color: var(--primary-background-color);
     }
 
