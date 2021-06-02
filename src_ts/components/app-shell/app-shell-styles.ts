@@ -1,6 +1,5 @@
 import {css} from 'lit-element';
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
-import {layoutFlex} from '../styles/lit-styles/flex-layout-styles';
 
 export const AppShellStyles = css`
   ${appDrawerStyles}
@@ -13,7 +12,7 @@ export const AppShellStyles = css`
   }
 
   .main-content {
-    ${layoutFlex}
+    flex: 1;
   }
 
   .page {

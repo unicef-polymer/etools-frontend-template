@@ -29,6 +29,7 @@ import {AppDrawerLayoutElement} from '@polymer/app-layout/app-drawer-layout/app-
 import {AppHeaderLayoutElement} from '@polymer/app-layout/app-header-layout/app-header-layout';
 import {AppDrawerElement} from '@polymer/app-layout/app-drawer/app-drawer';
 import {customElement, html, LitElement, property, query} from 'lit-element';
+import LoadingMixin from '@unicef-polymer/etools-loading/etools-loading-mixin';
 
 import {AppShellStyles} from './app-shell-styles';
 
@@ -45,6 +46,7 @@ import {getCurrentUser} from '../user/user-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
 import {loadPartners, loadUnicefUsers} from '../../redux/actions/common-data';
+import {registerTranslateConfig, use} from 'lit-translate';
 declare const dayjs: any;
 declare const dayjs_plugin_utc: any;
 
@@ -55,12 +57,14 @@ store.addReducers({
   commonData
 });
 
+registerTranslateConfig({loader: (lang: string) => fetch(`assets/i18n/${lang}.json`).then((res: any) => res.json())});
+
 /**
  * @customElement
  * @LitElement
  */
 @customElement('app-shell')
-export class AppShell extends connect(store)(LitElement) {
+export class AppShell extends connect(store)(LoadingMixin(LitElement)) {
   static get styles() {
     return [AppShellStyles];
   }
@@ -142,6 +146,9 @@ export class AppShell extends connect(store)(LitElement) {
   @property({type: Boolean})
   public smallMenu = false;
 
+  @property({type: String})
+  selectedLanguage!: string;
+
   @query('#layout') private drawerLayout!: AppDrawerLayoutElement;
   @query('#drawer') private drawer!: AppDrawerElement;
   @query('#appHeadLayout') private appHeaderLayout!: AppHeaderLayoutElement;
@@ -175,6 +182,17 @@ export class AppShell extends connect(store)(LitElement) {
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
     getCurrentUser();
+
+    setTimeout(() => {
+      window.EtoolsEsmmFitIntoEl = this.appHeaderLayout!.shadowRoot!.querySelector('#contentContainer');
+      this.etoolsLoadingContainer = window.EtoolsEsmmFitIntoEl;
+    }, 100);
+
+    this.addEventListener('scroll-up', () => {
+      if (this.appHeaderLayout) {
+        this.appHeaderLayout.$.contentContainer.scrollTop = 0;
+      }
+    });
   }
 
   public disconnectedCallback() {
@@ -188,6 +206,15 @@ export class AppShell extends connect(store)(LitElement) {
     this.mainPage = state.app!.routeDetails!.routeName;
     this.subPage = state.app!.routeDetails!.subRouteName;
     this.drawerOpened = state.app!.drawerOpened;
+
+    if (state.activeLanguage && state.activeLanguage.activeLanguage !== this.selectedLanguage) {
+      this.selectedLanguage = state.activeLanguage!.activeLanguage;
+      this.loadLocalization();
+    }
+  }
+
+  async loadLocalization() {
+    await use(this.selectedLanguage);
   }
 
   // TODO: just for testing...

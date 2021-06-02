@@ -1,5 +1,4 @@
 import {css} from 'lit-element';
-import {layoutHorizontal, layoutVertical, layoutWrap, layoutFlex} from './lit-styles/flex-layout-styles';
 
 // language=CSS
 export const gridLayoutStylesLit = css`
@@ -13,16 +12,18 @@ export const gridLayoutStylesLit = css`
   }
 
   .layout-horizontal {
-    ${layoutHorizontal}
+    display: flex;
+    flex-direction: row;
   }
 
   .layout-vertical,
   .col.layout-vertical {
-    ${layoutVertical}
+    display: flex;
+    flex-direction: column;
   }
 
   .layout-wrap {
-    ${layoutWrap};
+    flex-wrap: wrap;
   }
 
   .row-padding {
@@ -48,32 +49,37 @@ export const gridLayoutStylesLit = css`
   }
 
   .row-h {
-    ${layoutHorizontal}
+    display: flex;
+    flex-direction: row;
   }
 
   .row-v {
-    ${layoutVertical};
+    display: flex;
+    flex-direction: column;
   }
 
   .flex-c {
     /* flex container */
-    ${layoutFlex}
+    flex: 1;
   }
 
-
-  .row-h, .row-v {
+  .row-h,
+  .row-v {
     padding: 16px 24px;
   }
 
-  .row-v.t-border, .row-h.t-border {
+  .row-v.t-border,
+  .row-h.t-border {
     border-top: 1px solid var(--light-divider-color);
   }
 
-  .row-v.b-border, .row-h.b-border {
+  .row-v.b-border,
+  .row-h.b-border {
     border-bottom: 1px solid var(--light-divider-color);
   }
 
-  .row-v.header-row, .row-h.header-row {
+  .row-v.header-row,
+  .row-h.header-row {
     color: var(--secondary-text-color);
     border-bottom: 1px solid var(--light-divider-color);
     font-weight: 600;
@@ -103,7 +109,8 @@ export const gridLayoutStylesLit = css`
   }
 
   .right-align {
-    ${layoutHorizontal}
+    display: flex;
+    flex-direction: row;
     justify-content: flex-end;
     align-items: center;
     text-align: right;
@@ -119,7 +126,8 @@ export const gridLayoutStylesLit = css`
   }
 
   .col {
-    ${layoutHorizontal}
+    display: flex;
+    flex-direction: row;
     box-sizing: border-box;
   }
 

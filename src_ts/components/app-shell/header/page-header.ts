@@ -2,6 +2,7 @@ import '@polymer/app-layout/app-toolbar/app-toolbar';
 import '@polymer/paper-icon-button/paper-icon-button';
 import '@unicef-polymer/etools-app-selector/etools-app-selector';
 import '@unicef-polymer/etools-profile-dropdown/etools-profile-dropdown';
+import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
 import {customElement, LitElement, html, property} from 'lit-element';
 
 import '../../common/layout/support-btn';
@@ -15,8 +16,16 @@ import {EtoolsUserModel, dummyUserData} from '../../user/user-model';
 import {fireEvent} from '../../utils/fire-custom-event';
 import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUser} from '../../user/user-actions';
-import {AnyObject} from '../../../types/globals';
 import {pageHeaderStyles} from './page-header-styles';
+import {use} from 'lit-translate';
+import {setLanguage} from '../../../redux/actions/active-language';
+import {activeLanguage} from '../../../redux/reducers/active-language';
+import {countriesDropdownStyles} from './countries-dropdown-styles';
+import {AnyObject, GenericObject} from '@unicef-polymer/etools-types';
+
+store.addReducers({
+  activeLanguage
+});
 
 /**
  * page header element
@@ -33,6 +42,7 @@ export class PageHeader extends connect(store)(LitElement) {
     // main template
     // language=HTML
     return html`
+      ${countriesDropdownStyles}
       <style>
         app-toolbar {
           background-color: ${this.headerColor};
@@ -40,24 +50,40 @@ export class PageHeader extends connect(store)(LitElement) {
         support-btn {
           color: var(--header-icon-color);
         }
-
-        @media (max-width: 576px) {
-          etools-app-selector {
-            --app-selector-button-padding: 18px 8px;
+        .dropdowns {
+          display: flex;
+          margin-right: 5px;
+        }
+        .header {
+          flex-wrap: wrap;
+          height: 100%;
+          justify-content: space-between;
+        }
+        .nav-menu-button {
+          min-width: 70px;
+        }
+        .header__item {
+          display: flex;
+          align-items: center;
+        }
+        .header__right-group {
+          justify-content: space-evenly;
+        }
+        .logo {
+          margin-left: 20px;
+        }
+        @media (max-width: 380px) {
+          .header__item {
+            flex-grow: 1;
           }
+        }
+        @media (max-width: 576px) {
           #app-logo {
             display: none;
           }
           .envWarning {
             font-size: 10px;
             margin-left: 2px;
-          }
-          #refresh {
-            width: 24px;
-            padding: 0px;
-          }
-          app-toolbar {
-            padding-right: 4px;
           }
         }
       </style>
@@ -68,11 +94,28 @@ export class PageHeader extends connect(store)(LitElement) {
           <etools-app-selector id="selector"></etools-app-selector>
           <img id="app-logo" src="images/etools-logo-color-white.svg" alt="eTools" />
           ${this.isStaging
-        ? html`<div class="envWarning">
+            ? html`<div class="envWarning">
            <span class='envLong'> - </span>${this.environment} <span class='envLong'>  TESTING ENVIRONMENT</div>`
-        : ''}
+            : ''}
         </div>
-        <div class="content-align">
+        <div class="header__item header__right-group">
+          <div class="dropdowns">
+            <etools-dropdown
+              .selected="${this.selectedLanguage}"
+              .options="${this.languages}"
+              option-label="display_name"
+              option-value="value"
+              @etools-selected-item-changed="${({detail}: CustomEvent) => this.languageChanged(detail.selectedItem)}"
+              trigger-value-change-event
+              hide-search
+              allow-outside-scroll
+              no-label-float
+              .autoWidth="${true}"
+            ></etools-dropdown>
+
+            <countries-dropdown></countries-dropdown>
+          </div>
+
           <support-btn></support-btn>
 
           <etools-profile-dropdown
@@ -128,6 +171,13 @@ export class PageHeader extends connect(store)(LitElement) {
   @property({type: String})
   environment = 'LOCAL';
 
+  @property() selectedLanguage!: string;
+
+  languages: GenericObject<string>[] = [
+    {value: 'en', display_name: 'English'},
+    {value: 'ar', display_name: 'Arabic'}
+  ];
+
   public connectedCallback() {
     super.connectedCallback();
     this.setBgColor();
@@ -136,8 +186,34 @@ export class PageHeader extends connect(store)(LitElement) {
 
   public stateChanged(state: RootState) {
     if (state) {
-      this.profile = state.user!.data as EtoolsUserModel;
+      this.profile = state.user!.data!;
+      // TODO
       this.profile = dummyUserData;
+
+      if (state.activeLanguage && state.activeLanguage.activeLanguage !== this.selectedLanguage) {
+        this.selectedLanguage = state.activeLanguage!.activeLanguage;
+        setTimeout(() => {
+          const htmlTag = document.querySelector('html');
+          if (this.selectedLanguage === 'ar') {
+            htmlTag!.setAttribute('dir', 'rtl');
+          } else if (htmlTag!.getAttribute('dir')) {
+            htmlTag!.removeAttribute('dir');
+          }
+        });
+      }
+    }
+  }
+
+  languageChanged(selectedItem: any): void {
+    if (!selectedItem || !selectedItem.value) {
+      return;
+    }
+    const newLanguage = selectedItem.value;
+    if (this.selectedLanguage !== newLanguage) {
+      localStorage.setItem('defaultLanguage', newLanguage);
+      use(newLanguage)
+        .then(() => store.dispatch(setLanguage(newLanguage)))
+        .finally(() => location.reload());
     }
   }
 
