@@ -1,4 +1,4 @@
-import {html} from 'lit-element';
+import { html } from 'lit-element';
 
 // language=HTML
 export const countriesDropdownStyles = html`
@@ -50,6 +50,15 @@ export const countriesDropdownStyles = html`
       --paper-menu-button-dropdown: {
         max-height: 380px;
       }
+
+      --paper-input-container-shared-input-style: {
+        color: var(--header-icon-color);
+        cursor: pointer;
+        font-size: 16px;
+        text-align: right;
+        width: 100px;
+      }
+
     }
 
     @media (max-width: 768px) {

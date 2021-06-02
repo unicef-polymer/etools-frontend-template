@@ -43,6 +43,11 @@ export class AppMenu extends LitElement {
           Frontend Template
         </paper-tooltip>
 
+        <span class="chev-right">
+          <iron-icon id="expand-menu" icon="chevron-right" @tap="${() => this._toggleSmallMenu()}"></iron-icon>
+          <paper-ripple class="circle" center></paper-ripple>
+        </span>
+
         <span class="ripple-wrapper">
           <iron-icon id="minimize-menu" icon="chevron-left" @tap="${() => this._toggleSmallMenu()}"></iron-icon>
           <paper-ripple class="circle" center></paper-ripple>

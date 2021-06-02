@@ -33,10 +33,6 @@ export const SharedStylesLit = html`
       text-decoration: none;
     }
 
-    section {
-      background-color: var(--primary-background-color);
-    }
-
     .error {
       color: var(--error-color);
       font-size: 12px;
@@ -93,14 +89,76 @@ export const SharedStylesLit = html`
       --esmm-select-cursor: text;
       --esmm-external-wrapper: {
         width: 100%;
+        margin: 0;
       }
+    }
+
+    paper-input {
+      width: 100%;
+    }
+
+    paper-textarea {
+      width: 100%;
+    }
+
+    datepicker-lite {
+      min-width: 200px;
+    }
+
+    etools-content-panel::part(ecp-header) {
+      background-color: var(--primary-background-color);
+      border-bottom: 1px groove var(--dark-divider-color);
+    }
+
+    etools-content-panel::part(ecp-header-title) {
+      padding: 0 24px 0 0;
+      text-align: start;
+      font-size: 18px;
+      font-weight: 500;
+    }
+
+    etools-content-panel::part(ecp-content) {
+      padding: 0;
+    }
+
+    etools-dialog {
+      --esmm-dropdown-menu-position: fixed !important;
+    }
+
+    etools-dialog::part(ed-title) {
+      border-bottom: solid 1px var(--dark-divider-color);
+    }
+
+    etools-dialog paper-textarea {
+      --iron-autogrow-textarea: {
+        overflow: auto;
+        padding: 0;
+        max-height: 96px;
+      }
+    }
+
+    paper-textarea {
+      flex: auto;
+      --paper-input-container-input: {
+        display: block;
+      }
+    }
+
+    etools-dialog::part(ed-scrollable) {
+      margin-top: 0 !important;
+      padding-top: 12px;
+      padding-bottom: 16px;
+    }
+
+    etools-dialog::part(ed-button-styles) {
+      margin-top: 0;
     }
 
     etools-dropdown,
     etools-dropdown-multi {
       --esmm-external-wrapper: {
-        width: auto;
-        max-width: 650px;
+        width: 100%;
+        margin: 0;
       }
     }
 
@@ -164,6 +222,40 @@ export const SharedStylesLit = html`
     }
     .font-bold {
       font-weight: bold;
+    }
+    .p-relative {
+      position: relative;
+    }
+
+    section > *::not(etools-loading) {
+      background-color: var(--primary-background-color);
+    }
+
+    .editable-row > .hover-block {
+      opacity: 0;
+      display: flex;
+      align-items: center;
+      cursor: pointer;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      line-height: 48px;
+      background-color: #eeeeee;
+      z-index: 100;
+    }
+
+    .editable-row .hover-block paper-icon-button {
+      color: rgba(0, 0, 0, 0.54);
+      padding-left: 5px;
+    }
+
+    .editable-row:hover > .hover-block {
+      opacity: 1;
+    }
+
+    .editable-row:focus-within .hover-block {
+      opacity: 1;
     }
   </style>
 `;

@@ -51,7 +51,7 @@ export class CountriesDropdown extends connect(store)(LitElement) {
   countries: any[] = [];
 
   @property({type: Boolean})
-  countrySelectorVisible = false;
+  countrySelectorVisible = true;
 
   @property({type: Object})
   userData!: EtoolsUserModel;

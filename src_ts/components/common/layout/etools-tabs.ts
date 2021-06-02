@@ -2,7 +2,6 @@ import {LitElement, html, property, customElement} from 'lit-element';
 import '@polymer/paper-tabs/paper-tabs';
 import '@polymer/paper-tabs/paper-tab';
 import {AnyObject} from '../../../types/globals';
-import {layoutHorizontal, layoutStartJustified} from '../../styles/lit-styles/flex-layout-styles';
 
 /**
  * @LitElement
@@ -21,7 +20,7 @@ export class EtoolsTabs extends LitElement {
         }
 
         paper-tab[disabled] {
-          opacity: .3;
+          opacity: 0.3;
         }
 
         *[disabled] {
@@ -30,8 +29,9 @@ export class EtoolsTabs extends LitElement {
         }
 
         :host {
-          ${layoutHorizontal}
-          ${layoutStartJustified}
+          display: flex;
+          flex-direction: row;
+          justify-content: flex-start;
         }
 
         :host([border-bottom]) {
