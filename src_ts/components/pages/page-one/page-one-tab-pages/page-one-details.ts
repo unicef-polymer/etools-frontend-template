@@ -1,4 +1,5 @@
 import {LitElement, html} from 'lit-element';
+import {fireEvent} from '../../../utils/fire-custom-event';
 
 /**
  * @customElement
@@ -14,6 +15,15 @@ class PageOneDetails extends LitElement {
 
       Page One Details tab content
     `;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    // Disable loading message for tab load, triggered by parent element on stamp or by tap event on tabs
+    fireEvent(this, 'global-loading', {
+      active: false,
+      loadingSource: 'demo-page'
+    });
   }
 }
 
