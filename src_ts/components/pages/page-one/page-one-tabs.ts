@@ -15,6 +15,7 @@ import {customElement, LitElement, html, property} from 'lit-element';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
 import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
 import {RouteDetails} from '../../../routing/router';
+import {fireEvent} from '../../utils/fire-custom-event';
 
 /**
  * @LitElement
@@ -93,6 +94,12 @@ export class PageOneTabs extends connect(store)(LitElement) {
     return tab === expectedTab;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+
+    this.showLoadingMessage();
+  }
+
   public stateChanged(state: RootState) {
     // update page route data
     if (state.app!.routeDetails.routeName === 'page-one' && state.app!.routeDetails.subRouteName !== 'list') {
@@ -128,8 +135,17 @@ export class PageOneTabs extends connect(store)(LitElement) {
       if (this.routeDetails.path === newPath) {
         return;
       }
+      this.showLoadingMessage();
       // go to new tab
       updateAppLocation(newPath, true);
     }
+  }
+
+  showLoadingMessage() {
+    fireEvent(this, 'global-loading', {
+      message: `Loading...`,
+      active: true,
+      loadingSource: 'demo-page'
+    });
   }
 }
