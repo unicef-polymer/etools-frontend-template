@@ -6,7 +6,7 @@ import '../../common/layout/etools-tabs';
 // eslint-disable-next-line max-len
 import {pageContentHeaderSlottedStyles} from '../../common/layout/page-content-header/page-content-header-slotted-styles';
 import '../../common/layout/status/etools-status';
-
+import '../../common/layout/available-actions/available-actions';
 import {AnyObject} from '../../../types/globals';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
@@ -43,8 +43,10 @@ export class PageOneTabs extends connect(store)(LitElement) {
         <h1 slot="page-title">Title here</h1>
 
         <div slot="title-row-actions" class="content-header-actions">
-          <paper-button raised>Action 1</paper-button>
-          <paper-button raised>Action 2</paper-button>
+          <available-actions
+            .entityId="${this.record?.id}"
+            .actions="${this.record?.actions_available || []}"
+          ></available-actions>
         </div>
 
         <etools-tabs
@@ -87,7 +89,8 @@ export class PageOneTabs extends connect(store)(LitElement) {
   @property({type: Object})
   record: AnyObject = {
     id: 23,
-    title: 'Page One title'
+    title: 'Page One title',
+    actions_available: ['send_to_partner', 'accept', 'cancel', 'download_comments', 'export', 'generate_pdf']
   };
 
   isActiveTab(tab: string, expectedTab: string): boolean {
