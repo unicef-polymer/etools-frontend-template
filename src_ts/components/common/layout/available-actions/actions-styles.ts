@@ -17,6 +17,8 @@ export const ActionsStyles: CSSResult = css`
     color: white;
     background: var(--green-color);
     font-weight: 500;
+    text-transform: uppercase;
+    border-radius: 3px;
   }
 
   .back-button {
