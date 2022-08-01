@@ -24,6 +24,7 @@ import '@polymer/app-layout/app-drawer/app-drawer.js';
 import '@polymer/app-layout/app-header-layout/app-header-layout.js';
 import '@polymer/app-layout/app-header/app-header.js';
 import '@polymer/app-layout/app-toolbar/app-toolbar.js';
+import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics';
 
 import {AppDrawerLayoutElement} from '@polymer/app-layout/app-drawer-layout/app-drawer-layout';
 import {AppHeaderLayoutElement} from '@polymer/app-layout/app-header-layout/app-header-layout';
@@ -41,7 +42,8 @@ import './app-theme.js';
 import {ToastNotificationHelper} from '../common/toast-notifications/toast-notification-helper';
 import user from '../../redux/reducers/user';
 import commonData from '../../redux/reducers/common-data';
-import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../config/config';
+import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY, ROOT_PATH} from '../../config/config';
+import {AnyObject} from '@unicef-polymer/etools-types';
 import {getCurrentUser} from '../user/user-actions';
 import {EtoolsRouter} from '../../routing/routes';
 import {RouteDetails} from '../../routing/router';
@@ -73,6 +75,13 @@ export class AppShell extends connect(store)(LoadingMixin(LitElement)) {
     // main template
     // language=HTML
     return html`
+      <etools-piwik-analytics
+        .page="${ROOT_PATH + this.mainPage}"
+        .user="${this.user}"
+        .toast="${this.currentToastMessage}"
+      >
+      </etools-piwik-analytics>
+
       <app-drawer-layout
         id="layout"
         responsive-width="850px"
@@ -149,6 +158,12 @@ export class AppShell extends connect(store)(LoadingMixin(LitElement)) {
   @property({type: String})
   selectedLanguage!: string;
 
+  @property({type: String})
+  currentToastMessage!: string;
+
+  @property({type: Object})
+  user!: AnyObject;
+
   @query('#layout') private drawerLayout!: AppDrawerLayoutElement;
   @query('#drawer') private drawer!: AppDrawerElement;
   @query('#appHeadLayout') private appHeaderLayout!: AppHeaderLayoutElement;
@@ -181,7 +196,11 @@ export class AppShell extends connect(store)(LoadingMixin(LitElement)) {
     installRouter((location) => store.dispatch(navigate(decodeURIComponent(location.pathname + location.search))));
     installMediaQueryWatcher(`(min-width: 460px)`, () => store.dispatch(updateDrawerState(false)));
 
-    getCurrentUser();
+    getCurrentUser().then((user?: AnyObject) => {
+      if (user) {
+        this.user = user;
+      }
+    });
 
     setTimeout(() => {
       window.EtoolsEsmmFitIntoEl = this.appHeaderLayout!.shadowRoot!.querySelector('#contentContainer');
