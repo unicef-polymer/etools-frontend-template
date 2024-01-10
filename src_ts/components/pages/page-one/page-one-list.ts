@@ -4,6 +4,7 @@ import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
 
 import '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header';
+// eslint-disable-next-line max-len
 import {pageContentHeaderSlottedStyles} from '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header-slotted-styles';
 
 import {AnyObject} from '@unicef-polymer/etools-types';

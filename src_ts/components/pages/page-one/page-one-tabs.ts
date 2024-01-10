@@ -1,9 +1,9 @@
 import '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header';
+// eslint-disable-next-line max-len
 import {pageContentHeaderSlottedStyles} from '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header-slotted-styles';
 
 import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '@unicef-polymer/etools-modules-common/dist/layout/status/etools-status';
-// eslint-disable-next-line max-len
 import './actions/page-one-actions';
 import {AnyObject} from '@unicef-polymer/etools-types';
 import {connect} from 'pwa-helpers/connect-mixin';

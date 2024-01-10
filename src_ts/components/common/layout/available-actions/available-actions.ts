@@ -1,5 +1,5 @@
 import {GenericObject} from '@unicef-polymer/etools-types/dist/global.types';
-import {css, CSSResultArray, html, LitElement, TemplateResult} from 'lit';
+import {CSSResultArray, html, LitElement, TemplateResult} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
