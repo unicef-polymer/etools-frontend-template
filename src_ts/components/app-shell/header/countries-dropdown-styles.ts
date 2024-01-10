@@ -1,4 +1,4 @@
-import { html } from 'lit-element';
+import {html} from 'lit';
 
 // language=HTML
 export const countriesDropdownStyles = html`
@@ -9,6 +9,7 @@ export const countriesDropdownStyles = html`
 
     :host {
       display: block;
+      --sl-spacing-small: 0;
     }
 
     :host(:hover) {
@@ -16,53 +17,46 @@ export const countriesDropdownStyles = html`
     }
 
     etools-dropdown {
+      --auto-size-available-height: 600px;
+    }
+
+    #languageSelector {
+      width: 120px;
+    }
+
+    .w100 {
+      width: 100%;
+    }
+
+    organizations-dropdown {
+      width: 180px;
+    }
+
+    countries-dropdown {
       width: 160px;
+    }
 
-      --paper-listbox: {
-        max-height: 600px;
-      }
+    etools-dropdown::part(display-input) {
+      text-align: end;
+    }
 
-      --esmm-icons: {
-        color: var(--header-icon-color);
-        cursor: pointer;
-      }
+    etools-dropdown.warning::part(combobox) {
+      outline: 1.5px solid red !important;
+      padding: 4px;
+    }
+    etools-dropdown::part(display-input)::placeholder {
+      color: var(--sl-input-color);
+      opacity: 1;
+    }
 
-      --paper-input-container-underline: {
-        display: none;
-      }
-
-      --paper-input-container-underline-focus: {
-        display: none;
-      }
-
-      --paper-input-container-underline-disabled: {
-        display: none;
-      }
-
-      --paper-input-container-input: {
-        color: var(--header-icon-color);
-        cursor: pointer;
-        min-height: 24px;
-        text-align: right;
-        line-height: 21px; /* for IE */
-      }
-
-      --paper-menu-button-dropdown: {
-        max-height: 380px;
-      }
-
-      --paper-input-container-shared-input-style: {
-        color: var(--header-icon-color);
-        cursor: pointer;
-        font-size: 16px;
-        text-align: right;
-        width: 100px;
-      }
-
+    etools-dropdown::part(display-input)::-ms-input-placeholder {
+      /* Edge 12-18 */
+      color: var(--sl-input-color);
     }
 
     @media (max-width: 768px) {
       etools-dropdown {
+        min-width: 130px;
         width: 130px;
       }
     }

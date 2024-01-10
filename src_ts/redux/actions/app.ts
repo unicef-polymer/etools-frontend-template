@@ -1,63 +1,89 @@
+/* eslint-disable max-len */
 import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../store';
 import {ROOT_PATH} from '../../config/config';
-import {DEFAULT_ROUTE, EtoolsRouter, ROUTE_404, updateAppLocation} from '../../routing/routes';
-import {RouteDetails} from '../../routing/router';
-import {getFilePathsToImport} from '../../routing/component-lazy-load-config';
-import {getRedirectToListPath} from '../../routing/subpage-redirect';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {UPDATE_ROUTE} from '../actionsContants';
 
-export const UPDATE_ROUTE_DETAILS = 'UPDATE_ROUTE_DETAILS';
-export const UPDATE_DRAWER_STATE = 'UPDATE_DRAWER_STATE';
-
-export interface AppActionUpdateRouteDetails extends Action<'UPDATE_ROUTE_DETAILS'> {
-  routeDetails: any;
-}
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
 }
 
-export type AppAction = AppActionUpdateRouteDetails | AppActionUpdateDrawerState;
+export type AppAction = AppActionUpdateDrawerState | any;
 
-type ThunkResult = ThunkAction<void, RootState, undefined, AppAction>;
-
-const updateStoreRouteDetails: ActionCreator<AppActionUpdateRouteDetails> = (routeDetails: any) => {
+const updateRouteDetails = (routeDetails: any) => {
   return {
-    type: UPDATE_ROUTE_DETAILS,
+    type: UPDATE_ROUTE,
     routeDetails
   };
 };
 
-const loadPageComponents: ActionCreator<ThunkResult> = (routeDetails: RouteDetails) => (dispatch) => {
-  console.log('loadPageComponents', routeDetails);
+type ThunkResult = ThunkAction<void, RootState, undefined, AppAction>;
+
+const loadPageComponents = (routeDetails: EtoolsRouteDetails) => (dispatch: any, _getState: any) => {
   if (!routeDetails) {
     // invalid route => redirect to 404 page
-    updateAppLocation(ROUTE_404, true);
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
     return;
   }
 
-  const importBase = '../../'; // relative to current file
-  // start importing components (lazy loading)
-  const filesToImport: string[] = getFilePathsToImport(routeDetails);
-  filesToImport.forEach((filePath: string) => {
-    import(importBase + filePath)
-      .then(() => {
-        console.log(`component: ${filePath} has been loaded... yey!`);
-      })
-      .catch((importError: any) => {
-        console.log('component import failed...', importError);
-      });
+  const appShell = document.body.querySelector('app-shell');
+  let imported: Promise<any> | undefined;
+
+  fireEvent(appShell as any, 'global-loading', {
+    active: true,
+    loadingSource: 'initialisation'
   });
 
-  // add page details to redux store, to be used in other components
-  dispatch(updateStoreRouteDetails(routeDetails));
-};
+  let routeImportsPathsKey: string = routeDetails.routeName;
+  if (routeDetails.subRouteName) {
+    routeImportsPathsKey += `_${routeDetails.subRouteName}`;
+  }
 
-export const updateDrawerState: ActionCreator<AppActionUpdateDrawerState> = (opened: boolean) => {
-  return {
-    type: UPDATE_DRAWER_STATE,
-    opened
-  };
+  switch (routeImportsPathsKey) {
+    case 'page-one_list':
+      imported = import(`../../components/pages/page-one/page-one-list.js`);
+      break;
+    case 'page-one_details':
+      imported = Promise.all([
+        import(`../../components/pages/page-one/page-one-tabs.js`),
+        import(`../../components/pages/page-one/page-one-tab-pages/page-one-details.js`)
+      ]);
+      break;
+    case 'page-one_questionnaires':
+      imported = Promise.all([
+        import(`../../components/pages/page-one/page-one-tabs.js`),
+        import(`../../components/pages/page-one/page-one-tab-pages/page-one-questionnaires.js`)
+      ]);
+      break;
+    case 'page-two':
+      imported = import(`../../components/pages/page-two.js`);
+      break;
+    case 'page-not-found':
+    default:
+      imported = import(`../../components/pages/page-not-found.js`);
+      break;
+  }
+
+  if (imported) {
+    imported
+      .then()
+      .catch((err) => {
+        console.log(err);
+        EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.NOT_FOUND));
+      })
+      .finally(() => {
+        dispatch(updateRouteDetails(routeDetails));
+        fireEvent(appShell as any, 'global-loading', {
+          active: false,
+          loadingSource: 'initialisation'
+        });
+      });
+  }
 };
 
 export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch) => {
@@ -65,22 +91,19 @@ export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch)
 
   // if app route is accessed, redirect to default route (if not already on it)
   // @ts-ignore
-  if (path === ROOT_PATH && ROOT_PATH !== DEFAULT_ROUTE) {
-    updateAppLocation(DEFAULT_ROUTE, true);
+  if (path === ROOT_PATH && ROOT_PATH !== EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT)) {
+    EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT));
     return;
   }
 
   // some routes need redirect to subRoute list
-  const redirectPath: string | undefined = getRedirectToListPath(path);
+  const redirectPath: string | undefined = EtoolsRouter.getRedirectToListPath(path);
   if (redirectPath) {
-    updateAppLocation(redirectPath, true);
+    EtoolsRouter.updateAppLocation(redirectPath);
     return;
   }
 
-  const routeDetails: RouteDetails | null = EtoolsRouter.getRouteDetails(path);
-  /**
-   * TODO:
-   *  - create template page with detail about routing (including tabs subpages navigation), creating a new page
-   */
-  dispatch(loadPageComponents(routeDetails));
+  const routeDetails: EtoolsRouteDetails = EtoolsRouter.getRouteDetails(path)!;
+
+  dispatch(loadPageComponents(routeDetails!));
 };

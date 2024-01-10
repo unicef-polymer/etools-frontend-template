@@ -1,13 +1,13 @@
-import '@polymer/iron-icons/iron-icons.js';
-import '@polymer/iron-icons/maps-icons.js';
-import '@polymer/iron-selector/iron-selector.js';
-import '@polymer/paper-tooltip/paper-tooltip.js';
-import '@polymer/paper-ripple/paper-ripple.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {ROOT_PATH, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
-import {customElement, html, LitElement, property} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
+import {translate} from 'lit-translate';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 /**
  * main menu
@@ -15,7 +15,7 @@ import {customElement, html, LitElement, property} from 'lit-element';
  * @customElement
  */
 @customElement('app-menu')
-export class AppMenu extends LitElement {
+export class AppMenu extends MatomoMixin(LitElement) {
   static get styles() {
     return [navMenuStyles];
   }
@@ -25,89 +25,92 @@ export class AppMenu extends LitElement {
     // language=HTML
     return html`
       <div class="menu-header">
-        <span id="app-name">
-          Frontend <br />
-          Template
-        </span>
+        <span id="app-name"> Template </span>
 
-        <span class="ripple-wrapper main">
-          <iron-icon
-            id="menu-header-top-icon"
-            icon="assignment-ind"
-            @tap="${() => this._toggleSmallMenu()}"
-          ></iron-icon>
-          <paper-ripple class="circle" center></paper-ripple>
-        </span>
-
-        <paper-tooltip for="menu-header-top-icon" position="right">
-          Frontend Template
-        </paper-tooltip>
+        <sl-tooltip for="menu-header-top-icon" placement="right" content="Template">
+          <span class="ripple-wrapper main">
+            <etools-icon
+              id="menu-header-top-icon"
+              name="assignment-ind"
+              @click="${() => this._toggleSmallMenu()}"
+            ></etools-icon>
+          </span>
+        </sl-tooltip>
 
         <span class="chev-right">
-          <iron-icon id="expand-menu" icon="chevron-right" @tap="${() => this._toggleSmallMenu()}"></iron-icon>
-          <paper-ripple class="circle" center></paper-ripple>
+          <etools-icon id="expand-menu" name="chevron-right" @click="${() => this._toggleSmallMenu()}"></etools-icon>
         </span>
 
         <span class="ripple-wrapper">
-          <iron-icon id="minimize-menu" icon="chevron-left" @tap="${() => this._toggleSmallMenu()}"></iron-icon>
-          <paper-ripple class="circle" center></paper-ripple>
+          <etools-icon id="minimize-menu" name="chevron-left" @click="${() => this._toggleSmallMenu()}"></etools-icon>
         </span>
       </div>
 
       <div class="nav-menu">
-        <iron-selector
-          .selected="${this.selectedOption}"
-          attr-for-selected="menu-name"
-          selectable="a"
-          role="navigation"
-        >
-          <a class="nav-menu-item" menu-name="page-one" href="${this.rootPath + 'page-one'}">
-            <iron-icon id="page1-icon" icon="accessibility"></iron-icon>
-            <paper-tooltip for="page1-icon" position="right">
-              Page One
-            </paper-tooltip>
+        <div class="menu-selector" role="navigation">
+          <a
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'page-one')}"
+            menu-name="page-one"
+            href="${ROOT_PATH}page-one"
+          >
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="Page One">
+              <etools-icon name="accessibility"></etools-icon>
+            </sl-tooltip>
             <div class="name">Page One</div>
           </a>
 
-          <a class="nav-menu-item" menu-name="page-two" href="${this.rootPath + 'page-two'}">
-            <iron-icon id="page2-icon" icon="extension"></iron-icon>
-            <paper-tooltip for="page2-icon" position="right">
-              Page Two
-            </paper-tooltip>
+          <a
+            class="nav-menu-item ${this.getItemClass(this.selectedOption, 'page-two')}"
+            menu-name="page-two"
+            href="${ROOT_PATH}page-two"
+          >
+            <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="Page Two">
+              <etools-icon name="extension"></etools-icon>
+            </sl-tooltip>
             <div class="name">Page Two</div>
           </a>
-        </iron-selector>
-
-        <div class="nav-menu-item section-title">
-          <span>eTools Community Channels</span>
         </div>
 
-        <a class="nav-menu-item lighter-item" href="http://etools.zendesk.com" target="_blank">
-          <iron-icon id="knoledge-icon" icon="maps:local-library"></iron-icon>
-          <paper-tooltip for="knoledge-icon" position="right">
-            Knowledge base
-          </paper-tooltip>
-          <div class="name">Knowledge base</div>
+        <div class="nav-menu-item section-title">
+          <span>${translate('COMMUNITY_CHANNELS')}</span>
+        </div>
+
+        <a
+          class="nav-menu-item lighter-item"
+          href="http://etools.zendesk.com"
+          target="_blank"
+          @click="${this.trackAnalytics}"
+          tracker="Knowledge base"
+        >
+          <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('KNOWLEDGE_BASE')}">
+            <etools-icon id="knoledge-icon" name="maps:local-library"></etools-icon>
+          </sl-tooltip>
+          <div class="name">${translate('KNOWLEDGE_BASE')}</div>
         </a>
 
         <a
           class="nav-menu-item lighter-item"
           href="https://www.yammer.com/unicef.org/#/threads/inGroup?type=in_group&feedId=5782560"
           target="_blank"
+          @click="${this.trackAnalytics}"
+          tracker="Discussion"
         >
-          <iron-icon id="discussion-icon" icon="icons:question-answer"></iron-icon>
-          <paper-tooltip for="discussion-icon" position="right">
-            Discussion
-          </paper-tooltip>
-          <div class="name">Discussion</div>
+          <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('DISCUSSION')}">
+            <etools-icon id="discussion-icon" name="question-answer"></etools-icon>
+          </sl-tooltip>
+          <div class="name">${translate('DISCUSSION')}</div>
         </a>
-
-        <a class="nav-menu-item lighter-item last-one" href="http://etoolsinfo.unicef.org" target="_blank">
-          <iron-icon id="information-icon" icon="icons:info"></iron-icon>
-          <paper-tooltip for="information-icon" position="right">
-            Information
-          </paper-tooltip>
-          <div class="name">Information</div>
+        <a
+          class="nav-menu-item lighter-item last-one"
+          href="https://etools.unicef.org/landing"
+          target="_blank"
+          @click="${this.trackAnalytics}"
+          tracker="Information"
+        >
+          <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="${translate('INFORMATION')}">
+            <etools-icon id="information-icon" name="info"></etools-icon>
+          </sl-tooltip>
+          <div class="name">${translate('INFORMATION')}</div>
         </a>
       </div>
     `;
@@ -127,5 +130,9 @@ export class AppMenu extends LitElement {
     const localStorageVal: number = this.smallMenu ? 1 : 0;
     localStorage.setItem(SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY, String(localStorageVal));
     fireEvent(this, 'toggle-small-menu', {value: this.smallMenu});
+  }
+
+  getItemClass(selectedValue: string, itemValue: string) {
+    return selectedValue === itemValue ? 'selected' : '';
   }
 }

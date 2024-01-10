@@ -1,11 +1,16 @@
-import {customElement, html, LitElement, property, css} from 'lit-element';
-import '@polymer/paper-button/paper-button';
-import '@polymer/paper-menu-button/paper-menu-button';
-import '@polymer/iron-icon/iron-icon';
-import '@polymer/paper-listbox/paper-listbox';
-import {AnyObject} from '../../../types/globals';
-import {elevation2} from '../../styles/lit-styles/elevation-styles';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {getEndpoint} from '@unicef-polymer/etools-utils/dist/endpoint.util';
+import {AnyObject, EtoolsEndpoint} from '@unicef-polymer/etools-types';
+import {RequestEndpoint} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-request';
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
+import {etoolsEndpoints} from '../../../endpoints/endpoints-list';
+import {translate} from 'lit-translate';
 
 /**
  * @customElement
@@ -13,61 +18,28 @@ import {fireEvent} from '../../utils/fire-custom-event';
  */
 @customElement('export-data')
 export class ExportData extends LitElement {
-  static get styles() {
-    return [
-      css`
-        paper-menu-button {
-          padding: 0px 24px;
-        }
-        paper-button {
-          height: 40px;
-          padding: 0px 5px;
-          margin-left: 10px;
-          font-weight: bold;
-          color: var(--secondary-text-color);
-        }
-
-        paper-button iron-icon {
-          margin-right: 10px;
-          color: var(--secondary-text-color);
-        }
-
-        paper-button:focus {
-          ${elevation2}
-        }
-
-        paper-item:hover {
-          cursor: pointer;
-        }
-      `
-    ];
-  }
   public render() {
     return html`
       <style>
-        #pdExportMenuBtn {
-          /* Prevent first item highlighted by default */
-          --paper-item-focused-before: {
-            background: none;
-            opacity: 0;
-          }
-          --paper-item-focused-after: {
-            background: none;
-            opacity: 0;
-          }
+        sl-menu-item::part(label) {
+          text-align: left;
+        }
+        sl-dropdown sl-menu-item:focus-visible::part(base) {
+          background-color: rgba(0, 0, 0, 0.1);
+          color: var(--sl-color-neutral-1000);
         }
       </style>
-      <paper-menu-button id="pdExportMenuBtn" close-on-activate horizontal-align="right">
-        <paper-button slot="dropdown-trigger" class="dropdown-trigger">
-          <iron-icon icon="file-download"></iron-icon>
-          Export
-        </paper-button>
-        <paper-listbox slot="dropdown-content">
+      <sl-dropdown id="pdExportMenuBtn">
+        <etools-button class="neutral" variant="text" slot="trigger">
+          <etools-icon name="file-download"></etools-icon>
+          ${translate('EXPORT')}
+        </etools-button>
+        <sl-menu>
           ${this.exportLinks.map(
-      (item) => html` <paper-item @tap="${() => this.export(item.type)}">${item.name}</paper-item>`
-    )}
-        </paper-listbox>
-      </paper-menu-button>
+            (item) => html` <sl-menu-item @click="${() => this.export(item.type)}">${item.name}</sl-menu-item>`
+          )}
+        </sl-menu>
+      </sl-dropdown>
     `;
   }
 
@@ -90,9 +62,13 @@ export class ExportData extends LitElement {
   endpoint = '';
 
   export(_type: string) {
-    // const url = this.endpoint + `export/${type}/` + (this.params ? `?${this.params}` : '');
-    // Export not implemented yet
-    // window.open(url, '_blank');
+    // Just an example
+
+    if (_type == 'dummy') {
+      const url = getEndpoint<EtoolsEndpoint, RequestEndpoint>((etoolsEndpoints as any).dummy).url;
+      window.open(url, '_blank');
+      return;
+    }
     fireEvent(this, 'toast', {text: 'Export not implemented...'});
   }
 }

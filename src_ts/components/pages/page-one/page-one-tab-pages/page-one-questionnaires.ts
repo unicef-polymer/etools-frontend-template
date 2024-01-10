@@ -1,11 +1,12 @@
-import {LitElement, html} from 'lit-element';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {LitElement, html} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
  * @customElement
- * @polymer
  */
-class PageOneQuestionnaires extends LitElement {
+@customElement('page-one-questionnaires')
+export class PageOneQuestionnaires extends LitElement {
   render() {
     // language=HTML
     return html`
@@ -39,5 +40,3 @@ class PageOneQuestionnaires extends LitElement {
     super.disconnectedCallback();
   }
 }
-
-window.customElements.define('page-one-questionnaires', PageOneQuestionnaires);

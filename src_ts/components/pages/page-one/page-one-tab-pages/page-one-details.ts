@@ -1,11 +1,12 @@
-import {LitElement, html} from 'lit-element';
-import {fireEvent} from '../../../utils/fire-custom-event';
+import {html, LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 
 /**
  * @customElement
- * @polymer
  */
-class PageOneDetails extends LitElement {
+@customElement('page-one-details')
+export class PageOneDetails extends LitElement {
   render() {
     // language=HTML
     return html`
@@ -26,5 +27,3 @@ class PageOneDetails extends LitElement {
     });
   }
 }
-
-window.customElements.define('page-one-details', PageOneDetails);

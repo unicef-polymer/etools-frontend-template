@@ -1,54 +1,57 @@
-import '@polymer/paper-button/paper-button';
-import {customElement, html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
 
-import '../../common/layout/page-content-header/page-content-header';
-// eslint-disable-next-line max-len
-import {pageContentHeaderSlottedStyles} from '../../common/layout/page-content-header/page-content-header-slotted-styles';
+import '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header';
+import {pageContentHeaderSlottedStyles} from '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header-slotted-styles';
 
-import {AnyObject} from '../../../types/globals';
-import '../../common/layout/filters/etools-filters';
+import {AnyObject} from '@unicef-polymer/etools-types';
+import '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {
   defaultFilters,
   defaultSelectedFilters,
   updateFilterSelectionOptions,
   updateFiltersSelectedValues,
-  FilterKeysAndTheirSelectedValues
+  FilterKeysAndTheirSelectedValues,
+  FilterKeys
 } from './list/filters';
 import {ROOT_PATH} from '../../../config/config';
-import {EtoolsFilter} from '../../common/layout/filters/etools-filters';
+import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {buttonsStyles} from '../../styles/button-styles';
-import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
-import '@unicef-polymer/etools-table/etools-table';
+import {sharedStyles} from '../../styles/shared-styles';
+import '@unicef-polymer/etools-unicef/src/etools-table/etools-table';
 import {
   EtoolsTableColumn,
   EtoolsTableColumnSort,
   EtoolsTableColumnType
-} from '@unicef-polymer/etools-table/etools-table';
+} from '@unicef-polymer/etools-unicef/src/etools-table/etools-table';
 import {
   EtoolsPaginator,
   defaultPaginator,
   getPaginatorWithBackend
-} from '@unicef-polymer/etools-table/pagination/etools-pagination';
+} from '@unicef-polymer/etools-unicef/src/etools-table/pagination/etools-pagination';
 import {
   buildUrlQueryString,
-  EtoolsTableSortItem,
-  getSelectedFiltersFromUrlParams,
+  EtoolsTableUtilitySortItem,
   getSortFields,
   getSortFieldsFromUrlSortParams,
   getUrlQueryStringSort
-} from '../../common/layout/etools-table-utility';
-import {RouteDetails, RouteQueryParams} from '../../../routing/router';
-import {updateAppLocation, replaceAppLocation} from '../../../routing/routes';
-import {SharedStylesLit} from '../../styles/shared-styles-lit';
-
-import '@unicef-polymer/etools-loading';
+} from '@unicef-polymer/etools-modules-common/dist/layout/etools-table/etools-table-utility';
+import {getSelectedFiltersFromUrlParams} from '@unicef-polymer/etools-unicef/src/etools-filters/filters';
+import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
 import {getListDummydata} from '../page-one/list/list-dummy-data';
 import get from 'lodash-es/get';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import '../../common/layout/export-data';
+import {
+  EtoolsRouteDetails,
+  EtoolsRouteQueryParams
+} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
 let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedFilters};
 
 /**
@@ -58,14 +61,14 @@ let lastSelectedFilters: FilterKeysAndTheirSelectedValues = {...defaultSelectedF
 @customElement('page-one-list')
 export class PageOneList extends connect(store)(LitElement) {
   static get styles() {
-    return [elevationStyles, buttonsStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
+    return [elevationStyles, pageLayoutStyles, pageContentHeaderSlottedStyles];
   }
 
   public render() {
     // main template
     // language=HTML
     return html`
-      ${SharedStylesLit}
+      ${sharedStyles}
       <style>
         etools-table {
           padding-top: 12px;
@@ -97,13 +100,13 @@ export class PageOneList extends connect(store)(LitElement) {
 
         <div slot="title-row-actions" class="content-header-actions">
           <div class="action">
-            <export-data .params="${this.queryParams}" raised></export-data>
+            <export-data .params="${this.queryParams}"></export-data>
           </div>
           <div class="action">
-            <paper-button id="addBtn" class="primary left-icon" raised @tap="${this.goToAddnewPage}">
-              <iron-icon icon="add"></iron-icon><span class="longAddText">Add new record</span>
-              <span class="shortAddText">Add</span>
-            </paper-button>
+            <etools-button id="addBtn" variant="primary" @tap="${this.goToAddnewPage}">
+              <etools-icon name="add" slot="prefix"></etools-icon>
+              Add new record
+            </etools-button>
           </div>
         </div>
       </page-content-header>
@@ -127,7 +130,7 @@ export class PageOneList extends connect(store)(LitElement) {
   }
 
   @property({type: Object})
-  routeDetails!: RouteDetails;
+  routeDetails!: EtoolsRouteDetails;
 
   @property({type: String})
   rootPath: string = ROOT_PATH;
@@ -136,7 +139,7 @@ export class PageOneList extends connect(store)(LitElement) {
   paginator: EtoolsPaginator = {...defaultPaginator};
 
   @property({type: Array})
-  sort: EtoolsTableSortItem[] = [
+  sort: EtoolsTableUtilitySortItem[] = [
     {name: 'assessment_date', sort: EtoolsTableColumnSort.Desc},
     {name: 'partner_name', sort: EtoolsTableColumnSort.Asc}
   ];
@@ -164,7 +167,7 @@ export class PageOneList extends connect(store)(LitElement) {
     {
       label: 'Reference No.',
       name: 'ref_number',
-      link_tmpl: `${ROOT_PATH}page-one/:id/details`,
+      link_tmpl: `page-one/:id/details`,
       type: EtoolsTableColumnType.Link
     },
     {
@@ -200,7 +203,7 @@ export class PageOneList extends connect(store)(LitElement) {
   listData: AnyObject[] = [];
 
   stateChanged(state: RootState) {
-    const routeDetails = get(state, 'app.routeDetails');
+    const routeDetails = get(state, 'app.routeDetails')!;
     if (!(routeDetails.routeName === 'page-one' && routeDetails.subRouteName === 'list')) {
       return; // Avoid code execution while on a different page
     }
@@ -246,8 +249,8 @@ export class PageOneList extends connect(store)(LitElement) {
   private dataRequiredByFiltersHasBeenLoaded(state: RootState) {
     if (
       state.commonData &&
-      get(state, 'commonData.unicefUsers.length') &&
-      get(state, 'commonData.partners.length') &&
+      state.commonData?.unicefUsers?.length &&
+      state.commonData?.partners?.length &&
       this.routeDetails.queryParams &&
       Object.keys(this.routeDetails.queryParams).length > 0
     ) {
@@ -257,14 +260,14 @@ export class PageOneList extends connect(store)(LitElement) {
   }
 
   populateDropdownFilterOptionsFromCommonData(commonData: any, currentFilters: EtoolsFilter[]) {
-    updateFilterSelectionOptions(currentFilters, 'unicef_focal_point', commonData.unicefUsers);
-    updateFilterSelectionOptions(currentFilters, 'partner', commonData.partners);
+    updateFilterSelectionOptions(currentFilters, FilterKeys.unicef_focal_point, commonData.unicefUsers);
+    updateFilterSelectionOptions(currentFilters, FilterKeys.partner, commonData.partners);
   }
 
   updateUrlListQueryParams() {
     const qs = this.getParamsForQuery();
     this.queryParams = qs;
-    replaceAppLocation(`${this.routeDetails.path}?${qs}`, true);
+    EtoolsRouter.replaceAppLocation(this.routeDetails.path, qs);
   }
 
   getParamsForQuery() {
@@ -277,7 +280,7 @@ export class PageOneList extends connect(store)(LitElement) {
     return buildUrlQueryString(params);
   }
 
-  updateListParamsFromRouteDetails(queryParams: RouteQueryParams) {
+  updateListParamsFromRouteDetails(queryParams: EtoolsRouteQueryParams) {
     // update sort fields
     if (queryParams.sort) {
       this.sort = getSortFieldsFromUrlSortParams(queryParams.sort);
@@ -332,6 +335,6 @@ export class PageOneList extends connect(store)(LitElement) {
   }
 
   goToAddnewPage() {
-    updateAppLocation('/page-one/new/details', true);
+    EtoolsRouter.updateAppLocation('/page-one/new/details');
   }
 }
