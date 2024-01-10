@@ -2,7 +2,6 @@ declare global {
   interface Window {
     process?: Record<string, any>;
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose; // eslint-disable-line
-    EtoolsEsmmFitIntoEl: any;
   }
 }
 
@@ -11,13 +10,13 @@ import thunk, {ThunkMiddleware} from 'redux-thunk';
 import {lazyReducerEnhancer} from 'pwa-helpers/lazy-reducer-enhancer.js';
 
 import app, {AppState} from './reducers/app.js';
+import {ActiveLanguageState} from './reducers/active-language.js';
 import {AppAction} from './actions/app.js';
-
+import {LanguageAction} from './actions/active-language';
 import {UserAction} from './actions/user.js';
 import {UserState} from './reducers/user.js';
 import {CommonDataAction} from './actions/common-data';
 import {CommonDataState} from './reducers/common-data';
-import {ActiveLanguageState} from './reducers/active-language.js';
 
 // Overall state extends static states and partials lazy states.
 export interface RootState {
@@ -29,7 +28,7 @@ export interface RootState {
 
 // could be more than one action AppAction | OtherAppAction ...
 // TODO: remove any and find a way to fix generated ts-lint errors
-export type RootAction = AppAction | UserAction | CommonDataAction | any;
+export type RootAction = AppAction | UserAction | CommonDataAction | LanguageAction | any;
 
 // Sets up a Chrome extension for time travel debugging.
 // See https://github.com/zalmoxisus/redux-devtools-extension for more information.

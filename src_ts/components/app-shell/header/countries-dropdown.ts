@@ -1,18 +1,19 @@
 import {connect} from 'pwa-helpers/connect-mixin.js';
 import {store, RootState} from '../../../redux/store';
-import '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {logError} from '@unicef-polymer/etools-behaviors/etools-logging';
-import {EtoolsDropdownEl} from '@unicef-polymer/etools-dropdown/etools-dropdown.js';
-import {customElement, LitElement, html, property, query} from 'lit-element';
+import '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import {EtoolsLogger} from '@unicef-polymer/etools-utils/dist/singleton/logger';
+import {EtoolsDropdownEl} from '@unicef-polymer/etools-unicef/src/etools-dropdown/etools-dropdown.js';
+import {LitElement, html} from 'lit';
+import {customElement, property, query} from 'lit/decorators.js';
 
 // import EndpointsMixin from '../../endpoints/endpoints-mixin.js';
-import {fireEvent} from '../../utils/fire-custom-event';
-import {AnyObject} from '../../../types/globals';
-import {EtoolsUserModel} from '../../user/user-model';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {countriesDropdownStyles} from './countries-dropdown-styles';
 import {changeCurrentUserCountry} from '../../user/user-actions';
-import {DEFAULT_ROUTE, updateAppLocation} from '../../../routing/routes';
 import {ROOT_PATH} from '../../../config/config';
+import {AnyObject, AvailableUserCountry, EtoolsUser} from '@unicef-polymer/etools-types';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
 
 /**
  * @LitElement
@@ -25,9 +26,11 @@ export class CountriesDropdown extends connect(store)(LitElement) {
     // language=HTML
     return html`
       ${countriesDropdownStyles}
-      <!-- shown options limit set to 250 as there are currently 195 countries in the UN council and about 230 total -->
+      <!-- shown options limit set to 280 as there are currently 195 countries in the UN council and about 230 total -->
       <etools-dropdown
         id="countrySelector"
+        transparent
+        class="w100"
         .selected="${this.currentCountry.id}"
         placeholder="Country"
         allow-outside-scroll
@@ -37,9 +40,9 @@ export class CountriesDropdown extends connect(store)(LitElement) {
         option-value="id"
         trigger-value-change-event
         @etools-selected-item-changed="${this.countrySelected}"
-        shown-options-limit="250"
-        ?hidden="${!this.countrySelectorVisible}"
+        .shownOptionsLimit="${280}"
         hide-search
+        .autoWidth="${true}"
       ></etools-dropdown>
     `;
   }
@@ -48,23 +51,15 @@ export class CountriesDropdown extends connect(store)(LitElement) {
   currentCountry: AnyObject = {};
 
   @property({type: Array})
-  countries: any[] = [];
-
-  @property({type: Boolean})
-  countrySelectorVisible = true;
+  countries: AvailableUserCountry[] = [];
 
   @property({type: Object})
-  userData!: EtoolsUserModel;
+  userData!: EtoolsUser;
 
   @query('#countrySelector') private countryDropdown!: EtoolsDropdownEl;
 
   public connectedCallback() {
     super.connectedCallback();
-
-    setTimeout(() => {
-      const fitInto = document.querySelector('app-shell')!.shadowRoot!.querySelector('#appHeadLayout');
-      this.countryDropdown.set('fitInto', fitInto);
-    }, 0);
   }
 
   public stateChanged(state: RootState) {
@@ -75,18 +70,10 @@ export class CountriesDropdown extends connect(store)(LitElement) {
     this.userDataChanged(this.userData);
   }
 
-  userDataChanged(userData: EtoolsUserModel) {
+  userDataChanged(userData: EtoolsUser) {
     if (userData) {
       this.countries = userData.countries_available;
       this.currentCountry = userData.country;
-
-      this.showCountrySelector(this.countries);
-    }
-  }
-
-  protected showCountrySelector(countries: any) {
-    if (Array.isArray(countries) && countries.length > 1) {
-      this.countrySelectorVisible = true;
     }
   }
 
@@ -114,7 +101,7 @@ export class CountriesDropdown extends connect(store)(LitElement) {
         // country change req returns 204
         // redirect to default page
         // TODO: clear all cached data related to old country
-        updateAppLocation(DEFAULT_ROUTE);
+        EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT));
         // force page reload to load all data specific to the new country
         document.location.assign(window.location.origin + ROOT_PATH);
       })
@@ -130,8 +117,8 @@ export class CountriesDropdown extends connect(store)(LitElement) {
   }
 
   protected handleCountryChangeError(error: any) {
-    logError('Country change failed!', 'countries-dropdown', error);
-    this.countryDropdown.set('selected', this.currentCountry.id);
+    EtoolsLogger.warn('Country change failed!', 'countries-dropdown', error);
+    this.countryDropdown.selected = this.currentCountry.id;
     fireEvent(this, 'toast', {text: 'Something went wrong changing your workspace. Please try again'});
   }
 }

@@ -1,7 +1,7 @@
 /**
  * TODO: this file provide mock-up data for list page
  */
-import {EtoolsPaginator} from '@unicef-polymer/etools-table/pagination/etools-pagination';
+import {EtoolsPaginator} from '@unicef-polymer/etools-unicef/src/etools-table/pagination/etools-pagination';
 
 const ratings: string[] = ['Low', 'High', 'Medium'];
 const statuses: string[] = ['Assigned', 'Submitted', 'Rejected'];
@@ -10,7 +10,7 @@ const randomValue = (myArray: string[]) => myArray[Math.floor(Math.random() * my
 
 const listDataModel: any = {
   id: 1,
-  ref_number: '2019/11',
+  ref_number: '2019/11/',
   assessment_date: '2019-08-01',
   partner_name: 'Partner name',
   status: '',
@@ -24,6 +24,7 @@ const data: any[] = [];
 while (i < 150) {
   const item = {...listDataModel};
   item.id = item.id + i;
+  item.ref_number = item.ref_number + (i + 1);
   item.assessor = randomValue(assessors);
   item.status = randomValue(statuses);
   item.rating = randomValue(ratings);

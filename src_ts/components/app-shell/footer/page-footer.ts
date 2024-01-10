@@ -1,6 +1,6 @@
-import {LitElement, html, customElement, property} from 'lit-element';
+import {LitElement, html} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
 import {ROOT_PATH} from '../../../config/config';
-
 /**
  * page footer element
  * @LitElement
@@ -16,7 +16,7 @@ export class PageFooter extends LitElement {
         :host {
           display: flex;
           flex-direction: column;
-          flex: 1;
+          flex: none;
           justify-content: flex-end;
           padding: 18px 24px;
           width: 100%;
@@ -33,7 +33,7 @@ export class PageFooter extends LitElement {
           display: flex;
           flex-direction: row;
           display: inline-flex;
-          padding-right: 30px;
+          padding-inline-end: 30px;
         }
 
         #unicef-logo img {
@@ -62,10 +62,6 @@ export class PageFooter extends LitElement {
           <span id="unicef-logo">
             <img src="images/UNICEF_logo.png" alt="UNICEF logo" />
           </span>
-          <!-- TODO: modify span to a with proper href values after footer pages are ready -->
-          <!--   <span class="footer-link">Contact</span>
-            <span class="footer-link">Disclaimers</span>
-            <span class="footer-link">Privacy Policy</span> -->
         </div>
       </footer>
     `;

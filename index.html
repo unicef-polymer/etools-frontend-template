@@ -1,13 +1,4 @@
-<!--
-@license
-Copyright (c) 2018 The Polymer Project Authors. All rights reserved.
-This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
-The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
-The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
-Code distributed by Google as part of the polymer project is also
-subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
--->
-
+<!-- Can be accessed at ./LICENSE.txt -->
 <!doctype html>
 <html lang="en">
   <head>
@@ -25,7 +16,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       a) Add a `basePath` property to the build configuration in your `polymer.json`.
       b) Use the `--base-path` command-line option for `polymer build`.
     -->
-    <base href="/">
+    <base href="/template/">
 
     <link rel="icon" href="images/favicon.ico">
 
@@ -70,7 +61,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       if ('serviceWorker' in navigator) {
         window.addEventListener('load', function() {
           navigator.serviceWorker.register('service-worker.js', {
-            scope: '/',
+            scope: '/template/',
           });
         });
       }
@@ -80,6 +71,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       window.process = { env: { NODE_ENV: 'production' } };
     </script>
 
+    <link
+      rel="stylesheet"
+      type="text/css"
+      crossorigin="anonymous"
+      href="https://fonts.googleapis.com/css?family=Roboto+Mono:400,700|Roboto:400,300,300italic,400italic,500,500italic,700,700italic"
+    />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.5.2/dist/themes/light.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/app-theme.css" />
     <!-- Add any global styles for body, document, etc. -->
     <style>
       /*@font-face {*/
@@ -133,9 +132,20 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         align-content: center;
         justify-content: center;
       }
+      /* TODO: move in assets. */
+      :root {
+        --sl-input-background-color-disabled: inherit;
+        --sl-input-background-color-focus: inherit;
+        --sl-input-height-small: 26px;
+        --sl-font-sans: 'Roboto', 'Noto', sans-serif;
+        --sl-input-color: rgba(0, 0, 0, 0.87);
+        --sl-input-label-font-size-small: 12px;
+      }
     </style>
   </head>
   <body>
+    <div id="buildRevNo" style="display: none">revNo</div>
+    <div id="buildDate" style="display: none">bDate</div>
     <app-shell appTitle="my app">
       <div id="loading-animation">
         <span>
@@ -153,6 +163,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <script src="node_modules/dayjs/dayjs.min.js"></script>
     <script src="node_modules/dayjs/plugin/utc.js"></script>
     <!-- Built with love using PWA Starter Kit -->
-    <script type="module" src="src/components/app-shell/app-shell.js"></script>
+    <script type="module" src="src/app-shell.js"></script>
   </body>
 </html>

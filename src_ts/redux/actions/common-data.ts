@@ -1,36 +1,18 @@
-import {getPartnersDummyData, geUnicefUsersDummyData} from '../../components/pages/page-one/list/list-dummy-data';
-import {Action, ActionCreator} from 'redux';
-import {AnyObject} from '../../types/globals';
+import {Action} from 'redux';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
+import {etoolsEndpoints} from '../../endpoints/endpoints-list';
 
-export const SET_UNICEF_USERS_DATA = 'SET_UNICEF_USERS_DATA';
-export const SET_PARTNERS = 'SET_PARTNERS';
+export const SET_ALL_STATIC_DATA = 'SET_ALL_STATIC_DATA';
+export const UPDATE_STATIC_DATA = 'UPDATE_STATIC_DATA';
 
-export interface CommonDataActionSetUnicefUsersData extends Action<'SET_UNICEF_USERS_DATA'> {
-  unicefUsersData: AnyObject[];
-}
+export interface CommonDataActionSetAllStaticData extends Action<'SET_ALL_STATIC_DATA'> {}
 
-export type CommonDataAction = CommonDataActionSetUnicefUsersData;
+export interface CommonDataActionUpdateStaticData extends Action<'UPDATE_STATIC_DATA'> {}
 
-export const setUnicefUsers: ActionCreator<CommonDataActionSetUnicefUsersData> = (unicefUsersData: AnyObject[]) => {
-  return {
-    type: SET_UNICEF_USERS_DATA,
-    unicefUsersData
-  };
-};
+export type CommonDataAction = CommonDataActionSetAllStaticData | CommonDataActionUpdateStaticData;
 
-export const setPartners = (partners: AnyObject[]) => {
-  return {
-    type: SET_PARTNERS,
-    partners
-  };
-};
-
-export const loadPartners = () => (dispatch: any) => {
-  // here will make request to endpoint to load data
-  dispatch(setPartners(getPartnersDummyData()));
-};
-
-export const loadUnicefUsers = () => (dispatch: any) => {
-  // here will make request to endpoint to load data
-  dispatch(setUnicefUsers(geUnicefUsersDummyData()));
+export const getUnicefUsers = () => {
+  return sendRequest({
+    endpoint: {url: etoolsEndpoints.unicefUsers.url!}
+  });
 };

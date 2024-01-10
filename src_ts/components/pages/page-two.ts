@@ -1,7 +1,8 @@
-import {customElement, LitElement, html} from 'lit-element';
-import {elevationStyles} from '../styles/lit-styles/elevation-styles';
+import {html, LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {pageLayoutStyles} from '../styles/page-layout-styles';
-import {SharedStylesLit} from '../styles/shared-styles-lit';
+import {sharedStyles} from '../styles/shared-styles';
 
 /**
  * @LitElement
@@ -17,7 +18,7 @@ export class PageTwo extends LitElement {
     // main template
     // language=HTML
     return html`
-      ${SharedStylesLit}
+      ${sharedStyles}
       <section class="elevation page-content" elevation="1">
         <h1>Page2</h1>
         <p>

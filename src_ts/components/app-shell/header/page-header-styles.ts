@@ -1,10 +1,10 @@
-import {css} from 'lit-element';
+import {css} from 'lit';
 
 // language=CSS
 export const pageHeaderStyles = css`
   app-toolbar {
     padding: 0 16px 0 0;
-    height: 60px;
+    height: auto;
   }
 
   .titlebar {
@@ -13,11 +13,6 @@ export const pageHeaderStyles = css`
 
   #menuButton {
     display: block;
-    color: var(--header-color);
-  }
-
-  support-btn {
-    margin-left: 24px;
     color: var(--header-color);
   }
 
@@ -39,6 +34,7 @@ export const pageHeaderStyles = css`
   .content-align {
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   #app-logo {
@@ -52,8 +48,8 @@ export const pageHeaderStyles = css`
     font-size: 18px;
   }
 
-  support-btn {
-    color: var(--header-icon-color);
+  etools-dropdown::part(display-input) {
+    text-align: right;
   }
 
   @media (min-width: 850px) {
@@ -72,9 +68,6 @@ export const pageHeaderStyles = css`
     .titlebar img {
       margin: 0 8px 0 12px;
     }
-    support-btn {
-      margin-left: 14px;
-    }
     etools-profile-dropdown {
       margin-left: 12px;
       width: 40px;
@@ -82,9 +75,6 @@ export const pageHeaderStyles = css`
   }
 
   @media (max-width: 576px) {
-    etools-app-selector {
-      --app-selector-button-padding: 18px 8px;
-    }
     #app-logo {
       display: none;
     }
@@ -98,7 +88,7 @@ export const pageHeaderStyles = css`
       margin-left: 2px;
     }
     app-toolbar {
-      padding-right: 0px;
+      padding-inline-end: 0px;
     }
   }
 `;

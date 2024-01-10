@@ -1,26 +1,33 @@
-import {Router, RouteCallbackParams, RouteDetails} from './router';
-import {store} from '../redux/store';
-import {navigate} from '../redux/actions/app';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {ROOT_PATH} from '../config/config';
+import {
+  EtoolsRouteCallbackParams,
+  EtoolsRouteDetails
+} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
-export const EtoolsRouter = new Router(ROOT_PATH);
 const routeParamRegex = '([^\\/?#=+]+)';
 
-EtoolsRouter.addRoute(
-  new RegExp('^page-one/list$'),
-  (params: RouteCallbackParams): RouteDetails => {
-    return {
-      routeName: 'page-one',
-      subRouteName: 'list',
-      path: params.matchDetails[0],
-      queryParams: params.queryParams,
-      params: null
-    };
-  }
-)
+EtoolsRouter.init({
+  baseUrl: ROOT_PATH,
+  redirectPaths: {
+    notFound: '/page-not-found',
+    default: '/page-one/list'
+  },
+  redirectedPathsToSubpageLists: ['page-one']
+});
+
+EtoolsRouter.addRoute(new RegExp('^page-one/list$'), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+  return {
+    routeName: 'page-one',
+    subRouteName: 'list',
+    path: params.matchDetails[0],
+    queryParams: params.queryParams,
+    params: null
+  };
+})
   .addRoute(
     new RegExp(`^page-one\\/${routeParamRegex}\\/${routeParamRegex}$`),
-    (params: RouteCallbackParams): RouteDetails => {
+    (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
       return {
         routeName: 'page-one',
         subRouteName: params.matchDetails[2], // tab name
@@ -32,53 +39,21 @@ EtoolsRouter.addRoute(
       };
     }
   )
-  .addRoute(
-    new RegExp(`^page-not-found$`),
-    (params: RouteCallbackParams): RouteDetails => {
-      return {
-        routeName: 'page-not-found',
-        subRouteName: null,
-        path: params.matchDetails[0],
-        queryParams: null,
-        params: null
-      };
-    }
-  )
-  .addRoute(
-    new RegExp(`^page-two$`),
-    (params: RouteCallbackParams): RouteDetails => {
-      return {
-        routeName: 'page-two',
-        subRouteName: null,
-        path: params.matchDetails[0],
-        queryParams: null,
-        params: null
-      };
-    }
-  );
-
-/**
- * Utility used to update location based on routes and dispatch navigate action (optional)
- */
-export const updateAppLocation = (newLocation: string, dispatchNavigation = true): void => {
-  const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
-
-  EtoolsRouter.pushState(_newLocation);
-
-  if (dispatchNavigation) {
-    store.dispatch(navigate(decodeURIComponent(_newLocation)));
-  }
-};
-
-export const replaceAppLocation = (newLocation: string, dispatchNavigation = true): void => {
-  const _newLocation = EtoolsRouter.prepareLocationPath(newLocation);
-
-  EtoolsRouter.replaceState(_newLocation);
-
-  if (dispatchNavigation) {
-    store.dispatch(navigate(decodeURIComponent(_newLocation)));
-  }
-};
-
-export const ROUTE_404 = '/page-not-found';
-export const DEFAULT_ROUTE = '/page-one/list';
+  .addRoute(new RegExp(`^page-not-found$`), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+    return {
+      routeName: 'page-not-found',
+      subRouteName: null,
+      path: params.matchDetails[0],
+      queryParams: null,
+      params: null
+    };
+  })
+  .addRoute(new RegExp(`^page-two$`), (params: EtoolsRouteCallbackParams): EtoolsRouteDetails => {
+    return {
+      routeName: 'page-two',
+      subRouteName: null,
+      path: params.matchDetails[0],
+      queryParams: null,
+      params: null
+    };
+  });

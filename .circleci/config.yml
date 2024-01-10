@@ -1,0 +1,82 @@
+version: 2
+jobs:
+  lint:
+    working_directory: ~/code
+    # The primary container is an instance of the first list image listed. Your build commands run in this container.
+    docker:
+      - image: node:14.21
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install node modules
+          command: npm ci
+      - save_cache:
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - node_modules
+      - run:
+          name: TsLint
+          command: npm run tsToJs
+      - run:
+          name: EsLint
+          command: npm run lint
+
+  build_and_deploy:
+    working_directory: ~/code
+    docker:
+      - image: node:14.21
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Exporting revision number
+          command: |
+            REVNO=${CIRCLE_SHA1}
+            BUILDDATE=$(date -u +%F_%T)
+            sed -i "0,/revNo/s//$REVNO/" index.html
+            sed -i "0,/revNo/s//$REVNO/" version.json
+            sed -i "0,/bDate/s//$BUILDDATE/" version.json
+            sed -i "0,/bDate/s//$BUILDDATE/" index.html
+      - run:
+          name: Install Docker client
+          command: |
+            set -x
+            VER="17.03.0-ce"
+            curl -L -o /tmp/docker-$VER.tgz https://get.docker.com/builds/Linux/x86_64/docker-$VER.tgz
+            tar -xz -C /tmp -f /tmp/docker-$VER.tgz
+            mv /tmp/docker/* /usr/bin
+          # build and push Docker image
+      - run:
+          name: Building the image
+          command: |
+            TAG=${CIRCLE_BRANCH}
+            docker build -t unicef/etools-frontend-template:$TAG .
+      - run:
+          name: Pushing to Docker Hub
+          command: |
+            TAG=${CIRCLE_BRANCH}
+            docker login -u $DOCKER_USER -p $DOCKER_PASS
+            docker push unicef/etools-frontend-template:$TAG
+
+workflows:
+  version: 2
+  lint_and_build:
+    jobs:
+      - lint:
+          filters:
+            branches:
+              ignore:
+                - master
+                - staging
+                - develop
+      - build_and_deploy:
+          requires:
+            - lint
+          filters:
+            branches:
+              only:
+                - master
+                - staging
+                - develop

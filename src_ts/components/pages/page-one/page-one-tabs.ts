@@ -1,21 +1,21 @@
-import '@polymer/paper-button/paper-button';
-
-import {SharedStylesLit} from '../../styles/shared-styles-lit';
-import '../../common/layout/page-content-header/page-content-header';
-import '../../common/layout/etools-tabs';
+import '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header';
 // eslint-disable-next-line max-len
-import {pageContentHeaderSlottedStyles} from '../../common/layout/page-content-header/page-content-header-slotted-styles';
-import '../../common/layout/status/etools-status';
+import {pageContentHeaderSlottedStyles} from '@unicef-polymer/etools-modules-common/dist/layout/page-content-header/page-content-header-slotted-styles';
+
+import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
+import '@unicef-polymer/etools-modules-common/dist/layout/status/etools-status';
 import './actions/page-one-actions';
-import {AnyObject} from '../../../types/globals';
+import {AnyObject} from '@unicef-polymer/etools-types';
 import {connect} from 'pwa-helpers/connect-mixin';
 import {RootState, store} from '../../../redux/store';
-import {updateAppLocation} from '../../../routing/routes';
-import {customElement, LitElement, html, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
-import {elevationStyles} from '../../styles/lit-styles/elevation-styles';
-import {RouteDetails} from '../../../routing/router';
-import {fireEvent} from '../../utils/fire-custom-event';
+import {sharedStyles} from '../../styles/shared-styles';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 
 /**
  * @LitElement
@@ -31,13 +31,13 @@ export class PageOneTabs extends connect(store)(LitElement) {
     // main template
     // language=HTML
     return html`
-      ${SharedStylesLit}
+      ${sharedStyles}
       <style>
-        etools-status {
+        etools-status-lit {
           justify-content: center;
         }
       </style>
-      <etools-status></etools-status>
+      <etools-status-lit .statuses="${this.statuses}" .activeStatus="${'submitted-accepted'}"></etools-status-lit>
 
       <page-content-header with-tabs-visible>
         <h1 slot="page-title">Title here</h1>
@@ -49,12 +49,12 @@ export class PageOneTabs extends connect(store)(LitElement) {
           ></page-one-actions>
         </div>
 
-        <etools-tabs
+        <etools-tabs-lit
           slot="tabs"
           .tabs="${this.pageTabs}"
           .activeTab="${this.activeTab}"
-          @iron-select="${this.handleTabChange}"
-        ></etools-tabs>
+          @sl-tab-show="${this.handleTabChange}"
+        ></etools-tabs-lit>
       </page-content-header>
 
       <section class="elevation page-content" elevation="1">
@@ -67,7 +67,16 @@ export class PageOneTabs extends connect(store)(LitElement) {
   }
 
   @property({type: Object})
-  routeDetails!: RouteDetails;
+  routeDetails!: EtoolsRouteDetails;
+
+  @property({type: Object})
+  statuses: any[] = [
+    ['draft', 'Draft'],
+    ['submitted-accepted', 'Submitted/Accepted'],
+    ['report-submitted', 'Report submitted'],
+    ['rejected', 'Rejected'],
+    ['completed', 'Completed']
+  ];
 
   @property({type: Array})
   pageTabs = [
@@ -78,7 +87,7 @@ export class PageOneTabs extends connect(store)(LitElement) {
     },
     {
       tab: 'questionnaires',
-      tabLabel: 'Questionnaires‎',
+      tabLabel: 'Questionnaires',
       hidden: false
     }
   ];
@@ -90,7 +99,7 @@ export class PageOneTabs extends connect(store)(LitElement) {
   record: AnyObject = {
     id: 23,
     title: 'Page One title',
-    actions_available: ['review', 'accept', 'cancel', 'download_comments', 'export']
+    actions_available: ['back', 'review', 'accept', 'cancel', 'download_comments', 'export']
   };
 
   isActiveTab(tab: string, expectedTab: string): boolean {
@@ -121,7 +130,7 @@ export class PageOneTabs extends connect(store)(LitElement) {
   }
 
   handleTabChange(e: CustomEvent) {
-    const newTabName: string = e.detail.item.getAttribute('name');
+    const newTabName: string = e.detail.name;
     if (newTabName === this.activeTab) {
       return;
     }
@@ -140,7 +149,7 @@ export class PageOneTabs extends connect(store)(LitElement) {
       }
       this.showLoadingMessage();
       // go to new tab
-      updateAppLocation(newPath, true);
+      EtoolsRouter.updateAppLocation(newPath);
     }
   }
 

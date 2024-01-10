@@ -1,29 +1,33 @@
 import {GenericObject} from '@unicef-polymer/etools-types/dist/global.types';
-import {customElement, html, LitElement, property} from 'lit-element';
-import {fireEvent} from '../../../utils/fire-custom-event';
-import {sendRequest} from '@unicef-polymer/etools-ajax';
+import {CSSResultArray, html, LitElement, TemplateResult} from 'lit';
+import {customElement, property} from 'lit/decorators.js';
+import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
+import {sendRequest} from '@unicef-polymer/etools-utils/dist/etools-ajax';
 import {get as getTranslation} from 'lit-translate';
-import {PaperMenuButton} from '@polymer/paper-menu-button';
-import '@polymer/paper-menu-button/paper-menu-button';
-import '@polymer/paper-icon-button/paper-icon-button';
-import {formatServerErrorAsText} from '@unicef-polymer/etools-ajax/ajax-error-parser';
-import '../are-you-sure';
+import {arrowLeftIcon} from '@unicef-polymer/etools-modules-common/dist/styles/app-icons';
+import {formatServerErrorAsText} from '@unicef-polymer/etools-utils/dist/etools-ajax/ajax-error-parser';
+import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import '../export-data';
-import {openDialog} from '../../../utils/dialog.js';
+import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 
-import {arrowLeftIcon} from '../../../styles/app-icons.js';
 import {ActionsStyles} from './actions-styles';
+
+import '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
+import '@unicef-polymer/etools-unicef/src/etools-button/etools-button';
+import '@shoelace-style/shoelace/dist/components/menu/menu.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import SlDropdown from '@shoelace-style/shoelace/dist/components/dropdown/dropdown.js';
 
 @customElement('available-actions')
 export class AvailableActions extends LitElement {
   EXPORT_ACTIONS: string[] = [];
-  BACK_ACTIONS: string[] = [];
+  BACK_ACTIONS: string[] = ['back'];
   CANCEL = 'cancel';
   ACTIONS_WITHOUT_CONFIRM: string[] = [];
   ACTIONS_WITH_INPUT: string[] = [];
   namesMap: GenericObject<string> = {};
 
-  static get styles() {
+  static get styles(): CSSResultArray {
     return [ActionsStyles];
   }
   protected render() {
@@ -48,11 +52,16 @@ export class AvailableActions extends LitElement {
   @property({type: String})
   entityId!: string;
 
-  actionsNamesMap = new Proxy(this.namesMap, {
-    get(target: GenericObject<string>, property: string): string {
-      return target[property] || property.replace('_', ' ');
-    }
-  });
+  actionsNamesMap;
+
+  constructor() {
+    super();
+    this.actionsNamesMap = new Proxy(this.namesMap, {
+      get(target: GenericObject<string>, property: string): string {
+        return target[property] || property.replace('_', ' ');
+      }
+    });
+  }
 
   private renderExport(actions: string[]) {
     const preparedExportActions = actions.map((action: string) => ({
@@ -64,46 +73,52 @@ export class AvailableActions extends LitElement {
       : html``;
   }
 
-  private renderBackAction(action?: string) {
+  private renderBackAction(action?: string): TemplateResult {
     return action
       ? html`
-          <paper-button class="main-button back-button" @click="${() => this.processAction(action)}">
+          <etools-button variant="primary" class="back-button" @click="${() => this.processAction(action)}">
             ${arrowLeftIcon} <span>${this.actionsNamesMap[action]}</span>
-          </paper-button>
+          </etools-button>
         `
       : html``;
   }
 
-  private renderGroupedActions(mainAction: string, actions: string[]) {
+  private renderGroupedActions(mainAction: string, actions: string[]): TemplateResult {
     const withAdditional = actions.length ? ' with-additional' : '';
     const onlyCancel = !actions.length && mainAction === this.CANCEL ? ` cancel-background` : '';
     const className = `main-button${withAdditional}${onlyCancel}`;
     return mainAction
       ? html`
-          <paper-button class="${className}" @click="${() => this.processAction(mainAction)}">
-            ${this.actionsNamesMap[mainAction]} ${this.getAdditionalTransitions(actions)}
-          </paper-button>
+          <etools-button
+            variant="primary"
+            class="${className} split-btn"
+            @click="${() => this.processAction(mainAction)}"
+          >
+            <span>${this.actionsNamesMap[mainAction]}</span> ${this.getAdditionalTransitions(actions)}
+          </etools-button>
         `
       : html``;
   }
 
-  private getAdditionalTransitions(actions?: string[]) {
+  private getAdditionalTransitions(actions?: string[]): TemplateResult {
     if (!actions || !actions.length) {
       return html``;
     }
     return html`
-      <paper-menu-button horizontal-align="right" @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
-        <paper-icon-button slot="dropdown-trigger" class="option-button" icon="expand-more"></paper-icon-button>
-        <div slot="dropdown-content">
+      <sl-dropdown @click="${(event: MouseEvent) => event.stopImmediatePropagation()}">
+        <etools-button slot="trigger" variant="primary" size="small">
+          <etools-icon name="expand-more"></etools-icon>
+        </etools-button>
+        <sl-menu>
           ${actions.map(
             (action: string) => html`
-              <div class="other-options" @click="${() => this.processAction(action)}">
+              <sl-menu-item @click="${() => this.processAction(action)}">
                 ${this.actionsNamesMap[action]}
-              </div>
+              </sl-menu-item>
             `
           )}
-        </div>
-      </paper-menu-button>
+        </sl-menu>
+      </sl-dropdown>
     `;
   }
 
@@ -171,9 +186,9 @@ export class AvailableActions extends LitElement {
   }
 
   private closeDropdown(): void {
-    const element: PaperMenuButton | null = this.shadowRoot!.querySelector('paper-menu-button');
+    const element: SlDropdown | null = this.shadowRoot!.querySelector('sl-dropdown');
     if (element) {
-      element.close();
+      element.open = false;
     }
   }
 

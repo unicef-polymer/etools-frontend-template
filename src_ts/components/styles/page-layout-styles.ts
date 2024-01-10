@@ -1,13 +1,12 @@
-import {css} from 'lit-element';
+import {css} from 'lit';
 // language=CSS
 export const pageLayoutStyles = css`
   .page-content {
     margin: 24px;
   }
 
-  section.page-content {
+  section.page-content:not(.filters) {
     padding: 18px 24px;
-    background-color: var(--primary-background-color);
   }
 
   section.page-content.filters {
