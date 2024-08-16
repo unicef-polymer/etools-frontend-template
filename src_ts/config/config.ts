@@ -10,8 +10,6 @@ declare global {
   }
 }
 
-export const ROOT_PATH = '/' + getBasePath().replace(window.location.origin, '').slice(1, -1) + '/';
-
 const PROD_DOMAIN = 'etools.unicef.org';
 
 function getBasePath() {

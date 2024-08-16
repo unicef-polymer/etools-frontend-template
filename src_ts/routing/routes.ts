@@ -1,5 +1,5 @@
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
-import {ROOT_PATH} from '../config/config';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {
   EtoolsRouteCallbackParams,
   EtoolsRouteDetails
@@ -8,7 +8,7 @@ import {
 const routeParamRegex = '([^\\/?#=+]+)';
 
 EtoolsRouter.init({
-  baseUrl: ROOT_PATH,
+  baseUrl: Environment.basePath,
   redirectPaths: {
     notFound: '/page-not-found',
     default: '/page-one/list'

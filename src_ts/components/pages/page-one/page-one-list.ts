@@ -17,7 +17,6 @@ import {
   FilterKeysAndTheirSelectedValues,
   FilterKeys
 } from './list/filters';
-import {ROOT_PATH} from '../../../config/config';
 import {EtoolsFilter} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
 import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {pageLayoutStyles} from '../../styles/page-layout-styles';
@@ -42,7 +41,7 @@ import {
 } from '@unicef-polymer/etools-modules-common/dist/layout/etools-table/etools-table-utility';
 import {getSelectedFiltersFromUrlParams} from '@unicef-polymer/etools-unicef/src/etools-filters/filters';
 import '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading';
-import {getListDummydata} from '../page-one/list/list-dummy-data';
+import {getListDummydata} from './list/list-dummy-data';
 import get from 'lodash-es/get';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import '../../common/layout/export-data';
@@ -132,9 +131,6 @@ export class PageOneList extends connect(store)(LitElement) {
 
   @property({type: Object})
   routeDetails!: EtoolsRouteDetails;
-
-  @property({type: String})
-  rootPath: string = ROOT_PATH;
 
   @property({type: Object})
   paginator: EtoolsPaginator = {...defaultPaginator};
