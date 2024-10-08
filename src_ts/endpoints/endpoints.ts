@@ -1,7 +1,6 @@
-import {AnyObject} from '../types/globals';
-import {EtoolsEndpoint} from './endpoints-list';
-import {EtoolsRequestEndpoint} from '@unicef-polymer/etools-ajax';
+import {RequestEndpoint} from '@unicef-polymer/etools-utils/dist/etools-ajax';
 import cloneDeep from 'lodash-es/cloneDeep';
+import {AnyObject, EtoolsEndpoint} from '@unicef-polymer/etools-types';
 
 const generateUrlFromTemplate = (tmpl: string, data: AnyObject | undefined) => {
   if (!tmpl) {
@@ -33,5 +32,5 @@ export const getEndpoint = (endpoint: EtoolsEndpoint, data?: AnyObject) => {
     }
   }
 
-  return completedEndpoint as EtoolsRequestEndpoint;
+  return completedEndpoint as RequestEndpoint;
 };

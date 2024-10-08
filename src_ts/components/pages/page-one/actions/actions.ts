@@ -1,6 +1,7 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
 import {get as getTranslation} from 'lit-translate';
 
+export const BACK = 'back';
 export const ACCEPT = 'accept';
 export const REVIEW = 'review';
 export const CANCEL = 'cancel';
@@ -11,6 +12,7 @@ export const ACTIONS_WITHOUT_CONFIRM = [ACCEPT, REVIEW, CANCEL];
 export const EXPORT_ACTIONS = [EXPORT, EXPORT_COMMENTS];
 
 export const namesMap: GenericObject<string> = {
+  [BACK]: getTranslation('BACK'),
   [ACCEPT]: getTranslation('ACCEPT'),
   [REVIEW]: getTranslation('REVIEW'),
   [CANCEL]: getTranslation('CANCEL'),

@@ -3,5 +3,7 @@
   "REVIEW": "Review",
   "CANCEL": "Cancel",
   "EXPORT_COMMENTS": "EXPORT COMMENTS",
-  "EXPORT": "EXPORT"
+  "EXPORT": "EXPORT",
+  "KNOWLEDGE_BASE":"Knowledge Base",
+  "COMMUNITY_CHANNELS": "eTools Community Channels"
 }

@@ -1,6 +1,6 @@
-import {EtoolsFilter, EtoolsFilterTypes} from '../../../common/layout/filters/etools-filters';
-import {AnyObject} from '../../../../types/globals';
-import {isJsonStrMatch} from '../../../utils/utils';
+import {EtoolsFilter, EtoolsFilterTypes} from '@unicef-polymer/etools-unicef/src/etools-filters/etools-filters';
+import {setselectedValueTypeByFilterKey} from '@unicef-polymer/etools-unicef/src/etools-filters/filters';
+import {isJsonStrMatch} from '@unicef-polymer/etools-utils/dist/equality-comparisons.util';
 
 export enum FilterKeys {
   q = 'q',
@@ -22,7 +22,7 @@ export const defaultSelectedFilters: FilterKeysAndTheirSelectedValues = {
   created_date: null
 };
 
-export const selectedValueTypeByFilterKey: AnyObject = {
+export const selectedValueTypeByFilterKey: any = {
   [FilterKeys.q]: 'string',
   [FilterKeys.status]: 'Array',
   [FilterKeys.unicef_focal_point]: 'Array',
@@ -31,6 +31,8 @@ export const selectedValueTypeByFilterKey: AnyObject = {
   [FilterKeys.page_size]: 'string',
   [FilterKeys.sort]: 'string'
 };
+
+setselectedValueTypeByFilterKey(selectedValueTypeByFilterKey);
 
 export const defaultFilters: EtoolsFilter[] = [
   {
@@ -80,7 +82,7 @@ export const defaultFilters: EtoolsFilter[] = [
   },
   {
     filterName: 'UNICEF Focal Point',
-    filterKey: 'unicef_focal_point',
+    filterKey: FilterKeys.unicef_focal_point,
     type: EtoolsFilterTypes.DropdownMulti,
     selectionOptions: [],
     selectedValue: [],
@@ -136,7 +138,7 @@ export const updateFiltersSelectedValues = (
   return availableFilters;
 };
 
-export const updateFilterSelectionOptions = (filters: EtoolsFilter[], fKey: string, options: AnyObject[]) => {
+export const updateFilterSelectionOptions = (filters: EtoolsFilter[], fKey: string, options: any[]) => {
   const filter = filters.find((f: EtoolsFilter) => f.filterKey === fKey);
   if (filter && options) {
     if (!isJsonStrMatch(filter.selectionOptions, options)) {

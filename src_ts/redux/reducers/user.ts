@@ -1,11 +1,10 @@
 import {Reducer} from 'redux';
 import {UPDATE_USER_DATA, UPDATE_USER_PERMISSIONS} from '../actions/user';
-import {EtoolsUserModel} from '../../components/user/user-model';
 import {RootAction} from '../store';
-import {AnyObject} from '../../types/globals';
+import {AnyObject, EtoolsUser} from '@unicef-polymer/etools-types';
 
 export interface UserState {
-  data: EtoolsUserModel | null;
+  data: EtoolsUser | null;
   permissions: AnyObject | null;
 }
 

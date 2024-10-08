@@ -1,10 +1,11 @@
-import {customElement, html, LitElement, property} from 'lit-element';
+import {html, LitElement} from 'lit';
+import {customElement} from 'lit/decorators.js';
 
 // These are the shared styles needed by this element.
-import {ROOT_PATH} from '../../config/config';
-import {elevationStyles} from '../styles/lit-styles/elevation-styles';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
+import {elevationStyles} from '@unicef-polymer/etools-modules-common/dist/styles/elevation-styles';
 import {pageLayoutStyles} from '../styles/page-layout-styles';
-import {SharedStylesLit} from '../styles/shared-styles-lit';
+import {sharedStyles} from '../styles/shared-styles';
 
 /**
  * @customElement
@@ -18,17 +19,14 @@ export class PageNotFound extends LitElement {
 
   render() {
     return html`
-      ${SharedStylesLit}
+      ${sharedStyles}
       <section class="page-content elevation" elevation="1">
         <h2>Oops! You hit a 404</h2>
         <p>
-          The page you're looking for doesn't seem to exist. Head back <a href="${this.rootPath}">home</a> and try
-          again?
+          The page you're looking for doesn't seem to exist. Head back <a href="${Environment.basePath}">home</a> and
+          try again?
         </p>
       </section>
     `;
   }
-
-  @property({type: String})
-  rootPath: string = ROOT_PATH;
 }

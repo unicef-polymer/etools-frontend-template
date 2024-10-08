@@ -1,4 +1,4 @@
-import {css} from 'lit-element';
+import {css} from 'lit';
 
 // language=HTML
 export const appDrawerStyles = css`

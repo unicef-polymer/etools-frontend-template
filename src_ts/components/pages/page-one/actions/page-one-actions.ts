@@ -1,9 +1,9 @@
-import {customElement} from 'lit-element';
+import {customElement} from 'lit/decorators.js';
 import {AvailableActions} from '../../../common/layout/available-actions/available-actions';
 import {ACTIONS_WITHOUT_CONFIRM, EXPORT_ACTIONS, namesMap} from './actions.js';
 
 @customElement('page-one-actions')
-export class EfaceActions extends AvailableActions {
+export class PageOneActions extends AvailableActions {
   constructor() {
     super();
 

@@ -1,6 +1,9 @@
-import {LitElement, html, customElement} from 'lit-element';
-import '@polymer/iron-icons/communication-icons';
-
+/* eslint-disable lit/attribute-value-entities */
+import {css, CSSResult, html, LitElement, TemplateResult} from 'lit';
+import {customElement} from 'lit/decorators.js';
+import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
+import {translate} from 'lit-translate';
+import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 /* eslint-disable max-len */
 
 /**
@@ -8,33 +11,44 @@ import '@polymer/iron-icons/communication-icons';
  * @customElement
  */
 @customElement('support-btn')
-export class SupportBtn extends LitElement {
-  public render() {
-    return html`
-      <style>
-        :host(:hover) {
-          cursor: pointer;
-        }
-        a {
-          color: inherit;
-          text-decoration: none;
-          font-size: 16px;
-        }
-        iron-icon {
-          margin-right: 4px;
-        }
-        @media (max-width: 768px) {
-          #supportTxt {
-            display: none;
-          }
-        }
-      </style>
+export class SupportBtn extends MatomoMixin(LitElement) {
+  static get styles(): CSSResult {
+    // language=CSS
+    return css`
+      :host(:hover) {
+        cursor: pointer;
+      }
 
+      a {
+        color: var(--light-secondary-text-color);
+        text-decoration: none;
+        font-size: 16px;
+      }
+
+      etools-icon {
+        margin-right: 4px;
+        color: var(--light-secondary-text-color);
+      }
+
+      @media (max-width: 650px) {
+        .support-text {
+          display: none;
+        }
+      }
+    `;
+  }
+
+  render(): TemplateResult {
+    // language=HTML
+    return html`
       <a
-        href="https://unicef.service-now.com/cc/?id=sc_cat_item&sys_id=35b00b1bdb255f00085184735b9619e6&sysparm_category=c6ab1444db5b5700085184735b961920"
+        href="https://unicef.service-now.com/cc?id=sc_cat_item&sys_id=c8e43760db622450f65a2aea4b9619ad&sysparm_category=99c51053db0a6f40f65a2aea4b9619af"
         target="_blank"
+        tracker="Support"
+        @click="${this.trackAnalytics}"
       >
-        <iron-icon icon="communication:textsms"></iron-icon><span id="supportTxt">Support</span>
+        <etools-icon name="communication:textsms"></etools-icon>
+        <span class="support-text">${translate('SUPPORT')}</span>
       </a>
     `;
   }

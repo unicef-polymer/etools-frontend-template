@@ -1,4 +1,4 @@
-import {css} from 'lit-element';
+import {css} from 'lit';
 import {appDrawerStyles} from './menu/styles/app-drawer-styles';
 
 export const AppShellStyles = css`
@@ -13,6 +13,11 @@ export const AppShellStyles = css`
 
   .main-content {
     flex: 1;
+    display: flex;
+  }
+
+  .main-content > * {
+    width: 100%;
   }
 
   .page {
