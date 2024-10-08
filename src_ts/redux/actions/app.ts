@@ -2,12 +2,12 @@
 import {Action, ActionCreator} from 'redux';
 import {ThunkAction} from 'redux-thunk';
 import {RootState} from '../store';
-import {ROOT_PATH} from '../../config/config';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
 import {EtoolsRedirectPath} from '@unicef-polymer/etools-utils/dist/enums/router.enum';
 import {EtoolsRouteDetails} from '@unicef-polymer/etools-utils/dist/interfaces/router.interfaces';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import {UPDATE_ROUTE} from '../actionsContants';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 
 export interface AppActionUpdateDrawerState extends Action<'UPDATE_DRAWER_STATE'> {
   opened: boolean;
@@ -91,7 +91,10 @@ export const navigate: ActionCreator<ThunkResult> = (path: string) => (dispatch)
 
   // if app route is accessed, redirect to default route (if not already on it)
   // @ts-ignore
-  if (path === ROOT_PATH && ROOT_PATH !== EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT)) {
+  if (
+    path === Environment.basePath &&
+    Environment.basePath !== EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT)
+  ) {
     EtoolsRouter.updateAppLocation(EtoolsRouter.getRedirectPath(EtoolsRedirectPath.DEFAULT));
     return;
   }

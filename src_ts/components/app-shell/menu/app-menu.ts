@@ -3,7 +3,8 @@ import '@shoelace-style/shoelace/dist/components/tooltip/tooltip.js';
 
 import {navMenuStyles} from './styles/nav-menu-styles';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {ROOT_PATH, SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
+import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 import {translate} from 'lit-translate';
@@ -51,7 +52,7 @@ export class AppMenu extends MatomoMixin(LitElement) {
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'page-one')}"
             menu-name="page-one"
-            href="${ROOT_PATH}page-one"
+            href="${Environment.basePath}page-one"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="Page One">
               <etools-icon name="accessibility"></etools-icon>
@@ -62,7 +63,7 @@ export class AppMenu extends MatomoMixin(LitElement) {
           <a
             class="nav-menu-item ${this.getItemClass(this.selectedOption, 'page-two')}"
             menu-name="page-two"
-            href="${ROOT_PATH}page-two"
+            href="${Environment.basePath}page-two"
           >
             <sl-tooltip placement="right" ?disabled="${!this.smallMenu}" content="Page Two">
               <etools-icon name="extension"></etools-icon>
@@ -118,9 +119,6 @@ export class AppMenu extends MatomoMixin(LitElement) {
 
   @property({type: String, attribute: 'selected-option'})
   public selectedOption = '';
-
-  @property({type: String})
-  rootPath: string = ROOT_PATH;
 
   @property({type: Boolean, attribute: 'small-menu'})
   public smallMenu = false;

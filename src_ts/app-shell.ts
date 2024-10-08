@@ -2,10 +2,9 @@
 @license
 Copyright (c) 2019 The eTools Project Authors. All rights reserved.
 */
-
-import {connect} from 'pwa-helpers/connect-mixin.js';
-import {installMediaQueryWatcher} from 'pwa-helpers/media-query.js';
-import {installRouter} from 'pwa-helpers/router.js';
+import {html, LitElement} from 'lit';
+import {customElement, property, query} from 'lit/decorators.js';
+import {connect, installMediaQueryWatcher, installRouter} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 
 // This element is connected to the Redux store.
 import {store, RootState} from './redux/store';
@@ -22,17 +21,15 @@ import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-drawer.js';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header-layout.js';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-header.js';
 import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-toolbar.js';
+import '@unicef-polymer/etools-unicef/src/etools-app-layout/app-footer.js';
 import '@unicef-polymer/etools-piwik-analytics/etools-piwik-analytics';
 import {createDynamicDialog} from '@unicef-polymer/etools-unicef/src/etools-dialog/dynamic-dialog';
 
 import {LoadingMixin} from '@unicef-polymer/etools-unicef/src/etools-loading/etools-loading-mixin';
-import {html, LitElement} from 'lit';
-import {customElement, property, query} from 'lit/decorators.js';
 import {AppShellStyles} from './components/app-shell/app-shell-styles';
 
 import './components/app-shell/menu/app-menu.js';
 import './components/app-shell/header/page-header.js';
-import './components/app-shell/footer/page-footer.js';
 
 import user from './redux/reducers/user';
 import commonData, {CommonDataState} from './redux/reducers/common-data';
@@ -46,15 +43,15 @@ import {EtoolsUser, RouteDetails} from '@unicef-polymer/etools-types';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
-import {ROOT_PATH} from './config/config';
 import {openDialog} from '@unicef-polymer/etools-utils/dist/dialog.util';
 import {RESET_CURRENT_ITEM, RESET_UNSAVED_UPLOADS, RESET_UPLOADS_IN_PROGRESS} from './redux/actions/upload-status';
 import UploadsMixin from '@unicef-polymer/etools-modules-common/dist/mixins/uploads-mixin';
 import '@unicef-polymer/etools-modules-common/dist/layout/are-you-sure';
 import {getTranslatedValue} from '@unicef-polymer/etools-modules-common/dist/utils/language';
 import {EtoolsRouter} from '@unicef-polymer/etools-utils/dist/singleton/router';
+import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {setBasePath} from '@shoelace-style/shoelace/dist/utilities/base-path.js';
-import {EtoolsIconSet, initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
+import {initializeIcons} from '@unicef-polymer/etools-unicef/src/etools-icons/etools-icons';
 import {getPartnersDummyData} from './components/pages/page-one/list/list-dummy-data';
 
 declare const dayjs: any;
@@ -79,15 +76,8 @@ store.addReducers({
   uploadStatus
 });
 
-setBasePath('/template/');
-initializeIcons([
-  EtoolsIconSet.communication,
-  EtoolsIconSet.device,
-  EtoolsIconSet.social,
-  EtoolsIconSet.av,
-  EtoolsIconSet.image,
-  EtoolsIconSet.maps
-]);
+setBasePath(Environment.basePath);
+initializeIcons();
 
 /**
  * @customElement
@@ -104,7 +94,7 @@ export class AppShell extends connect(store)(UploadsMixin(LoadingMixin(LitElemen
     // language=HTML
     return html`
       <etools-piwik-analytics
-        .page="${ROOT_PATH + this.mainPage}"
+        .page="${Environment.basePath + this.mainPage}"
         .user="${this.user}"
         .toast="${this.currentToastMessage}"
       >
@@ -157,7 +147,7 @@ export class AppShell extends connect(store)(UploadsMixin(LoadingMixin(LitElemen
             ></page-not-found>
           </main>
 
-          <page-footer></page-footer>
+          <app-footer></app-footer>
         </app-header-layout>
       </app-drawer-layout>
     `;
@@ -313,7 +303,7 @@ export class AppShell extends connect(store)(UploadsMixin(LoadingMixin(LitElemen
   }
 
   getValue(response: {status: string; value?: any; reason?: any}, defaultValue: any = []) {
-    return response.status === 'fulfilled' ? response.value : defaultValue;
+    return response?.status === 'fulfilled' ? response.value : defaultValue;
   }
 
   public disconnectedCallback() {
