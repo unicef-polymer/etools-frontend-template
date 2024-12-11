@@ -2,7 +2,6 @@ import {Reducer} from 'redux';
 import {RootAction} from '../store';
 import {SHOW_TOAST, CLOSE_TOAST, UPDATE_ROUTE} from '../actionsContants';
 import {RouteDetails} from '@unicef-polymer/etools-types';
-// eslint-disable-next-line max-len
 
 export interface AppState {
   routeDetails: RouteDetails;

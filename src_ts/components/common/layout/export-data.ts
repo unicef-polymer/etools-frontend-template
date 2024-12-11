@@ -10,7 +10,7 @@ import '@shoelace-style/shoelace/dist/components/menu/menu.js';
 import '@unicef-polymer/etools-unicef/src/etools-icons/etools-icon';
 import '@unicef-polymer/etools-unicef/src/etools-icon-button/etools-icon-button';
 import {etoolsEndpoints} from '../../../endpoints/endpoints-list';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate/directives/translate';
 
 /**
  * @customElement

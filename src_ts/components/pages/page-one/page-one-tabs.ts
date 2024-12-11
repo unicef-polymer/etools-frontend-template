@@ -6,7 +6,7 @@ import '@unicef-polymer/etools-modules-common/dist/layout/etools-tabs';
 import '@unicef-polymer/etools-modules-common/dist/layout/status/etools-status';
 import './actions/page-one-actions';
 import {AnyObject} from '@unicef-polymer/etools-types';
-import {connect} from 'pwa-helpers/connect-mixin';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../redux/store';
 import {html, LitElement} from 'lit';
 import {customElement, property} from 'lit/decorators.js';

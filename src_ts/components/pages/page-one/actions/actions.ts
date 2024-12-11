@@ -1,5 +1,5 @@
 import {GenericObject} from '@unicef-polymer/etools-types';
-import {get as getTranslation} from 'lit-translate';
+import {get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 
 export const BACK = 'back';
 export const ACCEPT = 'accept';

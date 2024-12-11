@@ -7,7 +7,7 @@ import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from '../../../config/config';
 import {Environment} from '@unicef-polymer/etools-utils/dist/singleton/environment';
 import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
-import {translate} from 'lit-translate';
+import {translate} from '@unicef-polymer/etools-unicef/src/etools-translate/directives/translate';
 import MatomoMixin from '@unicef-polymer/etools-piwik-analytics/matomo-mixin';
 
 /**

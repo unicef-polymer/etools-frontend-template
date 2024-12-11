@@ -13,13 +13,13 @@ import '@unicef-polymer/etools-modules-common/dist/components/buttons/support-bu
 import {LitElement, html} from 'lit';
 import {customElement, property} from 'lit/decorators.js';
 
-import {connect} from 'pwa-helpers/connect-mixin.js';
+import {connect} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 import {RootState, store} from '../../../redux/store';
 import {isProductionServer} from '../../../config/config';
 import {fireEvent} from '@unicef-polymer/etools-utils/dist/fire-event.util';
 import isEmpty from 'lodash-es/isEmpty';
 import {updateCurrentUser} from '../../user/user-actions';
-import {translate, get as getTranslation} from 'lit-translate';
+import {translate, get as getTranslation} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {setActiveLanguage} from '../../../redux/actions/active-language';
 import {activeLanguage} from '../../../redux/reducers/active-language';
 import {AnyObject, EtoolsUser} from '@unicef-polymer/etools-types';
