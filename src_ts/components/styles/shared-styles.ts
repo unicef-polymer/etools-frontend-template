@@ -48,7 +48,7 @@ export const sharedStyles = html`
       --esmm-select-cursor: text;
       --esmm-external-wrapper: {
         width: 100%;
-      }
+      };
     }
 
     etools-dropdown,
@@ -56,7 +56,7 @@ export const sharedStyles = html`
       --esmm-external-wrapper: {
         width: auto;
         max-width: 650px;
-      }
+      };
     }
 
     etools-dropdown-multi[required]::part(esmm-label),

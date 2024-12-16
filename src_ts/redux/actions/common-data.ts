@@ -5,9 +5,8 @@ import {etoolsEndpoints} from '../../endpoints/endpoints-list';
 export const SET_ALL_STATIC_DATA = 'SET_ALL_STATIC_DATA';
 export const UPDATE_STATIC_DATA = 'UPDATE_STATIC_DATA';
 
-export interface CommonDataActionSetAllStaticData extends Action<'SET_ALL_STATIC_DATA'> {}
-
-export interface CommonDataActionUpdateStaticData extends Action<'UPDATE_STATIC_DATA'> {}
+export type CommonDataActionSetAllStaticData = Action<'SET_ALL_STATIC_DATA'>;
+export type CommonDataActionUpdateStaticData = Action<'UPDATE_STATIC_DATA'>;
 
 export type CommonDataAction = CommonDataActionSetAllStaticData | CommonDataActionUpdateStaticData;
 

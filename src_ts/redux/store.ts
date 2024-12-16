@@ -1,13 +1,13 @@
 declare global {
   interface Window {
     process?: Record<string, any>;
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose; // eslint-disable-line
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
   }
 }
 
 import {createStore, compose, applyMiddleware, combineReducers, Reducer, StoreEnhancer} from 'redux';
 import thunk, {ThunkMiddleware} from 'redux-thunk';
-import {lazyReducerEnhancer} from 'pwa-helpers/lazy-reducer-enhancer.js';
+import {lazyReducerEnhancer} from '@unicef-polymer/etools-utils/dist/pwa.utils';
 
 import app, {AppState} from './reducers/app.js';
 import {ActiveLanguageState} from './reducers/active-language.js';

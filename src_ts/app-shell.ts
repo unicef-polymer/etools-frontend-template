@@ -38,7 +38,7 @@ import {getCurrentUser} from './components/user/user-actions';
 import {getUnicefUsers, SET_ALL_STATIC_DATA, UPDATE_STATIC_DATA} from './redux/actions/common-data';
 import get from 'lodash-es/get';
 import '@unicef-polymer/etools-unicef/src/etools-toasts/etools-toasts';
-import {registerTranslateConfig, use, translate} from 'lit-translate';
+import {registerTranslateConfig, use, translate} from '@unicef-polymer/etools-unicef/src/etools-translate';
 import {EtoolsUser, RouteDetails} from '@unicef-polymer/etools-types';
 import {setStore} from '@unicef-polymer/etools-utils/dist/store.util';
 import {SMALL_MENU_ACTIVE_LOCALSTORAGE_KEY} from './config/config';
